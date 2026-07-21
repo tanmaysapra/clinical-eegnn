@@ -1,0 +1,35 @@
+seed: 42
+data:
+  source: mock            # mock | mimic
+  task: mortality         # mortality | readmission_30d
+  n_patients: 3000        # mock only
+  missing_rate: 0.2       # mock only
+graph:
+  method: knn             # knn | threshold | multiview
+  k: 15                   # neighbours for knn
+  similarity: cosine      # cosine | euclidean_rbf
+  threshold: 0.8          # used only if method == threshold
+  views: [diagnosis, labs, treatment]   # used only if method == multiview
+model:
+  hidden_dim: 64
+  max_layers: 10          # L = maximum propagation budget
+  epsilon: 0.1            # ODE step size for SAS-GNN
+  gamma: 0.1              # diffusion strength
+  exit_every: 1           # attach an exit head every N layers
+  dropout: 0.3
+train:
+  epochs: 300
+  lr: 0.005
+  weight_decay: 0.0005
+  patience: 50
+  exit_weight_scheme: uniform     # uniform | increasing | distill
+  distill_weight: 1.0             # weight on the KL term when scheme == distill
+  ponder_cost: 0.01               # weight on the efficiency term
+  cost_ratio: 5.0                 # FN(high-risk) penalty / FP penalty
+  focal_gamma: 2.0
+  high_risk_halt_penalty: 0.05    # discourage shallow halts on high-risk nodes
+  gumbel_tau_start: 5.0
+  gumbel_tau_end: 0.5
+eval:
+  operating_sensitivity: 0.90     # pick threshold at this sensitivity
+  n_bins_ece: 15
