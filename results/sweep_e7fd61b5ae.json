@@ -1,0 +1,143 @@
+{
+  "config": {
+    "seed": 42,
+    "data": {
+      "source": "mock",
+      "task": "mortality",
+      "n_patients": 3000,
+      "missing_rate": 0.2
+    },
+    "graph": {
+      "method": "knn",
+      "k": 15,
+      "similarity": "cosine",
+      "threshold": 0.8,
+      "views": [
+        "diagnosis",
+        "labs",
+        "treatment"
+      ]
+    },
+    "model": {
+      "hidden_dim": 64,
+      "max_layers": 10,
+      "epsilon": 0.1,
+      "gamma": 0.1,
+      "exit_every": 1,
+      "dropout": 0.3
+    },
+    "train": {
+      "epochs": 300,
+      "lr": 0.005,
+      "weight_decay": 0.0005,
+      "patience": 50,
+      "exit_weight_scheme": "uniform",
+      "distill_weight": 1.0,
+      "ponder_cost": 0.01,
+      "cost_ratio": 5.0,
+      "focal_gamma": 2.0,
+      "high_risk_halt_penalty": 0.05,
+      "gumbel_tau_start": 5.0,
+      "gumbel_tau_end": 0.5
+    },
+    "eval": {
+      "operating_sensitivity": 0.9,
+      "n_bins_ece": 15
+    }
+  },
+  "config_hash": "e7fd61b5ae",
+  "git": "nogit",
+  "stage": "sweep",
+  "results": {
+    "sweep": [
+      {
+        "ponder_cost": 0.0,
+        "halt_penalty": 0.0,
+        "auroc": 0.7698188233317466,
+        "auprc": 0.3514573866472076,
+        "avg_depth": 1.0216666460037231,
+        "hi_depth": 1.0298507462686568,
+        "lo_depth": 1.020637898686679,
+        "hi_miss": 0.1044776119402985,
+        "ece": 0.12216806208404404
+      },
+      {
+        "ponder_cost": 0.1,
+        "halt_penalty": 0.05,
+        "auroc": 0.7685307048248439,
+        "auprc": 0.36815264521170005,
+        "avg_depth": 1.0,
+        "hi_depth": 1.0,
+        "lo_depth": 1.0,
+        "hi_miss": 0.1044776119402985,
+        "ece": 0.14069334785143534
+      },
+      {
+        "ponder_cost": 0.3,
+        "halt_penalty": 0.15,
+        "auroc": 0.7705468903139089,
+        "auprc": 0.37147212718836675,
+        "avg_depth": 1.0,
+        "hi_depth": 1.0,
+        "lo_depth": 1.0,
+        "hi_miss": 0.1044776119402985,
+        "ece": 0.13749063833306233
+      },
+      {
+        "ponder_cost": 0.3,
+        "halt_penalty": 0.3,
+        "auroc": 0.7694267872644283,
+        "auprc": 0.3472230846090953,
+        "avg_depth": 1.0499999523162842,
+        "hi_depth": 1.1791044776119404,
+        "lo_depth": 1.0337711069418387,
+        "hi_miss": 0.1044776119402985,
+        "ece": 0.12091494366216164
+      },
+      {
+        "ponder_cost": 0.5,
+        "halt_penalty": 0.3,
+        "auroc": 0.7713309624485453,
+        "auprc": 0.370858906285054,
+        "avg_depth": 1.0,
+        "hi_depth": 1.0,
+        "lo_depth": 1.0,
+        "hi_miss": 0.1044776119402985,
+        "ece": 0.1399458667387565
+      },
+      {
+        "ponder_cost": 0.3,
+        "halt_penalty": 0.6,
+        "auroc": 0.7707989135000419,
+        "auprc": 0.3541601758114803,
+        "avg_depth": 9.12833309173584,
+        "hi_depth": 8.64179104477612,
+        "lo_depth": 9.189493433395873,
+        "hi_miss": 0.1044776119402985,
+        "ece": 0.11345372588994604
+      },
+      {
+        "ponder_cost": 0.6,
+        "halt_penalty": 0.9,
+        "auroc": 0.770714905771331,
+        "auprc": 0.3550076715213354,
+        "avg_depth": 8.948333740234375,
+        "hi_depth": 8.597014925373134,
+        "lo_depth": 8.992495309568481,
+        "hi_miss": 0.1044776119402985,
+        "ece": 0.11464541431516408
+      },
+      {
+        "ponder_cost": 0.1,
+        "halt_penalty": 1.5,
+        "auroc": 0.7698748284842205,
+        "auprc": 0.36143739489806204,
+        "avg_depth": 9.993332862854004,
+        "hi_depth": 9.940298507462687,
+        "lo_depth": 10.0,
+        "hi_miss": 0.1044776119402985,
+        "ece": 0.09695223447866737
+      }
+    ]
+  }
+}

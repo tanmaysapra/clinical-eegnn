@@ -260,8 +260,16 @@ def main():
     ap.add_argument("--config", default="configs/default.yaml")
     ap.add_argument("--stage", default="smoke",
                     choices=["smoke", "baselines", "eegnn", "sweep", "full"])
-    ap.add_argument("--data", dest="data.source", default=None, choices=["mock", "mimic"])
+    ap.add_argument("--data", dest="data.source", default=None,
+                    choices=["mock", "mimic", "csv"])
     ap.add_argument("--task", dest="data.task", default=None)
+    ap.add_argument("--raw-dir", dest="data.raw_dir", default=None,
+                    help="dir holding mimic-iv-3.1/{hosp,icu} (mimic only)")
+    ap.add_argument("--cache-dir", dest="data.cache_dir", default=None)
+    ap.add_argument("--max-patients", dest="data.max_patients", type=int, default=None,
+                    help="label-stratified cohort subsample (mimic only)")
+    ap.add_argument("--obs-window", dest="data.obs_window_hours", type=float,
+                    default=None)
     ap.add_argument("--seed", type=int, default=None)
     ap.add_argument("--epochs", dest="train.epochs", type=int, default=None)
     ap.add_argument("--ponder-cost", dest="train.ponder_cost", type=float, default=None)

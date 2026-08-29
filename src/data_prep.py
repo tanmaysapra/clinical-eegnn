@@ -27,16 +27,20 @@ def load_cohort(cfg):
             seed=cfg["seed"],
         )
     if source == "mimic":
-        return _load_mimic(cfg)
+        from src import mimic_iv
+        return mimic_iv.build_cohort(cfg)
+    if source == "csv":
+        return _load_csv(cfg)
     raise ValueError(f"unknown data.source: {source}")
 
 
-def _load_mimic(cfg):
-    """Load a pre-extracted MIMIC-IV cohort table.
+def _load_csv(cfg):
+    """Load an already-flattened cohort table straight from CSV.
 
-    Extraction SQL lives in data/ and is run offline; this only reads the
-    resulting CSV so the loader stays dumb. Expected columns: subject_id,
-    label, and one column per feature.
+    Escape hatch for a cohort built elsewhere (e.g. exported from a Kaggle
+    kernel run of `mimic_iv.build_cohort`). Expected columns: `label`, optional
+    id columns, and one column per feature. The real MIMIC-IV path is
+    `source: mimic`, which runs the ETL in `src/mimic_iv.py`.
     """
     import pandas as pd
 

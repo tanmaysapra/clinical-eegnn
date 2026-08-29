@@ -1,13 +1,30 @@
 seed: 42
 data:
-  source: mock            # mock | mimic
+  source: mock            # mock | mimic | csv
   task: mortality         # mortality | readmission_30d
   n_patients: 3000        # mock only
   missing_rate: 0.2       # mock only
+  # --- source: mimic (src/mimic_iv.py) -------------------------------------
+  raw_dir: data/raw       # holds mimic-iv-3.1/{hosp,icu}; /kaggle/input/... on Kaggle
+  cache_dir: data/processed
+  obs_window_hours: 24    # features come from [intime, intime + this)
+  min_los_hours: 28       # stay must outlast the window with margin
+  max_patients: null      # label-stratified subsample; null = all
+  cohort_seed: 42
+  force_rebuild: false
+  blocks: [demographics, comorbidity, labs, vitals, treatment]
+  # Drop patients for whom these blocks are entirely absent. The Kaggle mirror's
+  # chartevents.csv is truncated and covers ~38% of ICU stays, so without this
+  # the vitals missingness indicators encode the download defect. See
+  # `mimic_iv._drop_uncovered`. Set to [] to keep every patient instead.
+  require_nonempty_blocks: [vitals]
+  # --- source: csv ---------------------------------------------------------
+  csv_path: data/raw/cohort.csv
 graph:
   method: knn             # knn | threshold | multiview
   k: 15                   # neighbours for knn
-  similarity: cosine      # cosine | euclidean_rbf
+  similarity: cosine      # cosine | euclidean_rbf | hybrid
+  hybrid_beta: 0.5        # hybrid only: weight on the Jaccard term vs cosine
   threshold: 0.8          # used only if method == threshold
   views: [diagnosis, labs, treatment]   # used only if method == multiview
 model:
@@ -33,3 +50,5 @@ train:
 eval:
   operating_sensitivity: 0.90     # pick threshold at this sensitivity
   n_bins_ece: 15
+  high_risk_top_frac: 0.10        # safety stratum = top decile of criticalness
+  safety_alpha: 0.01              # max share of early-exited patients allowed to be deaths

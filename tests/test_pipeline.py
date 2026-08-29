@@ -30,28 +30,28 @@ def cfg():
 
 @pytest.fixture(scope="module")
 def graph(cfg):
-    X_raw, y, names, risk = make_mock_cohort(300, missing_rate=0.2, seed=0)
+    X_raw, y, names, meta = make_mock_cohort(300, missing_rate=0.2, seed=0)
     masks = make_splits(y, seed=0)
     X = impute_and_scale(X_raw, masks[0])
-    return build_graph(X, y, masks, cfg, meta={"true_risk": risk},
+    return build_graph(X, y, masks, cfg, meta=meta,
                        cache_dir="/tmp/eegnn_test")
 
 
 # ------------------------------------------------------------------ mock data
 
 def test_mock_shapes_and_prevalence():
-    X, y, names, risk = make_mock_cohort(1000, n_features=40, missing_rate=0.2, seed=0)
+    X, y, names, meta = make_mock_cohort(1000, n_features=40, missing_rate=0.2, seed=0)
     assert X.shape == (1000, 40) and len(names) == 40
     assert set(np.unique(y)) <= {0, 1}
     assert 0.05 < y.mean() < 0.25, "prevalence should be realistically imbalanced"
     assert 0.1 < np.isnan(X).mean() < 0.3, "missingness must be injected"
-    assert risk.shape == (1000,)
+    assert meta["true_risk"].shape == (1000,)
 
 
 # --------------------------------------------------------------------- splits
 
 def test_splits_are_disjoint_and_stratified():
-    _, y, _, _ = make_mock_cohort(1000, seed=0)
+    _, y, _, _m = make_mock_cohort(1000, seed=0)
     tr, va, te = make_splits(y, seed=0)
     assert not (tr & va).any() and not (tr & te).any() and not (va & te).any()
     assert (tr | va | te).all(), "no patient may be dropped"
@@ -62,7 +62,7 @@ def test_splits_are_disjoint_and_stratified():
 
 def test_imputation_does_not_see_test_statistics():
     """Perturbing test rows must not change the imputed train rows."""
-    X, y, _, _ = make_mock_cohort(400, seed=0)
+    X, y, _, _m = make_mock_cohort(400, seed=0)
     tr, va, te = make_splits(y, seed=0)
     a = impute_and_scale(X.copy(), tr)
     X2 = X.copy()
@@ -74,7 +74,7 @@ def test_imputation_does_not_see_test_statistics():
 # ---------------------------------------------------------------------- graph
 
 def test_knn_graph_degree_and_symmetry():
-    X, _, _, _ = make_mock_cohort(200, seed=0)
+    X, _, _, _m = make_mock_cohort(200, seed=0)
     X = np.nan_to_num(X)
     ei, ew = build_knn_graph(X, k=10)
     assert (ei[0] != ei[1]).all(), "self-loops must be dropped"
@@ -152,3 +152,106 @@ def test_loss_decreases_on_overfit(cfg, graph):
             first = parts["task"]
         last = parts["task"]
     assert last < first * 0.9, f"task loss did not decrease: {first:.4f} -> {last:.4f}"
+
+
+def test_high_risk_metric_is_not_degenerate():
+    """The safety stratum must respond to the model, not to the threshold rule.
+
+    Defining "high risk" as `y == 1` and then thresholding at a fixed operating
+    sensitivity pins the miss rate to `1 - sensitivity` for every model, which
+    is what made the old metric constant at 0.104 across a whole sweep
+    (HANDOVER 6.1). Stratifying on an independent severity proxy must restore
+    the metric's ability to distinguish a good model from a bad one.
+    """
+    import numpy as np
+    from src.evaluate import high_risk_analysis
+
+    rng = np.random.default_rng(0)
+    n = 4000
+    risk = rng.uniform(size=n)
+    y = (rng.uniform(size=n) < 0.05 + 0.4 * risk).astype(int)
+
+    good = np.clip(risk + rng.normal(0, 0.05, n), 0, 1)   # tracks true severity
+    bad = rng.uniform(size=n)                             # ignores it
+    depth = np.clip(1 + 9 * risk, 1, 10)
+
+    label_based, severity_based = [], []
+    for p in (good, bad):
+        label_based.append(high_risk_analysis(y, p, depth, 10, 0.90)["high_risk_miss_rate"])
+        severity_based.append(
+            high_risk_analysis(y, p, depth, 10, 0.90, risk=risk)["high_risk_miss_rate"])
+
+    # Old behaviour: reported as nan now rather than as a misleading constant.
+    assert all(np.isnan(v) for v in label_based)
+
+    # New behaviour: a model that tracks severity misses fewer high-risk deaths.
+    assert all(np.isfinite(v) for v in severity_based)
+    assert severity_based[0] < severity_based[1], (
+        f"stratified miss rate failed to separate models: {severity_based}")
+
+    # And the safety ordering is reported explicitly.
+    res = high_risk_analysis(y, good, depth, 10, 0.90, risk=risk)
+    assert res["safety_ordering_ok"] and res["depth_gap"] > 0
+    assert res["high_risk_n"] == int(round(0.10 * n))
+
+
+def test_coverage_filter_keeps_blocks_aligned():
+    """Dropping uncovered patients must drop the same rows from every block.
+
+    A filter applied to the cohort table but not to each feature block would
+    silently pair one patient's features with another's label -- catastrophic
+    and invisible in aggregate metrics. Needed because the Kaggle mirror ships
+    a truncated `chartevents.csv` covering only ~38% of ICU stays.
+    """
+    import numpy as np
+    import pandas as pd
+    from src.mimic_iv import _drop_uncovered
+
+    df = pd.DataFrame({"subject_id": [10, 11, 12, 13, 14, 15],
+                       "label": [0, 1, 0, 1, 0, 1]})
+    vitals = pd.DataFrame({"hr": [1.0, np.nan, 3.0, np.nan, 5.0, np.nan],
+                           "bp": [np.nan, np.nan, 2.0, np.nan, 4.0, np.nan]})
+    treatment = pd.DataFrame({"vent": [0.0, 1.0, 0.0, 1.0, 0.0, 1.0]})
+
+    out_df, out_blocks, keep = _drop_uncovered(
+        df, {"vitals": vitals, "treatment": treatment}, ["vitals"], verbose=False)
+
+    assert keep.tolist() == [True, False, True, False, True, False]
+    assert list(out_df["subject_id"]) == [10, 12, 14]
+    # every block filtered identically, and index reset so concat aligns
+    for name, block in out_blocks.items():
+        assert len(block) == len(out_df), name
+        assert list(block.index) == list(range(len(out_df))), name
+    # the surviving treatment values are the ones belonging to those patients
+    assert out_blocks["treatment"]["vent"].tolist() == [0.0, 0.0, 0.0]
+
+    # no requirement -> untouched
+    same_df, same_blocks, same_keep = _drop_uncovered(
+        df, {"vitals": vitals}, [], verbose=False)
+    assert same_keep.all() and len(same_df) == 6
+
+
+def test_coverage_filter_ignores_zero_filled_count_columns():
+    """`_count` columns are zero-filled by design and must not imply coverage.
+
+    `_aggregate_events` sets a never-measured concept's count to 0 rather than
+    NaN, so a plain `notna().any(axis=1)` marks every patient as covered and
+    the filter silently does nothing -- which is exactly what happened on the
+    first run against the truncated mirror.
+    """
+    import numpy as np
+    import pandas as pd
+    from src.mimic_iv import _drop_uncovered
+
+    df = pd.DataFrame({"subject_id": [1, 2, 3, 4], "label": [0, 1, 0, 1]})
+    # patients 0 and 2 were measured; 1 and 3 never were, but still carry count 0
+    vitals = pd.DataFrame({
+        "vit_hr_mean": [80.0, np.nan, 95.0, np.nan],
+        "vit_hr_count": [24.0, 0.0, 18.0, 0.0],
+        "vit_sbp_count": [22.0, 0.0, 17.0, 0.0],
+    })
+    out_df, out_blocks, keep = _drop_uncovered(
+        df, {"vitals": vitals}, ["vitals"], verbose=False)
+
+    assert keep.tolist() == [True, False, True, False]
+    assert list(out_df["subject_id"]) == [1, 3]

@@ -53,6 +53,43 @@ def predictive_metrics(y, p, operating_sensitivity=0.90):
     }
 
 
+def c_index(risk, time, event, chunk=2048):
+    """Harrell's concordance index -- the spec's third clinical metric.
+
+    Comparable pairs are those where the earlier of the two had the event; a
+    pair is concordant when the patient who failed sooner carried the higher
+    predicted risk. Ties in risk count a half.
+
+    On this cohort the survival framing is an approximation and should be
+    reported as one: `time` is ICU length of stay and `event` is in-hospital
+    death, so survivors are treated as censored at ICU discharge. That matches
+    the discrete-time setup in the GNN-surv reference rather than a true
+    time-to-death analysis.
+
+    Computed in row blocks so the n^2 pair matrix is never materialised.
+    """
+    risk = np.asarray(risk, dtype=np.float64)
+    time = np.asarray(time, dtype=np.float64)
+    event = np.asarray(event).astype(bool)
+    n = len(risk)
+    conc = perm = 0.0
+
+    for start in range(0, n, chunk):
+        sl = slice(start, min(start + chunk, n))
+        # i indexes the block, j every patient; keep pairs where i had the
+        # event and failed strictly earlier than j.
+        ti, ri, ei = time[sl, None], risk[sl, None], event[sl, None]
+        comparable = ei & (ti < time[None, :])
+        if not comparable.any():
+            continue
+        higher = (ri > risk[None, :]) & comparable
+        tied = (ri == risk[None, :]) & comparable
+        conc += float(higher.sum()) + 0.5 * float(tied.sum())
+        perm += float(comparable.sum())
+
+    return float(conc / perm) if perm > 0 else float("nan")
+
+
 # --------------------------------------------------------------- calibration
 
 def expected_calibration_error(y, p, n_bins=15):
@@ -144,21 +181,66 @@ def efficiency_metrics(model, data, out, mask):
 
 # -------------------------------------------------------------------- safety
 
-def high_risk_analysis(y, p, exit_layer, max_layers, operating_sensitivity=0.90):
-    """Do high-risk patients propagate deeper, and are they missed rarely?
+def high_risk_analysis(y, p, exit_layer, max_layers, operating_sensitivity=0.90,
+                       risk=None, top_frac=0.10, n_bins=15):
+    """Does the model spend depth where being wrong is most costly?
 
-    A win looks like: high-risk mean depth > low-risk mean depth, and the
-    high-risk miss rate stays low. Efficiency should come from confidently-easy
-    low-risk patients, never from cutting the sick short.
+    The stratum must be defined **independently of the model's own decisions**.
+    An earlier version defined "high risk" as `y == 1` and then measured the
+    miss rate at a threshold chosen to hit `operating_sensitivity` -- which
+    makes the miss rate identically `1 - operating_sensitivity` for every
+    model, carrying no information (HANDOVER 6.1). It sat at a constant 0.104
+    across an entire sweep for exactly that reason.
+
+    Passing `risk` -- a severity proxy such as `criticalness`, derived from the
+    full stay and never a model input -- fixes this. The stratum becomes the
+    top `top_frac` of severity, fixed before any prediction is made, so miss
+    rate, calibration and depth inside it are all free to vary with the model.
+
+    Without `risk` the old label-based split is kept for the depth ordering,
+    but the degenerate rate is reported as nan rather than as a constant that
+    looks like a result.
     """
     thr = threshold_at_sensitivity(y, p, operating_sensitivity)
     pred = (p >= thr).astype(int)
-    hi, lo = y == 1, y == 0
+
+    if risk is not None:
+        risk = np.asarray(risk, dtype=np.float64)
+        hi = risk >= np.quantile(risk, 1.0 - top_frac)
+        stratum = f"top {top_frac:.0%} of severity"
+    else:
+        hi = y == 1
+        stratum = "label (degenerate -- pass `risk` for a real stratum)"
+    lo = ~hi
+
+    def _miss(sel):
+        # Of the deaths inside this stratum, how many did the model not flag?
+        deaths = sel & (y == 1)
+        if not deaths.any():
+            return float("nan")
+        return float((pred[deaths] == 0).mean())
+
+    def _ece(sel):
+        return (expected_calibration_error(y[sel], p[sel], n_bins)
+                if sel.sum() > n_bins else float("nan"))
+
+    hi_depth = float(exit_layer[hi].mean()) if hi.any() else float("nan")
+    lo_depth = float(exit_layer[lo].mean()) if lo.any() else float("nan")
+
     return {
+        "stratum": stratum,
         "high_risk_n": int(hi.sum()),
-        "high_risk_miss_rate": float((pred[hi] == 0).mean()) if hi.any() else float("nan"),
-        "high_risk_mean_depth": float(exit_layer[hi].mean()) if hi.any() else float("nan"),
-        "low_risk_mean_depth": float(exit_layer[lo].mean()) if lo.any() else float("nan"),
+        "high_risk_prevalence": float(y[hi].mean()) if hi.any() else float("nan"),
+        # Informative only when `risk` is supplied; nan otherwise, by design.
+        "high_risk_miss_rate": _miss(hi) if risk is not None else float("nan"),
+        "low_risk_miss_rate": _miss(lo) if risk is not None else float("nan"),
+        "high_risk_ece": _ece(hi),
+        "low_risk_ece": _ece(lo),
+        "high_risk_mean_depth": hi_depth,
+        "low_risk_mean_depth": lo_depth,
+        # The safety ordering: the sick must not be the ones cut short.
+        "depth_gap": hi_depth - lo_depth,
+        "safety_ordering_ok": bool(hi_depth > lo_depth),
         "high_risk_early_exit_rate": float((exit_layer[hi] <= max_layers / 2).mean())
         if hi.any() else float("nan"),
         "low_risk_early_exit_rate": float((exit_layer[lo] <= max_layers / 2).mean())
@@ -176,6 +258,19 @@ def evaluate_model(model, data, cfg, split="test", temperature=None,
     with torch.no_grad():
         out = model(data.x, data.edge_index, data.edge_weight, tau=0.5, hard=True)
 
+    # Severity proxy for the safety stratum, in order of preference:
+    #   severity     -- MIMIC, built from observation-window features only;
+    #   true_risk    -- mock generator's latent risk;
+    #   criticalness -- last resort. It weights the death flag at 1.2 and tracks
+    #                   mortality at AUROC ~0.97, so a stratum built from it is
+    #                   close to "the patients who died" and reproduces the very
+    #                   degeneracy `high_risk_analysis` exists to avoid.
+    risk = None
+    for attr in ("severity", "true_risk", "criticalness"):
+        if hasattr(data, attr):
+            risk = getattr(data, attr).cpu().numpy()
+            break
+
     logits = out["final_logits"]
     if temperature is not None:
         logits = logits / temperature
@@ -190,6 +285,9 @@ def evaluate_model(model, data, cfg, split="test", temperature=None,
         "safety": high_risk_analysis(
             y[m], p[m], out["exit_layer"].cpu().numpy()[m],
             model.max_layers, cfg["eval"]["operating_sensitivity"],
+            risk=risk[m] if risk is not None else None,
+            top_frac=cfg["eval"].get("high_risk_top_frac", 0.10),
+            n_bins=cfg["eval"]["n_bins_ece"],
         ),
     }
 

@@ -1,8 +1,18 @@
-data/raw/
-data/processed/
-results/
+# ---------------------------------------------------------------- credentialed data
+# MIMIC-IV v3.1 is credentialed under the PhysioNet Data Use Agreement and must
+# never be redistributed. Raw tables, any cohort built from them, and cached
+# feature blocks all count. Aggregate results -- metric JSON and figures -- do
+# not, and are committed on purpose, so `results/` is deliberately NOT ignored.
+data/
+*.csv
+*.csv.gz
+*.parquet
+*.pt
+
+# ------------------------------------------------------------------------------ cruft
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
-*.pt
+.pytest_cache/
 .DS_Store
+.venv/

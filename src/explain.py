@@ -73,12 +73,25 @@ def exit_depth_vs_difficulty(model, data, cfg, split="test"):
             for q in _quartile_masks(margin)
         ],
     }
-    if hasattr(data, "true_risk"):
-        risk = data.true_risk.cpu().numpy()[m]
-        # Ambiguity peaks at risk = 0.5 -- distance from it is "how clear-cut".
+    # An external difficulty proxy, when one exists: `true_risk` from the mock
+    # generator, or `criticalness` from the MIMIC ETL. Neither is a model input.
+    risk_attr = next((a for a in ("severity", "true_risk", "criticalness")
+                      if hasattr(data, a)), None)
+    if risk_attr is not None:
+        risk = getattr(data, risk_attr).cpu().numpy()[m]
+        # Normalise to [0, 1] so "ambiguity peaks mid-scale" holds for both.
+        span = risk.max() - risk.min()
+        r01 = (risk - risk.min()) / span if span > 0 else np.zeros_like(risk)
+        res["risk_proxy"] = risk_attr
+        # Ambiguity peaks at mid-risk -- distance from it is "how clear-cut".
         res["corr_depth_vs_true_ambiguity"] = float(
-            np.corrcoef(depth, -np.abs(risk - 0.5))[0, 1]
+            np.corrcoef(depth, -np.abs(r01 - 0.5))[0, 1]
         )
+        # And the clinically direct question: do sicker patients get more depth?
+        res["corr_depth_vs_risk"] = float(np.corrcoef(depth, r01)[0, 1])
+        res["depth_by_quartile_of_risk"] = [
+            float(depth[q].mean()) for q in _quartile_masks(r01)
+        ]
     res["depth"] = depth
     res["margin"] = margin
     return res
