@@ -98,13 +98,13 @@ def _build_view_arrays(X_raw, views, train_mask):
     return raw_views, view_x_full, view_observed_full
 
 
-def _torch_view_dict(view_arrays, idx):
-    return {name: torch.tensor(arr[idx], dtype=torch.float32)
+def _torch_view_dict(view_arrays, idx, device):
+    return {name: torch.tensor(arr[idx], dtype=torch.float32, device=device)
            for name, arr in view_arrays.items()}
 
 
-def _torch_obs_dict(view_observed_full, idx):
-    return {name: torch.tensor(arr[idx], dtype=torch.float32)
+def _torch_obs_dict(view_observed_full, idx, device):
+    return {name: torch.tensor(arr[idx], dtype=torch.float32, device=device)
            for name, arr in view_observed_full.items()}
 
 
@@ -123,8 +123,8 @@ def _train_arch4r(mode, view_in_dims, cfg_arch4r, view_x_full, view_observed_ful
 
     if mode == "encoder_only":
         n = len(y)
-        view_x = _torch_view_dict(view_x_full, np.arange(n))
-        view_observed = _torch_obs_dict(view_observed_full, np.arange(n))
+        view_x = _torch_view_dict(view_x_full, np.arange(n), device)
+        view_observed = _torch_obs_dict(view_observed_full, np.arange(n), device)
         mask_t = torch.tensor(train_mask, dtype=torch.bool, device=device)
         t0 = time.time()
         for _ in range(epochs):
@@ -138,8 +138,8 @@ def _train_arch4r(mode, view_in_dims, cfg_arch4r, view_x_full, view_observed_ful
         return model, checkpoints, time.time() - t0
 
     train_idx = np.flatnonzero(train_mask)
-    view_x_train = _torch_view_dict(view_x_full, train_idx)
-    view_observed_train = _torch_obs_dict(view_observed_full, train_idx)
+    view_x_train = _torch_view_dict(view_x_full, train_idx, device)
+    view_observed_train = _torch_obs_dict(view_observed_full, train_idx, device)
     batch = arch4r.transductive_batch(ref_graph)
     y_train_t = torch.tensor(y[train_idx], dtype=torch.float32, device=device)
     mask_t = torch.ones(len(train_idx), dtype=torch.bool, device=device)
@@ -174,10 +174,10 @@ def _eval_arch4r_graph_arm(model, checkpoints, view_x_full, view_observed_full,
     batch = arch4r.attach_batch(ref_graph, attached, n_train)
 
     all_view_x = {name: torch.tensor(
-        np.concatenate([arr[train_idx], arr[held_idx]]), dtype=torch.float32)
+        np.concatenate([arr[train_idx], arr[held_idx]]), dtype=torch.float32, device=device)
         for name, arr in view_x_full.items()}
     all_view_observed = {name: torch.tensor(
-        np.concatenate([arr[train_idx], arr[held_idx]]), dtype=torch.float32)
+        np.concatenate([arr[train_idx], arr[held_idx]]), dtype=torch.float32, device=device)
         for name, arr in view_observed_full.items()}
 
     model.eval()
@@ -198,9 +198,9 @@ def _eval_arch4r_graph_arm(model, checkpoints, view_x_full, view_observed_full,
     return margins, graph_available
 
 
-def _eval_arch4r_encoder_only(model, checkpoints, view_x_full, view_observed_full, n_total):
-    view_x = _torch_view_dict(view_x_full, np.arange(n_total))
-    view_observed = _torch_obs_dict(view_observed_full, np.arange(n_total))
+def _eval_arch4r_encoder_only(model, checkpoints, view_x_full, view_observed_full, n_total, device):
+    view_x = _torch_view_dict(view_x_full, np.arange(n_total), device)
+    view_observed = _torch_obs_dict(view_observed_full, np.arange(n_total), device)
     model.eval()
     with torch.no_grad():
         out = model(view_x, view_observed, None, checkpoints)
@@ -299,7 +299,7 @@ def run_one_seed(cfg, seed, args, cohort, verbose=True):
         "encoder_only", view_in_dims, cfg_arch4r, view_x_full, view_observed_full,
         y, train, None, args.epochs, args.lr, device)
     margins_enc, avail_enc = _eval_arch4r_encoder_only(model_enc, ckpts, view_x_full,
-                                                       view_observed_full, n)
+                                                       view_observed_full, n, device)
     arms["arch4r_encoder_only"] = {
         "test_auroc": float(auroc(y[test], margins_enc[-1][test])),
         "train_s": t_enc, "n_params": model_enc.n_trainable_params(),
