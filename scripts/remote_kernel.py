@@ -29,7 +29,7 @@ import uuid
 
 import requests
 
-REMOTE_ROOT = "clinical-eegnn"
+REMOTE_ROOT = os.environ.get("REMOTE_ROOT", "clinical-eegnn")
 TEXT_EXT = {".py", ".yaml", ".yml", ".md", ".txt", ".json", ".ipynb", ".cfg", ".toml"}
 SKIP_DIRS = {"__pycache__", ".git", ".pytest_cache", ".ipynb_checkpoints"}
 
@@ -183,6 +183,9 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--url", help="proxy URL (default: $KERNEL_URL)")
+    ap.add_argument("--root", help="remote directory to push into "
+                                   "(default: $REMOTE_ROOT or clinical-eegnn). "
+                                   "Give each parallel experiment its own.")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     sub.add_parser("status")
@@ -198,6 +201,9 @@ def main():
                    help="skip dropping cached src.* modules first")
 
     args = ap.parse_args()
+    if getattr(args, "root", None):
+        global REMOTE_ROOT
+        REMOTE_ROOT = args.root.rstrip("/")
     base = base_url(args.url)
     return {"status": cmd_status, "push": cmd_push,
             "pull": cmd_pull, "run": cmd_run}[args.cmd](base, args)

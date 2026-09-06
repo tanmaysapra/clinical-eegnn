@@ -1,13 +1,31 @@
 # Handover — Early-Exit GNN for Clinical Risk Stratification
 
-Last updated: 2026-08-27. Status of the implementation against the phased plan,
+Last updated: 2026-09-01. Status of the implementation against the phased plan,
 plus everything a new session (or a new person) needs to pick this up.
+
+**Read `CURRENT_ITERATION.md` first.** Every claim below has been through an
+independent four-agent reproduction (§5o). Most held; four did not, and those
+are corrected in place and marked **[REPRO 2026-09-01]**.
+
+**§5p (2026-09-01) closes everything §5o left open** and adds the spec's
+three-architecture controlled experiment (`ARCHITECTURES.md`). Headlines: the
+tie-block hypothesis is **refuted**; `fit_gate`'s search is **exact**; the
+seed-blind graph cache is real but **immaterial**; alpha=0.05 and the conformal
+ablation **were never actually unrun**; and ACT vs discrete exit stages is
+**not resolvable at 5 seeds**, which upgrades the negative result from
+"this halting mechanism fails" to "early exit fails on this data".
 
 ---
 
 ## 1. TL;DR
 
-**Updated 2026-08-29. Read §5n first — it supersedes the framing of §5f–§5m.**
+**Updated 2026-09-01 after an independent reproduction pass — see §5o and
+`CURRENT_ITERATION.md`. Read §5n for the result, §5o for what survived checking.**
+
+The reproduction's verdict in one line: **the §5n pivot holds, the graph negative
+hardened, and four recorded claims were wrong** — one code bug, one metric bug,
+one statistic averaged over 2 seeds but printed as 5, one wording error. The
+corrections are inline below.
 
 The project's central mechanism now works, and it works because the thing being
 cascaded over changed. §5g–§5j did not show early exit failing; they showed it
@@ -27,9 +45,11 @@ inverts:
   staging is free — the strongest measured component is now the backbone rather
   than the baseline being apologised to.
 - The safety rule carries a **distribution-free certificate**: thresholds chosen
-  against a Clopper–Pearson bound realise miss rates of 0.0074 / 0.0081 / 0.0316
-  against budgets of 0.01 / 0.02 / 0.05, and release 2.7% of the top severity
-  decile against 44.3% of everyone else (**16.7x**).
+  against a Clopper–Pearson bound realise miss rates of 0.0081 / 0.0316 against
+  budgets of 0.02 / 0.05, and release 2.7% of the top severity decile against
+  44.3% of everyone else (**16.7x**). **[REPRO 2026-09-01]** The 0.01 budget was
+  dropped from this list: its release side fires in only 2/5 seeds and is
+  uncertifiable at stage 0 (needs m >= 299 clean releases, has 98–220). See §5n.
 - The headline saving is **46.2% of patients resolved without the model reading
   the lab block at all** — money and turnaround, not the 5 microseconds of
   compute, which would be a rerun of §5j's oversized-budget error.
@@ -502,8 +522,12 @@ Validated on the cohort:
 | top-decile mortality | ~ the deaths | 0.388 (3.6x enriched over 0.108) |
 
 Mortality across severity deciles: 0.014, 0.023, 0.028, 0.046, 0.062, 0.061,
-0.110, 0.144, 0.202, 0.388 — monotone, strongly enriched at the top, and not
-identical to the label. That combination is what makes the safety metric
+0.110, 0.144, 0.202, 0.388 — **near**-monotone (deciles 5→6 invert, 0.0618 →
+0.0611), strongly enriched at the top, and not identical to the label.
+**[REPRO 2026-09-01]** This sentence previously read "monotone"; the inversion is
+visible in the numbers printed immediately before it, and was found independently
+by two reproduction agents via different code paths. The stratum remains usable —
+the inversion is one adjacent pair deep inside the low-risk region. That combination is what makes the safety metric
 informative rather than a restatement of the threshold rule.
 
 Also fixed in notebook 02: the measurement-intensity AUROC was printed with a
@@ -1124,7 +1148,7 @@ two-sided gate, 5 seeds:
 | alpha | AUROC | compute saved | resolved before labs | realised miss rate | decision agreement |
 |---|---|---|---|---|---|
 | 0.005 | 0.8959 ± 0.0058 | 4.5% | 6.0% | (low side not certified) | 1.000 |
-| 0.01 | 0.8939 ± 0.0059 | 10.8% | 6.0% | 0.0074 ± 0.0011 | 0.998 |
+| 0.01 ⚠ | 0.8939 ± 0.0059 | 10.8% *(bimodal)* | 6.0% | 0.0074 ± 0.0011 *(n=2)* | 0.998 |
 | 0.02 | 0.8920 ± 0.0063 | **34.5%** | **46.2%** | 0.0081 ± 0.0021 | 0.989 |
 | 0.05 | 0.8776 ± 0.0031 | 56.6% | 75.8% | 0.0316 ± 0.0104 | 0.880 |
 | always stage 0 | 0.8624 ± 0.0047 | 74.7% | 100% | — | — |
@@ -1133,6 +1157,28 @@ two-sided gate, 5 seeds:
 `results/figures/cascade_frontier.png` (`scripts/plot_cascade.py`) plots this
 against the two constant policies, alongside the release rates by severity
 stratum.
+
+> **⚠ [REPRO 2026-09-01] The alpha=0.01 row is not a frontier point. Do not
+> quote it.** An independent 5-seed rerun released **no patients at all at
+> alpha=0.01 in 5/5 seeds** (saving 4.3%, indistinguishable from the 0.005 row).
+> Re-reading this run's own `results/headline.json` shows why: the release side
+> fired in only **2 of 5 seeds** here too —
+> `released_frac = [0.0, 0.356, 0.366, 0.0, 0.0]`.
+>
+> - "10.8% saved" is the mean of a **bimodal** quantity (± 8.04). No seed is near
+>   it; seeds sit at ~4% or ~19.5%.
+> - "0.0074 ± 0.0011" is an **n=2 average** — the three non-releasing seeds
+>   contribute `nan` — printed in a table whose every other row is n=5.
+>
+> The cause is arithmetic and is already derived two subsections below: a
+> Clopper–Pearson bound needs m >= ln(0.05)/ln(1-alpha) clean releases, i.e.
+> **m >= 299 at alpha=0.01**, and the stage-0 ranking never supplies more than a
+> 220-long death-free prefix (98–220 across seeds). The two releasing seeds cleared
+> the bar at *stage 1* (`taus_lo = [0.0, 0.0084, 0.0]`), which is a knife edge —
+> a 2-thread vs 4-thread XGBoost numerical perturbation flips it.
+>
+> **alpha=0.005 and alpha=0.02 are unaffected**; the curve between them is real.
+> Report alpha=0.01 as "release side fires in 2/5 seeds" or drop the row.
 
 Monotone in both columns, and **the gate is no longer dominated**. §5h's
 comparison — learned policy worse than the trivial baseline on accuracy *and*
@@ -1196,6 +1242,13 @@ The certificate is not free and the cost is informative:
   selection split cannot supply them. That is a concrete statement about how
   much validation data a 0.5% safety guarantee requires, and it is better to
   read it off the bound than to discover it in deployment.
+  **[REPRO 2026-09-01]** The same bound gives **m >= 299 at alpha=0.01** and
+  m >= 149 at alpha=0.02. The selection split cannot supply 299 either — its
+  longest death-free prefix is 98–220 across seeds — so **alpha=0.01 is also
+  uncertifiable at stage 0**, which is why the row above is bimodal. This
+  paragraph originally applied the argument only to alpha=0.005; it kills
+  alpha=0.01 too. alpha=0.02 clears comfortably (~1,000 certified releases in
+  5/5 seeds).
 - It is **markedly more stable**. At alpha=0.02 the certified gate saves
   34.5% ± 1.3 against the empirical gate's 46.5% ± 3.2, and at alpha=0.05 the
   empirical gate's saving swings 53.5% ± 26.8 across seeds.
@@ -1307,6 +1360,264 @@ compute saving for skipping a stage that does nothing is precisely the error
 
 ---
 
+## 5o. Independent reproduction of all four architectures (2026-09-01)
+
+Four agents, one architecture each, in isolated folders (`experiments/{baselines,
+eegnn,graph,cascade}/`), each a full repo copy pushed to its own remote root, all
+sharing one read-only cohort cache built once. Brief: `experiments/AGENTS_BRIEF.md`.
+Job: **re-run from scratch and check whether the recorded numbers hold** — not
+tune, not extend. Per-agent detail in each folder's `REPORT.md`; raw JSON in
+`results_repro/`.
+
+Two agents (`baselines`, `eegnn`) finished. Two (`graph`, `cascade`) completed all
+compute and died on an API session limit during write-up; their reports were
+reconstructed by the orchestrator from raw JSON, with every number re-derived
+rather than taken from agent prose. The Kaggle session has since ended, so two
+follow-ups remain unrun (§7).
+
+### Verdict summary
+
+| architecture | claims checked | held | corrected |
+|---|---|---|---|
+| baselines + safe_exit | cohort, LR/neighbour-avg, hop-AUROC, fusion, ETL fixes | all | 1 significance verdict is knife-edge |
+| EEGNN depth cascade | 23 | 20 | depth-gap sign, §5j mechanism, metric bug |
+| graph residual stage | 6 | 6 | seed-blind graph cache bug found |
+| staged info cascade | 16 | 15 | alpha=0.01 row |
+
+### What held
+
+- **The §5n pivot, which is the thing the project now rests on.** Stages
+  0.8623 / 0.8753 / 0.8974 against recorded 0.8624 / 0.8733 / 0.8968; labs −
+  bedside **+0.0351, t = 14.76** against recorded +0.0343, t = 17.04. Same
+  conclusion, comfortably significant, 5/5 seeds same sign.
+- **The cohort is reproducible to the patient.** All six filter-ladder steps
+  identical (94,458 → 65,366 → 65,366 → 46,776 → 46,705 → 46,651), prevalence
+  0.10780, 331 → 542 features. Deterministic baselines match to 4 dp, pinning the
+  feature matrix, imputation and splits as bit-identical. `_severity` was
+  re-derived from `X_raw` (r = 0.99999999999) and is verifiably outcome-free.
+- **Flat depth exits.** L1 − L10 = +0.0011, t = 0.75. 0% saving in 15/15 runs.
+- **The high-risk calibration gap**, hi > lo in **20/20** runs, paired t = **+29.7**.
+- **alpha=0.02 as an operating point**: 37.5% saved / 50.2% resolved before labs
+  against recorded 34.5% / 46.2%, realised miss 0.0110 vs 0.0081 — both inside budget.
+- **§7's multi-view fusion question, closed negatively.** The 0.811 → 0.846 gain is
+  *entirely edge count*. At matched density fusion loses every time (0.7656 vs
+  0.8115 @0.42M; 0.8217 vs 0.8407 @1.1M; 0.8455 vs 0.8487 @1.9M). A single graph
+  at k=70 beats fused k=15 with fewer edges.
+
+### The graph negative got stronger
+
+5 seeds (the §5n table was 3), paired against **the same run with the graph off**:
+
+| variant | Δ vs graph-off | t |
+|---|---|---|
+| kNN / C&S (scale fit on val) | −0.00069 | −0.87 ns |
+| leaf / C&S (scale fit on val) | −0.00060 | −1.32 ns |
+| kNN / learned GNN | +0.00052 | +0.76 ns |
+| leaf / learned GNN | +0.00017 | +0.28 ns |
+
+None significant; both parameter-free variants are *negative* under honest
+selection. Sweeping the C&S scale and selecting **on the test set itself** — i.e.
+cheating — picks scale **0.0 in 4/5 seeds** (leaf) and 2/5 (kNN), with an oracle
+ceiling of **+0.0003**. So the correct statement is stronger than "does not earn
+its place": **no achievable setting of this stage helps, including one chosen with
+the answers in hand.** Cost re-measured at 4.1x the three tabular stages (recorded
+5x). Rank correlation base vs graph = 0.959.
+
+### Four corrections
+
+1. **Code bug — seed-blind graph cache.** `scripts/run_cascade.py:76` keys the kNN
+   graph cache on `(k, similarity)` with **no seed**, while `X` is rebuilt per seed
+   (`impute_and_scale(X_raw, train)`, fit on that seed's train split). Every seed
+   after the first silently reuses seed 42's graph. Confirmed by SHA-1 over the
+   sorted edge list: `c3b80d8c3ae0` **identical across all 5 seeds** for kNN,
+   5 distinct hashes for leaf (which is built inside the loop, uncached). Effect:
+   understated seed variance on kNN rows; conclusion unchanged, since the leaf
+   variants are unaffected and show the same null. Fix and the `--per-seed-graph`
+   control live in `experiments/graph/`.
+
+2. **Metric bug — tie reported as inversion.** `src/evaluate.py:243` uses strict
+   `>` for `safety_ordering_ok`, so a gap of exactly 0.00 (everyone at full depth,
+   nothing to order) reports `False` and reads as an ordering *inversion*. §5m's
+   "learned Gumbel 0/3 ordering OK" is entirely this tie artefact. Should be `>=`,
+   or the degenerate case should be reported separately.
+
+3. **"The sick exit earlier" is not a reliable property.** Recorded as −0.32 on a
+   single seed. Re-measured across 5: seed 42 = −0.216 (same sign as recorded),
+   seeds 43–46 = +0.597 / +0.627 / +0.792 / +0.649. Mean **+0.49 ± 0.40,
+   t = +2.728** against critical 2.776 — the sign flips and the effect does not
+   clear significance. **Third single-seed number in this project not to survive
+   more seeds** (after §5f's GCN/GAT ordering and §5g's 37.0% saving).
+
+4. **§5j's mechanism is wrong, though its conclusion is right.** §5j attributes
+   the 0% saving to an oversized budget. In fact at budgets 2/4/6 the *maximum*
+   halt-vs-continue margin over all 3,533 test nodes is **negative**
+   (−0.262 / −0.208 / −0.220): the halt head is saturated shut by the default loss
+   weights (`high_risk_halt_penalty: 0.05` = 5x `ponder_cost: 0.01`), not by budget
+   size. At budget 4 with ponder 0.05 early exit *does* engage — 56.9% saved at no
+   accuracy cost, +1.76 depth gap. This does **not** rescue the architecture (the
+   best budget-2 config is still "exit everyone at layer 1"), so §5n's pivot stands;
+   but the stated reason for the failure should be corrected.
+
+Plus the two wording/statistics corrections already applied inline: the severity
+decile curve is near-monotone with one inversion (§5e), and the alpha=0.01 row is
+bimodal with an n=2 miss rate (§5n).
+
+### Caveat on the reproduction itself
+
+XGBoost was pinned to 2 threads (four agents on a shared 4-CPU box), which changes
+histogram reduction order. Runs are therefore **not bit-identical** to the recorded
+ones — per-stage AUROCs drift 0.0001–0.0020. Irrelevant for every headline claim;
+**decisive for the knife-edge alpha=0.01 row**, and the honest reading there is
+that the claim is fragile, not that one run is right and the other wrong. Wall-clock
+`cost_us` figures are not comparable across the two settings at all; ratios are.
+
+---
+
+## 5p. The follow-ups closed, and the spec's controlled experiment (2026-09-01)
+
+Everything §5o left blocked on compute has now run, on a rebuilt cohort
+(identical: 17,663 / 331 → 542 / 0.10780). Detail in
+`experiments/cascade/FOLLOWUP.md`, `experiments/graph/FOLLOWUP.md` and
+`ARCHITECTURES.md`.
+
+### The tie-block hypothesis is refuted
+
+§5o and `CURRENT_ITERATION.md` both flagged isotonic tie blocks as "the most
+likely full explanation of the alpha=0.01 2/5-seed behaviour". **It is not.**
+The certificate scan was run tie-aware (one threshold per distinct calibrated
+value) and tie-*optimistic* (allowed to cut inside a tie block, i.e. to cheat):
+
+| alpha | clean releases needed | tie-aware certifiable | tie-optimistic |
+|---|---|---|---|
+| 0.005 | 598 | 0 0 0 0 0 | 0 0 0 0 0 |
+| 0.01 | **299** | **0 0 0 0 0** | **0 0 0 0 0** |
+| 0.02 | 149 | 896 1084 917 985 905 | 918 1100 972 996 1041 |
+| 0.05 | 59 | 1409 1525 1318 1531 1651 | 1570 1680 1531 1605 1708 |
+
+Ties are real and large — isotonic leaves only **20–45 distinct values** on the
+stage-1 pool — but wherever the honest scan certifies nothing the cheating scan
+also certifies nothing. Ties move the achievable set by ~10%, never from zero.
+
+### `fit_gate`'s search is exact — a validation, not a defect
+
+The audit found seed 43 could certify 857 stage-1 releases at alpha=0.01 where
+`fit_gate` set `tau_lo = 0`, raising the worry that its 400-point quantile grid
+misses thresholds. Run in one process on identical calibrated probabilities
+(`experiments/cascade/scripts/gate_vs_exhaustive.py`), **the shipped gate matches
+an exhaustive scan exactly at every alpha in every seed — 0/5 misses.**
+
+### What the alpha=0.01 row is
+
+| run | seeds firing | released when it fires |
+|---|---|---|
+| original record (4 threads) | 2/5 | ~36% |
+| §5o reproduction (2 threads) | 0/5 | — |
+| this session (rebuilt cohort) | 1/5 (seed 43) | 40.4% of sel |
+
+Stage 0 can never certify at alpha=0.01 (needs 299 clean, longest prefix 132–250).
+Stage 1 *can*, but only when its ranking holds **≤3 deaths among the cleanest
+~857** — k=4 gives 0.01065, just over budget. A discrete event decided far below
+the level of any modelling choice, which is why the row is bimodal rather than
+noisy. **Demoted to a flagged footnote**, per the decision taken 2026-09-01.
+
+### alpha=0.05 and `--ablate-conformal` were never unrun
+
+§7 listed both as outstanding. They are in `results_repro/headline_repro.json` —
+`ablate_conformal: true`, `alphas` includes 0.05, all five seeds populated. They
+were computed and never analysed. **alpha=0.05 is a solid fourth operating
+point**: released 0.694 ± 0.060, miss **0.0306 ± 0.0073** against budget 0.05,
+**75.2% never read the lab panel**, AUROC 0.8768 ± 0.0038. Fires 5/5, inside
+budget 5/5 — it fills the gap the demoted alpha=0.01 row leaves.
+
+**The certificate ablation is a result in its own right.** At alpha=0.005 the
+empirical gate fires in 5/5 seeds and **breaches the budget in 3 of them**; the
+conformal gate refuses to fire at all. The certificate converts three silent
+breaches into one explicit refusal. Where both fire, the certificate costs
+**11.6 pp of release volume at alpha=0.02** (t = −7.18) and buys a miss rate of
+0.0110 rather than 0.0168.
+
+### The seed-blind graph cache: real, and immaterial
+
+`run_cascade.py:76` is confirmed by edge hashing — the shipped kNN path yields
+**1 distinct graph across 5 seeds**, the seed-aware key yields **5**; the leaf
+path was already 5 (built inside the loop, uncached). Isolated within one
+session (same cohort, splits, threads, libraries; only the cache key differs):
+
+```
+shipped (seed-blind)  0.90162 ± 0.00457
+fixed  (seed-aware)   0.90158 ± 0.00458
+paired diff  -0.00004 ± 0.00011,  t = -0.74     std ratio 1.003
+```
+
+§5o predicted the bug "understates seed variance". **It does not** — the error
+bars are unchanged (ratio 1.003). A kNN graph over 542 standardised features is
+stable across train splits, so seed 42's graph is functionally near-identical to
+each seed's own; the hashes differ bit-for-bit, the graphs barely differ at all.
+The null is unmoved and slightly harder: the best variant `gnn_knn` moves from
++0.00052 to **−0.00086** (t = −0.99, ns) once the graph is rebuilt per seed.
+
+### The spec's controlled experiment, finally run
+
+Architectures 2 (PPR-Push) and 3 (corrected Fixed-Block) were built —
+`src/ppr_push.py`, `src/fixed_block.py`, driver `scripts/run_architectures.py`.
+All three share cohort, splits, graph, calibration split, certified gate and
+depth budget 4; only the exit mechanism varies. Full detail in `ARCHITECTURES.md`.
+
+**Does ACT beat discrete exit stages?**
+
+```
+AUROC(ACT) - AUROC(fixed-block) = +0.0024 ± 0.0024,  t = +2.18   (crit 2.776)
+```
+
+Not resolvable at 5 seeds. **The negative result is therefore about early exit on
+this data, not about the ACT halting mechanism** — two structurally different
+exit designs fail the same way. That is a stronger claim than the project could
+previously support, and §5o's caveat ("does not distinguish 'early exit fails
+here' from 'this halting mechanism fails here'") can now be discharged.
+
+**Flat exits reproduce in an architecture sharing none of Arch 1's choices:**
+
+| architecture | last stage − first | t | |
+|---|---|---|---|
+| 1. Graph-ACT | −0.0005 ± 0.0007 | −1.73 | flat |
+| 3. Fixed-Block | +0.0009 ± 0.0027 | +0.72 | flat |
+| **2. PPR-Push** | **+0.0207 ± 0.0083** | **+5.61** | **differentiated** |
+
+Architecture 2 breaks the flatness because its stage 0 is a *graph-free* encoder
+(0.8658) and each push round adds information — §5n's "cascade over information,
+not depth" reached from inside a GNN.
+
+**Compute is measured for the first time.** The spec's §3.3 Fix 1 (active-subgraph
+masking) was never implemented in Arch 1; `model.py` propagates every node at
+every step and masks afterwards. Arch 3 implements it, with a test asserting
+masked inference equals dense-plus-freeze to 1e-5:
+
+| | alpha=0.02 | alpha=0.05 |
+|---|---|---|
+| Arch 3 **measured** edge work saved | **44.8% ± 10.7** | **67.6% ± 2.1** |
+| Arch 3 gate's stage arithmetic | 42.3% ± 10.5 | 66.7% ± 2.3 |
+| Arch 1 | no measured figure exists | no measured figure exists |
+
+Architecture 2's tolerance sweep is the only compute claim here with a bound
+behind it: **47.0% ± 9.8 of edges saved for −0.0022 AUROC**, 94.2% for −0.0148,
+against a graph-free floor of 0.8658 ± 0.0080. Diffusion beats that floor by
+**+0.0207** — consistent with §5n, where propagation on top of a *strong* boosted
+score bought nothing: the graph adds information relative to a weak tabular model
+and none relative to a strong one. The system still loses to XGBoost
+(0.8865 vs 0.8958).
+
+### A leak found in the new driver, and what it implies
+
+The first architectures run returned all three at ~0.91 AUROC — above XGBoost, on
+identical Arch 1 code. `graph_build.build_graph` keys its cache on `cfg["seed"]`
+**and stores the split masks in the cached object**; the driver never set
+`cfg["seed"]`, so every seed loaded seed 42's graph *and masks* while scoring on
+its own test split. Fixed, with an assertion. Corrected Arch 1 lands at
+0.8887 ± 0.0055 against the record's 0.8888 / 0.8889 — it reproduces.
+**Same failure family as `run_cascade.py:76`, far worse consequence.**
+
+---
+
 ## 6. OPEN ISSUES — start here next session
 
 ### 6.1 RESOLVED — degenerate safety metric
@@ -1406,10 +1717,39 @@ selectivity, not term magnitude.
 - **A complete `chartevents` mirror.** The current one is truncated (§5b),
   costing 62% of the cohort. Another Kaggle mirror with an intact file would
   restore ~46.7k patients and is worth ten minutes of searching.
-- **Multi-view graph** is wired to real view membership now and reaches 0.846
-  1-hop AUROC vs 0.811 single-graph, but the comparison is confounded by edge
-  count (1.97M vs 426k) — compare at matched density before claiming it wins.
+- ~~**Multi-view graph** ... compare at matched density before claiming it wins.~~
+  **ANSWERED NEGATIVELY [REPRO 2026-09-01]** (§5o). The gain was *entirely* edge
+  count. At matched density fusion loses at every density tested: 0.7656 vs
+  0.8115 @0.42M, 0.8217 vs 0.8407 @1.1M, 0.8455 vs 0.8487 @1.9M. A single graph
+  at k=70 beats fused k=15 using fewer edges. Do not revisit.
+- ~~**Two reproduction follow-ups, blocked on compute.**~~ **BOTH DONE
+  [2026-09-01]** — see §5p.
+  1. `--per-seed-graph`: the cache bug is confirmed by edge hashing (1 distinct
+     graph across 5 seeds, vs 5 with the fix) and is **immaterial** — paired diff
+     −0.00004 ± 0.00011, and the error bars do *not* widen (std ratio 1.003),
+     contrary to the prediction. Null unmoved; `gnn_knn` moves +0.00052 → −0.00086.
+  2. The tie-aware scan **refutes** the tie hypothesis: where the honest scan
+     certifies nothing, the tie-*optimistic* scan certifies nothing either.
+     Separately, `fit_gate`'s quantile grid was checked against an exhaustive
+     scan and matches exactly (0/5 misses) — a validation of the shipped gate.
+  3. alpha=0.05 and `--ablate-conformal` **were never unrun** — both are in
+     `results_repro/headline_repro.json` and had simply never been analysed.
+     alpha=0.05 is a solid 5/5-seed operating point; the conformal-vs-empirical
+     ablation shows the empirical gate breaching the budget in 3/5 seeds at
+     alpha=0.005 where the certificate refuses to fire.
+- **Two known bugs, unfixed in canonical** (both diagnosed in §5o, fixes exist in
+  the experiment folders): the seed-blind graph cache at `scripts/run_cascade.py:76`,
+  and the strict-`>` tie handling at `src/evaluate.py:243`.
+- ~~**Architectures 2 and 3 from the spec were never built**, so the controlled
+  experiment never happened.~~ **BUILT AND RUN [2026-09-01]** — §5p and
+  `ARCHITECTURES.md`. ACT vs discrete stages: +0.0024 ± 0.0024, t = +2.18, not
+  resolvable at 5 seeds. The negative result is about early exit on this data,
+  not about the ACT mechanism.
 - **Survival/readmission tasks, multimodal nodes** — untouched extensions.
+- **Architecture 2 is the one live thread.** It is the only design here whose
+  stages are differentiated (+0.0207, t = +5.61) and the only one with a compute
+  bound rather than an empirical saving. It still loses to XGBoost, but it is the
+  only GNN route that has not been closed off.
 
 ## 8. Reproducibility
 

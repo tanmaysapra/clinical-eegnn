@@ -49,6 +49,45 @@ import numpy as np
 
 # ------------------------------------------------------------------- splits
 
+def split_validation_3way(val_mask, y, seed, fracs=(0.4, 0.3, 0.3)):
+    """Cut validation into model-val / gate-selection / gate-certification,
+    class-stratified, disjoint -- the Architecture 4R low-risk gate's own 3-
+    way split (`src.gate_lowrisk`), sibling to `split_validation` above, not
+    a replacement: Architectures 1-3 keep calling the 2-way version
+    unchanged.
+
+    Three disjoint jobs need three disjoint partitions here, not two: fitting
+    the stage-score calibrator (`model_val`), picking candidate thresholds
+    and which checkpoints to enable as gates (`gate_selection`), and the
+    one-shot Clopper-Pearson certification of the resulting policy
+    (`gate_certification`). Reusing `gate_selection` rows for certification
+    would let the certificate be optimistic about the very thresholds it was
+    used to choose -- the same reason `split_validation` keeps calibration
+    and selection disjoint, extended to a third job.
+    """
+    assert abs(sum(fracs) - 1.0) < 1e-9, "fracs must sum to 1.0"
+    rng = np.random.default_rng(seed + 992)
+    model_val = np.zeros_like(val_mask)
+    gate_selection = np.zeros_like(val_mask)
+    gate_certification = np.zeros_like(val_mask)
+    idx = np.flatnonzero(val_mask)
+    f_model, f_sel, _f_cert = fracs
+    for cls in (0, 1):
+        c = idx[y[idx] == cls]
+        c = rng.permutation(c)
+        cut1 = int(round(f_model * len(c)))
+        cut2 = cut1 + int(round(f_sel * len(c)))
+        model_val[c[:cut1]] = True
+        gate_selection[c[cut1:cut2]] = True
+        gate_certification[c[cut2:]] = True
+    parts = (model_val, gate_selection, gate_certification)
+    assert not (parts[0] & parts[1]).any() and not (parts[1] & parts[2]).any() \
+        and not (parts[0] & parts[2]).any()
+    assert (parts[0] | parts[1] | parts[2]).sum() == val_mask.sum()
+    return {"model_val": model_val, "gate_selection": gate_selection,
+           "gate_certification": gate_certification}
+
+
 def split_validation(val_mask, y, seed, cal_frac=0.4):
     """Cut validation into calibration and threshold-selection splits.
 

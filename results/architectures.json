@@ -1,0 +1,2453 @@
+{
+ "config": {
+  "seed": 46,
+  "data": {
+   "source": "mimic",
+   "task": "mortality",
+   "n_patients": 3000,
+   "missing_rate": 0.2,
+   "raw_dir": "/kaggle/input/datasets/akshaybe/updated-mimic-iv",
+   "cache_dir": "/kaggle/working/shared_cache",
+   "obs_window_hours": 24,
+   "min_los_hours": 28,
+   "max_patients": null,
+   "cohort_seed": 42,
+   "force_rebuild": false,
+   "blocks": [
+    "demographics",
+    "comorbidity",
+    "labs",
+    "vitals",
+    "treatment"
+   ],
+   "require_nonempty_blocks": [
+    "vitals"
+   ],
+   "csv_path": "data/raw/cohort.csv"
+  },
+  "graph": {
+   "method": "knn",
+   "k": 15,
+   "similarity": "cosine",
+   "hybrid_beta": 0.5,
+   "threshold": 0.8,
+   "views": [
+    "diagnosis",
+    "labs",
+    "treatment"
+   ]
+  },
+  "model": {
+   "hidden_dim": 64,
+   "max_layers": 4,
+   "epsilon": 0.1,
+   "gamma": 0.1,
+   "exit_every": 1,
+   "dropout": 0.3
+  },
+  "train": {
+   "epochs": 300,
+   "lr": 0.005,
+   "weight_decay": 0.0005,
+   "patience": 50,
+   "exit_weight_scheme": "uniform",
+   "distill_weight": 1.0,
+   "ponder_cost": 0.01,
+   "cost_ratio": 5.0,
+   "focal_gamma": 2.0,
+   "high_risk_halt_penalty": 0.05,
+   "gumbel_tau_start": 5.0,
+   "gumbel_tau_end": 0.5
+  },
+  "eval": {
+   "operating_sensitivity": 0.9,
+   "n_bins_ece": 15,
+   "high_risk_top_frac": 0.1,
+   "safety_alpha": 0.01
+  }
+ },
+ "args": {
+  "config": "configs/default.yaml",
+  "raw_dir": "/kaggle/input/datasets/akshaybe/updated-mimic-iv",
+  "cache_dir": "/kaggle/working/shared_cache",
+  "source": "mimic",
+  "seeds": [
+   42,
+   43,
+   44,
+   45,
+   46
+  ],
+  "alphas": [
+   0.02,
+   0.05
+  ],
+  "beta": 0.5,
+  "gamma": 0.05,
+  "n_blocks": 4,
+  "epochs": 300,
+  "block_beta": 0.5,
+  "ppr_alpha": 0.15,
+  "eps_push": 0.0001,
+  "eps_sweep": [
+   1e-06,
+   0.0001,
+   0.001,
+   0.01,
+   0.03,
+   0.1,
+   0.3
+  ],
+  "lam_smooth": 0.0,
+  "only": null,
+  "device": "cuda",
+  "out": "results/architectures.json"
+ },
+ "runs": [
+  {
+   "seed": 42,
+   "n": 17663,
+   "prevalence": 0.10779595765158806,
+   "n_blocks": 4,
+   "archs": {
+    "1_graph_act": {
+     "arch": "1_graph_act",
+     "train_s": 4.7495362758636475,
+     "best_val_auroc": 0.8827999054052255,
+     "n_params": 39952,
+     "mean_realised_depth": 4.0,
+     "analytical_depth_saved_pct": 0.0,
+     "measured_edge_work_saved_pct": null,
+     "compute_is_measured": false,
+     "full_depth": {
+      "auroc": 0.8820130034507108,
+      "auprc": 0.546068133346753
+     },
+     "stage_auroc": [
+      0.8829947573177719,
+      0.8849407783417936,
+      0.8830796927668305,
+      0.8820130034507108
+     ],
+     "stage_gap_last_minus_first": -0.0009817538670611192,
+     "gates": {
+      "alpha=0.02": {
+       "auroc": 0.8776396605246679,
+       "auprc": 0.5207024868483284,
+       "f1": 0.3418146903504561,
+       "sensitivity": 0.9343832020997376,
+       "specificity": 0.5729695431472082,
+       "ppv": 0.209165687426557,
+       "threshold": 0.06666666666666667,
+       "ece": 0.019059106459302217,
+       "mean_cost_us": 2.2193603170110388,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 44.51599207472403,
+       "mean_stage": 1.2193603170110388,
+       "early_exit_frac": 0.5935465609963204,
+       "released_frac": 0.5114633455986414,
+       "escalated_frac": 0.08208321539767903,
+       "miss_rate_among_released": 0.012728278915329275,
+       "deaths_among_released": 23,
+       "prevalence_among_escalated": 0.6103448275862069,
+       "prevalence_among_retained": 0.12604456824512536,
+       "resolved_before_labs_pct": 59.35465609963204,
+       "exit_frac_stage0": 0.5935465609963204,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.4064534390036796,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.05084745762711865,
+       "low_risk_release_rate": 0.5627555835168292,
+       "high_risk_mean_cost_us": 2.5677966101694913,
+       "low_risk_mean_cost_us": 2.180559924504561,
+       "cost_gap_us": 0.3872366856649303,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.09482775516437003,
+       "low_risk_ece": 0.015021316402364267,
+       "taus_lo": [
+        0.07329842931937172,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.35135135135135137,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 1.2193603170110388,
+       "stage_hist_test": [
+        2097,
+        0,
+        0,
+        1436
+       ]
+      },
+      "alpha=0.05": {
+       "auroc": 0.880174400788734,
+       "auprc": 0.5240167611809433,
+       "f1": 0.33981964878974846,
+       "sensitivity": 0.9396325459317585,
+       "specificity": 0.565989847715736,
+       "ppv": 0.2074159907300116,
+       "threshold": 0.07329842931937172,
+       "ece": 0.016505423946279376,
+       "mean_cost_us": 1.2938013020096235,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 67.65496744975941,
+       "mean_stage": 0.29380130200962357,
+       "early_exit_frac": 0.9020662326634589,
+       "released_frac": 0.8199830172657798,
+       "escalated_frac": 0.08208321539767903,
+       "miss_rate_among_released": 0.040386606834656544,
+       "deaths_among_released": 117,
+       "prevalence_among_escalated": 0.6103448275862069,
+       "prevalence_among_retained": 0.2514450867052023,
+       "resolved_before_labs_pct": 90.20662326634589,
+       "exit_frac_stage0": 0.9020662326634589,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.09793376733654119,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.327683615819209,
+       "low_risk_release_rate": 0.8748033972947468,
+       "high_risk_mean_cost_us": 1.7372881355932204,
+       "low_risk_mean_cost_us": 1.2444164831708084,
+       "cost_gap_us": 0.49287165242241193,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.08194237089694076,
+       "low_risk_ece": 0.013714871542991412,
+       "taus_lo": [
+        0.20967741935483872,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.35135135135135137,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 0.29380130200962357,
+       "stage_hist_test": [
+        3187,
+        0,
+        0,
+        346
+       ]
+      }
+     }
+    },
+    "2_ppr_push": {
+     "eps_sweep": [
+      {
+       "eps_push": 1e-06,
+       "edges_touched": 1776748,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.8861040609137057
+      },
+      {
+       "eps_push": 0.0001,
+       "edges_touched": 1776748,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.8861040609137054
+      },
+      {
+       "eps_push": 0.001,
+       "edges_touched": 1776748,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.8861040609137054
+      },
+      {
+       "eps_push": 0.01,
+       "edges_touched": 1776748,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.8861040609137057
+      },
+      {
+       "eps_push": 0.03,
+       "edges_touched": 1768164,
+       "edge_work_saved_pct": 0.48312985296733446,
+       "mean_exit_round": 3.994621515274048,
+       "rounds_used": 4,
+       "test_auroc": 0.886092403106972
+      },
+      {
+       "eps_push": 0.1,
+       "edges_touched": 1097409,
+       "edge_work_saved_pct": 38.2349663542607,
+       "mean_exit_round": 3.299156427383423,
+       "rounds_used": 4,
+       "test_auroc": 0.8855111781712565
+      },
+      {
+       "eps_push": 0.3,
+       "edges_touched": 142287,
+       "edge_work_saved_pct": 91.99171745233427,
+       "mean_exit_round": 3.2518258094787598,
+       "rounds_used": 4,
+       "test_auroc": 0.8782891668998227
+      }
+     ],
+     "encoder_only_auroc": 0.8764522296388079,
+     "arch": "2_ppr_push",
+     "train_s": 4.915315866470337,
+     "best_val_auroc": 0.8799454081564677,
+     "n_params": 39042,
+     "ledger": {
+      "edges_touched": 1776748,
+      "dense_edges": 1776748,
+      "pushes": 70652,
+      "rounds_used": 4,
+      "mean_exit_round": 4.0,
+      "edge_work_saved_pct": 0.0
+     },
+     "measured_edge_work_saved_pct": 0.0,
+     "compute_is_measured": true,
+     "full_depth": {
+      "auroc": 0.8861040609137054,
+      "auprc": 0.5648452280146766
+     },
+     "stage_auroc": [
+      0.8764522296388079,
+      0.8845119375940951,
+      0.8863713577680963,
+      0.8861040609137054
+     ],
+     "stage_gap_last_minus_first": 0.009651831274897549,
+     "gates": {
+      "alpha=0.02": {
+       "auroc": 0.8819051687384254,
+       "auprc": 0.5287622236921629,
+       "f1": 0.39340534394542354,
+       "sensitivity": 0.9081364829396326,
+       "specificity": 0.6725888324873096,
+       "ppv": 0.251088534107402,
+       "threshold": 0.11721611721611722,
+       "ece": 0.019934804835895888,
+       "mean_cost_us": 2.4078686668553635,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 39.80328332861591,
+       "mean_stage": 1.4078686668553637,
+       "early_exit_frac": 0.5307104443815455,
+       "released_frac": 0.49221624681573733,
+       "escalated_frac": 0.038494197565808096,
+       "miss_rate_among_released": 0.012075905692926969,
+       "deaths_among_released": 21,
+       "prevalence_among_escalated": 0.7058823529411765,
+       "prevalence_among_retained": 0.15922798552472858,
+       "resolved_before_labs_pct": 53.071044438154544,
+       "exit_frac_stage0": 0.5307104443815455,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.4692895556184546,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.07344632768361582,
+       "low_risk_release_rate": 0.5388486945580371,
+       "high_risk_mean_cost_us": 3.1186440677966103,
+       "low_risk_mean_cost_us": 2.328719723183391,
+       "cost_gap_us": 0.7899243446132194,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.04345996038604066,
+       "low_risk_ece": 0.01983453921957871,
+       "taus_lo": [
+        0.056179775280898875,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.4838709677419355,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 1.4078686668553637,
+       "stage_hist_test": [
+        1875,
+        0,
+        0,
+        1658
+       ]
+      },
+      "alpha=0.05": {
+       "auroc": 0.8786110056357169,
+       "auprc": 0.5315332095328297,
+       "f1": 0.35276073619631904,
+       "sensitivity": 0.905511811023622,
+       "specificity": 0.6097715736040609,
+       "ppv": 0.21904761904761905,
+       "threshold": 0.058823529411764705,
+       "ece": 0.02063619340634736,
+       "mean_cost_us": 1.573167279932069,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 60.670818001698265,
+       "mean_stage": 0.5731672799320691,
+       "early_exit_frac": 0.8089442400226436,
+       "released_frac": 0.7704500424568356,
+       "escalated_frac": 0.038494197565808096,
+       "miss_rate_among_released": 0.03526818515797208,
+       "deaths_among_released": 96,
+       "prevalence_among_escalated": 0.7058823529411765,
+       "prevalence_among_retained": 0.28,
+       "resolved_before_labs_pct": 80.89442400226436,
+       "exit_frac_stage0": 0.8089442400226436,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.19105575997735635,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.3531073446327684,
+       "low_risk_release_rate": 0.8169235608681975,
+       "high_risk_mean_cost_us": 2.2796610169491527,
+       "low_risk_mean_cost_us": 1.4944951242529096,
+       "cost_gap_us": 0.785165892696243,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.05815299559229397,
+       "low_risk_ece": 0.019857045242820948,
+       "taus_lo": [
+        0.15853658536585366,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.4838709677419355,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 0.5731672799320691,
+       "stage_hist_test": [
+        2858,
+        0,
+        0,
+        675
+       ]
+      }
+     }
+    },
+    "3_fixed_block": {
+     "arch": "3_fixed_block",
+     "train_s": 3.483496904373169,
+     "best_val_auroc": 0.8825750762753641,
+     "n_params": 52432,
+     "compute_is_measured": true,
+     "full_depth": {
+      "auroc": 0.8829731071052666,
+      "auprc": 0.536600875750517
+     },
+     "stage_auroc": [
+      0.880641545758557,
+      0.8814817405438533,
+      0.8820862810930359,
+      0.8829731071052666
+     ],
+     "stage_gap_last_minus_first": 0.002331561346709532,
+     "gates": {
+      "alpha=0.02": {
+       "auroc": 0.8806731883768335,
+       "auprc": 0.4903338525773128,
+       "f1": 0.36926360725720386,
+       "sensitivity": 0.9081364829396326,
+       "specificity": 0.6361040609137056,
+       "ppv": 0.231748158070998,
+       "threshold": 0.054187192118226604,
+       "ece": 0.01613384583200676,
+       "mean_cost_us": 1.9637701669968866,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 50.90574582507783,
+       "mean_stage": 0.9637701669968864,
+       "early_exit_frac": 0.6787432776677045,
+       "released_frac": 0.5774129634871215,
+       "escalated_frac": 0.10133031418058307,
+       "miss_rate_among_released": 0.01715686274509804,
+       "deaths_among_released": 35,
+       "prevalence_among_escalated": 0.5167597765363129,
+       "prevalence_among_retained": 0.14185022026431718,
+       "resolved_before_labs_pct": 67.87432776677045,
+       "exit_frac_stage0": 0.6787432776677045,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.3212567223322955,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.0847457627118644,
+       "low_risk_release_rate": 0.6322743000943692,
+       "high_risk_mean_cost_us": 2.3135593220338984,
+       "low_risk_mean_cost_us": 1.924819125511167,
+       "cost_gap_us": 0.3887401965227313,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.05812366014159609,
+       "low_risk_ece": 0.013077133949427569,
+       "taus_lo": [
+        0.0975609756097561,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.2857142857142857,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 0.9637701669968864,
+       "stage_hist_test": [
+        2398,
+        0,
+        0,
+        1135
+       ],
+       "measured_edge_work_saved_pct": 53.52593614851402,
+       "measured_node_work_saved_pct": 51.74800430277982,
+       "edges_processed": 825727
+      },
+      "alpha=0.05": {
+       "auroc": 0.8793379531556017,
+       "auprc": 0.4909999302433894,
+       "f1": 0.36926360725720386,
+       "sensitivity": 0.9081364829396326,
+       "specificity": 0.6361040609137056,
+       "ppv": 0.231748158070998,
+       "threshold": 0.0975609756097561,
+       "ece": 0.015409038549769173,
+       "mean_cost_us": 1.2938013020096235,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 67.65496744975941,
+       "mean_stage": 0.29380130200962357,
+       "early_exit_frac": 0.9020662326634589,
+       "released_frac": 0.8007359184828757,
+       "escalated_frac": 0.10133031418058307,
+       "miss_rate_among_released": 0.036408624955814775,
+       "deaths_among_released": 103,
+       "prevalence_among_escalated": 0.5167597765363129,
+       "prevalence_among_retained": 0.26878612716763006,
+       "resolved_before_labs_pct": 90.20662326634589,
+       "exit_frac_stage0": 0.9020662326634589,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.09793376733654119,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.2937853107344633,
+       "low_risk_release_rate": 0.8571877949040578,
+       "high_risk_mean_cost_us": 1.6864406779661016,
+       "low_risk_mean_cost_us": 1.2500786410821012,
+       "cost_gap_us": 0.43636203688400044,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.05881010892077308,
+       "low_risk_ece": 0.012365628735589326,
+       "taus_lo": [
+        0.14583333333333334,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.2857142857142857,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 0.29380130200962357,
+       "stage_hist_test": [
+        3187,
+        0,
+        0,
+        346
+       ],
+       "measured_edge_work_saved_pct": 68.39501156044638,
+       "measured_node_work_saved_pct": 67.6711204212195,
+       "edges_processed": 561541
+      }
+     }
+    }
+   }
+  },
+  {
+   "seed": 43,
+   "n": 17663,
+   "prevalence": 0.10779595765158806,
+   "n_blocks": 4,
+   "archs": {
+    "1_graph_act": {
+     "arch": "1_graph_act",
+     "train_s": 4.545475482940674,
+     "best_val_auroc": 0.8996112954154842,
+     "n_params": 39952,
+     "mean_realised_depth": 4.0,
+     "analytical_depth_saved_pct": 0.0,
+     "measured_edge_work_saved_pct": null,
+     "compute_is_measured": false,
+     "full_depth": {
+      "auroc": 0.8922052573377566,
+      "auprc": 0.5730393750393904
+     },
+     "stage_auroc": [
+      0.8921020024781167,
+      0.8938781526040209,
+      0.8900752095074409,
+      0.8922052573377566
+     ],
+     "stage_gap_last_minus_first": 0.00010325485963991188,
+     "gates": {
+      "alpha=0.02": {
+       "auroc": 0.8900747931572004,
+       "auprc": 0.529455395512991,
+       "f1": 0.383668903803132,
+       "sensitivity": 0.9002624671916011,
+       "specificity": 0.6624365482233503,
+       "ppv": 0.24378109452736318,
+       "threshold": 0.05082790262424428,
+       "ece": 0.016912354639520583,
+       "mean_cost_us": 2.227002547410133,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 44.32493631474668,
+       "mean_stage": 1.227002547410133,
+       "early_exit_frac": 0.590999150863289,
+       "released_frac": 0.5179733937163883,
+       "escalated_frac": 0.07302575714690066,
+       "miss_rate_among_released": 0.012021857923497269,
+       "deaths_among_released": 22,
+       "prevalence_among_escalated": 0.6085271317829457,
+       "prevalence_among_retained": 0.1397923875432526,
+       "resolved_before_labs_pct": 59.099915086328906,
+       "exit_frac_stage0": 0.590999150863289,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.40900084913671103,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.096045197740113,
+       "low_risk_release_rate": 0.5649575338156653,
+       "high_risk_mean_cost_us": 2.593220338983051,
+       "low_risk_mean_cost_us": 2.186222082415854,
+       "cost_gap_us": 0.406998256567197,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.07227317915643561,
+       "low_risk_ece": 0.012774689057078644,
+       "taus_lo": [
+        0.03773584905660377,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.2727272727272727,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 1.227002547410133,
+       "stage_hist_test": [
+        2088,
+        0,
+        0,
+        1445
+       ]
+      },
+      "alpha=0.05": {
+       "auroc": 0.8894177924777169,
+       "auprc": 0.5327895498422448,
+       "f1": 0.34452975047984646,
+       "sensitivity": 0.9422572178477691,
+       "specificity": 0.5736040609137056,
+       "ppv": 0.21080446271285966,
+       "threshold": 0.03773584905660377,
+       "ece": 0.018016203553929577,
+       "mean_cost_us": 1.2683272006793094,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 68.29181998301726,
+       "mean_stage": 0.2683272006793094,
+       "early_exit_frac": 0.9105575997735635,
+       "released_frac": 0.8375318426266629,
+       "escalated_frac": 0.07302575714690066,
+       "miss_rate_among_released": 0.040892193308550186,
+       "deaths_among_released": 121,
+       "prevalence_among_escalated": 0.6085271317829457,
+       "prevalence_among_retained": 0.3259493670886076,
+       "resolved_before_labs_pct": 91.05575997735636,
+       "exit_frac_stage0": 0.9105575997735635,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.08944240022643646,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.3728813559322034,
+       "low_risk_release_rate": 0.889273356401384,
+       "high_risk_mean_cost_us": 1.7627118644067796,
+       "low_risk_mean_cost_us": 1.2132746146586977,
+       "cost_gap_us": 0.549437249748082,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.06900409748178653,
+       "low_risk_ece": 0.014221532539005051,
+       "taus_lo": [
+        0.21739130434782608,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.2727272727272727,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 0.2683272006793094,
+       "stage_hist_test": [
+        3217,
+        0,
+        0,
+        316
+       ]
+      }
+     }
+    },
+    "2_ppr_push": {
+     "eps_sweep": [
+      {
+       "eps_push": 1e-06,
+       "edges_touched": 1775980,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.887310643910628
+      },
+      {
+       "eps_push": 0.0001,
+       "edges_touched": 1775980,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.887310643910628
+      },
+      {
+       "eps_push": 0.001,
+       "edges_touched": 1775980,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.887310643910628
+      },
+      {
+       "eps_push": 0.01,
+       "edges_touched": 1775980,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.887310643910628
+      },
+      {
+       "eps_push": 0.03,
+       "edges_touched": 1702143,
+       "edge_work_saved_pct": 4.157535557832858,
+       "mean_exit_round": 3.9283246994018555,
+       "rounds_used": 4,
+       "test_auroc": 0.886975065616798
+      },
+      {
+       "eps_push": 0.1,
+       "edges_touched": 705200,
+       "edge_work_saved_pct": 60.2923456345229,
+       "mean_exit_round": 2.848440408706665,
+       "rounds_used": 4,
+       "test_auroc": 0.8822028591603714
+      },
+      {
+       "eps_push": 0.3,
+       "edges_touched": 55976,
+       "edge_work_saved_pct": 96.84816270453496,
+       "mean_exit_round": 3.6199400424957275,
+       "rounds_used": 4,
+       "test_auroc": 0.8628567288860466
+      }
+     ],
+     "encoder_only_auroc": 0.8603586274431432,
+     "arch": "2_ppr_push",
+     "train_s": 6.354737043380737,
+     "best_val_auroc": 0.9029129528225216,
+     "n_params": 39042,
+     "ledger": {
+      "edges_touched": 1775980,
+      "dense_edges": 1775980,
+      "pushes": 70652,
+      "rounds_used": 4,
+      "mean_exit_round": 4.0,
+      "edge_work_saved_pct": 0.0
+     },
+     "measured_edge_work_saved_pct": 0.0,
+     "compute_is_measured": true,
+     "full_depth": {
+      "auroc": 0.887310643910628,
+      "auprc": 0.5540210359952923
+     },
+     "stage_auroc": [
+      0.8603586274431432,
+      0.8761091570406493,
+      0.8824102015801324,
+      0.887310643910628
+     ],
+     "stage_gap_last_minus_first": 0.026952016467484796,
+     "gates": {
+      "alpha=0.02": {
+       "auroc": 0.8738342193266451,
+       "auprc": 0.4806361112772584,
+       "f1": 0.27855787476280836,
+       "sensitivity": 0.963254593175853,
+       "specificity": 0.40133248730964466,
+       "ppv": 0.16282165039929014,
+       "threshold": 0.01939655172413793,
+       "ece": 0.022397979352600964,
+       "mean_cost_us": 2.8630059439569773,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 28.424851401075568,
+       "mean_stage": 1.863005943956977,
+       "early_exit_frac": 0.37899801868100763,
+       "released_frac": 0.2977639399943391,
+       "escalated_frac": 0.08123407868666856,
+       "miss_rate_among_released": 0.011406844106463879,
+       "deaths_among_released": 12,
+       "prevalence_among_escalated": 0.5296167247386759,
+       "prevalence_among_retained": 0.09890610756608934,
+       "resolved_before_labs_pct": 37.89980186810077,
+       "exit_frac_stage0": 0.37899801868100763,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.6210019813189923,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.0903954802259887,
+       "low_risk_release_rate": 0.32085561497326204,
+       "high_risk_mean_cost_us": 2.7542372881355934,
+       "low_risk_mean_cost_us": 2.875117961623152,
+       "cost_gap_us": -0.12088067348755871,
+       "safety_ordering_ok": false,
+       "high_risk_ece": 0.10435187127394703,
+       "low_risk_ece": 0.018253230770070215,
+       "taus_lo": [
+        0.014742014742014743,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.4,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 1.863005943956977,
+       "stage_hist_test": [
+        1339,
+        0,
+        0,
+        2194
+       ]
+      },
+      "alpha=0.05": {
+       "auroc": 0.853990550514942,
+       "auprc": 0.4667113067306405,
+       "f1": 0.2578616352201258,
+       "sensitivity": 0.968503937007874,
+       "specificity": 0.3299492385786802,
+       "ppv": 0.1487303506650544,
+       "threshold": 0.014742014742014743,
+       "ece": 0.02399614155224373,
+       "mean_cost_us": 1.404189074440985,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 64.89527313897537,
+       "mean_stage": 0.404189074440985,
+       "early_exit_frac": 0.8652703085196717,
+       "released_frac": 0.7840362298330031,
+       "escalated_frac": 0.08123407868666856,
+       "miss_rate_among_released": 0.04115523465703971,
+       "deaths_among_released": 114,
+       "prevalence_among_escalated": 0.5296167247386759,
+       "prevalence_among_retained": 0.2415966386554622,
+       "resolved_before_labs_pct": 86.52703085196717,
+       "exit_frac_stage0": 0.8652703085196717,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.13472969148032835,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.4011299435028249,
+       "low_risk_release_rate": 0.8266750550487575,
+       "high_risk_mean_cost_us": 1.8220338983050848,
+       "low_risk_mean_cost_us": 1.3576596413966657,
+       "cost_gap_us": 0.46437425690841905,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.12818924664572884,
+       "low_risk_ece": 0.01709009307519128,
+       "taus_lo": [
+        0.13333333333333333,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.4,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 0.404189074440985,
+       "stage_hist_test": [
+        3057,
+        0,
+        0,
+        476
+       ]
+      }
+     }
+    },
+    "3_fixed_block": {
+     "arch": "3_fixed_block",
+     "train_s": 5.134860277175903,
+     "best_val_auroc": 0.896823414205204,
+     "n_params": 52432,
+     "compute_is_measured": true,
+     "full_depth": {
+      "auroc": 0.8872040582490641,
+      "auprc": 0.5704738209928681
+     },
+     "stage_auroc": [
+      0.8903874721878039,
+      0.8875254806347176,
+      0.8886429646801765,
+      0.8872040582490641
+     ],
+     "stage_gap_last_minus_first": -0.0031834139387397764,
+     "gates": {
+      "alpha=0.02": {
+       "auroc": 0.8862689356089373,
+       "auprc": 0.5417290988447099,
+       "f1": 0.3196794300979519,
+       "sensitivity": 0.9422572178477691,
+       "specificity": 0.5222081218274112,
+       "ppv": 0.19249329758713138,
+       "threshold": 0.029940119760479042,
+       "ece": 0.016323249850929266,
+       "mean_cost_us": 2.05972261534107,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 48.50693461647325,
+       "mean_stage": 1.05972261534107,
+       "early_exit_frac": 0.6467591282196433,
+       "released_frac": 0.5459949051797339,
+       "escalated_frac": 0.10076422303990942,
+       "miss_rate_among_released": 0.01503369621565578,
+       "deaths_among_released": 29,
+       "prevalence_among_escalated": 0.5674157303370787,
+       "prevalence_among_retained": 0.1201923076923077,
+       "resolved_before_labs_pct": 64.67591282196433,
+       "exit_frac_stage0": 0.6467591282196433,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.3532408717803566,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.11581920903954802,
+       "low_risk_release_rate": 0.59389745202894,
+       "high_risk_mean_cost_us": 2.2711864406779663,
+       "low_risk_mean_cost_us": 2.0361748977665934,
+       "cost_gap_us": 0.23501154291137283,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.06031632419698993,
+       "low_risk_ece": 0.012768559597514797,
+       "taus_lo": [
+        0.03759398496240601,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.26280380173856055,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 1.05972261534107,
+       "stage_hist_test": [
+        2285,
+        0,
+        0,
+        1248
+       ],
+       "measured_edge_work_saved_pct": 51.20159010799672,
+       "measured_node_work_saved_pct": 49.43809092453151,
+       "edges_processed": 866650
+      },
+      "alpha=0.05": {
+       "auroc": 0.888719989474666,
+       "auprc": 0.5449944245031018,
+       "f1": 0.35465994962216624,
+       "sensitivity": 0.9238845144356955,
+       "specificity": 0.6027918781725888,
+       "ppv": 0.2194513715710723,
+       "threshold": 0.03759398496240601,
+       "ece": 0.01613744747602913,
+       "mean_cost_us": 1.2386074157939428,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 69.03481460515142,
+       "mean_stage": 0.23860741579394282,
+       "early_exit_frac": 0.9204641947353523,
+       "released_frac": 0.819699971695443,
+       "escalated_frac": 0.10076422303990942,
+       "miss_rate_among_released": 0.03763812154696133,
+       "deaths_among_released": 109,
+       "prevalence_among_escalated": 0.5674157303370787,
+       "prevalence_among_retained": 0.2491103202846975,
+       "resolved_before_labs_pct": 92.04641947353524,
+       "exit_frac_stage0": 0.9204641947353523,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.07953580526464761,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.3531073446327684,
+       "low_risk_release_rate": 0.8716577540106952,
+       "high_risk_mean_cost_us": 1.5593220338983051,
+       "low_risk_mean_cost_us": 1.2028939918213275,
+       "cost_gap_us": 0.35642804207697765,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.05977969922653888,
+       "low_risk_ece": 0.012698169634409782,
+       "taus_lo": [
+        0.2577319587628865,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.26280380173856055,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 0.23860741579394282,
+       "stage_hist_test": [
+        3252,
+        0,
+        0,
+        281
+       ],
+       "measured_edge_work_saved_pct": 69.56193200373878,
+       "measured_node_work_saved_pct": 69.08509313253694,
+       "edges_processed": 540574
+      }
+     }
+    }
+   }
+  },
+  {
+   "seed": 44,
+   "n": 17663,
+   "prevalence": 0.10779595765158806,
+   "n_blocks": 4,
+   "archs": {
+    "1_graph_act": {
+     "arch": "1_graph_act",
+     "train_s": 4.62895393371582,
+     "best_val_auroc": 0.8685615598811569,
+     "n_params": 39952,
+     "mean_realised_depth": 4.0,
+     "analytical_depth_saved_pct": 0.0,
+     "measured_edge_work_saved_pct": null,
+     "compute_is_measured": false,
+     "full_depth": {
+      "auroc": 0.8843787055171403,
+      "auprc": 0.5536297541323786
+     },
+     "stage_auroc": [
+      0.8842937700680817,
+      0.8846410061686452,
+      0.8848466831874441,
+      0.8843787055171403
+     ],
+     "stage_gap_last_minus_first": 8.49354490585208e-05,
+     "gates": {
+      "alpha=0.02": {
+       "auroc": 0.8831159152377527,
+       "auprc": 0.499200423270465,
+       "f1": 0.3721424774056353,
+       "sensitivity": 0.9186351706036745,
+       "specificity": 0.6351522842639594,
+       "ppv": 0.23333333333333334,
+       "threshold": 0.06097560975609756,
+       "ece": 0.013638252828707337,
+       "mean_cost_us": 2.6736484574016415,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 33.15878856495896,
+       "mean_stage": 1.6736484574016417,
+       "early_exit_frac": 0.44211718086611945,
+       "released_frac": 0.3560713274837249,
+       "escalated_frac": 0.08604585338239457,
+       "miss_rate_among_released": 0.007154213036565978,
+       "deaths_among_released": 9,
+       "prevalence_among_escalated": 0.5789473684210527,
+       "prevalence_among_retained": 0.09944190766108574,
+       "resolved_before_labs_pct": 44.211718086611945,
+       "exit_frac_stage0": 0.44211718086611945,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.5578828191338806,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.011299435028248588,
+       "low_risk_release_rate": 0.3944636678200692,
+       "high_risk_mean_cost_us": 2.7711864406779663,
+       "low_risk_mean_cost_us": 2.6627870399496696,
+       "cost_gap_us": 0.10839940072829668,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.0563294148650513,
+       "low_risk_ece": 0.014778468234569572,
+       "taus_lo": [
+        0.02,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.26717557251908397,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 1.6736484574016417,
+       "stage_hist_test": [
+        1562,
+        0,
+        0,
+        1971
+       ]
+      },
+      "alpha=0.05": {
+       "auroc": 0.8830438866461489,
+       "auprc": 0.49897047260587296,
+       "f1": 0.35971943887775554,
+       "sensitivity": 0.9422572178477691,
+       "specificity": 0.6015228426395939,
+       "ppv": 0.22229102167182663,
+       "threshold": 0.06111111111111111,
+       "ece": 0.012950392191403898,
+       "mean_cost_us": 1.5604302292669119,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 60.989244268327205,
+       "mean_stage": 0.560430229266912,
+       "early_exit_frac": 0.813189923577696,
+       "released_frac": 0.7271440701953015,
+       "escalated_frac": 0.08604585338239457,
+       "miss_rate_among_released": 0.028026469443363178,
+       "deaths_among_released": 72,
+       "prevalence_among_escalated": 0.5789473684210527,
+       "prevalence_among_retained": 0.2015151515151515,
+       "resolved_before_labs_pct": 81.3189923577696,
+       "exit_frac_stage0": 0.813189923577696,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.186810076422304,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.16666666666666666,
+       "low_risk_release_rate": 0.7895564642969487,
+       "high_risk_mean_cost_us": 2.305084745762712,
+       "low_risk_mean_cost_us": 1.4775086505190311,
+       "cost_gap_us": 0.8275760952436808,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.057469568250827774,
+       "low_risk_ece": 0.013930698219679814,
+       "taus_lo": [
+        0.12844036697247707,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.26717557251908397,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 0.560430229266912,
+       "stage_hist_test": [
+        2873,
+        0,
+        0,
+        660
+       ]
+      }
+     }
+    },
+    "2_ppr_push": {
+     "eps_sweep": [
+      {
+       "eps_push": 1e-06,
+       "edges_touched": 1776436,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.8838091383881582
+      },
+      {
+       "eps_push": 0.0001,
+       "edges_touched": 1776436,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.8838091383881582
+      },
+      {
+       "eps_push": 0.001,
+       "edges_touched": 1776436,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.8838091383881582
+      },
+      {
+       "eps_push": 0.01,
+       "edges_touched": 1776436,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.8838091383881582
+      },
+      {
+       "eps_push": 0.03,
+       "edges_touched": 1753676,
+       "edge_work_saved_pct": 1.281216998529644,
+       "mean_exit_round": 3.9851667881011963,
+       "rounds_used": 4,
+       "test_auroc": 0.8837983132819058
+      },
+      {
+       "eps_push": 0.1,
+       "edges_touched": 827816,
+       "edge_work_saved_pct": 53.40017878493792,
+       "mean_exit_round": 2.985902786254883,
+       "rounds_used": 4,
+       "test_auroc": 0.8811086907283798
+      },
+      {
+       "eps_push": 0.3,
+       "edges_touched": 73576,
+       "edge_work_saved_pct": 95.85822399455989,
+       "mean_exit_round": 3.5218253135681152,
+       "rounds_used": 4,
+       "test_auroc": 0.8657586900622194
+      }
+     ],
+     "encoder_only_auroc": 0.8563158666080445,
+     "arch": "2_ppr_push",
+     "train_s": 8.271822452545166,
+     "best_val_auroc": 0.8782949958031895,
+     "n_params": 39042,
+     "ledger": {
+      "edges_touched": 1776436,
+      "dense_edges": 1776436,
+      "pushes": 70652,
+      "rounds_used": 4,
+      "mean_exit_round": 4.0,
+      "edge_work_saved_pct": 0.0
+     },
+     "measured_edge_work_saved_pct": 0.0,
+     "compute_is_measured": true,
+     "full_depth": {
+      "auroc": 0.8838091383881582,
+      "auprc": 0.5660432686564391
+     },
+     "stage_auroc": [
+      0.8563158666080445,
+      0.8736010631919743,
+      0.8795656967371464,
+      0.8838091383881582
+     ],
+     "stage_gap_last_minus_first": 0.027493271780113737,
+     "gates": {
+      "alpha=0.02": {
+       "auroc": 0.873397884274618,
+       "auprc": 0.4923803311737885,
+       "f1": 0.3859060402684564,
+       "sensitivity": 0.905511811023622,
+       "specificity": 0.6630710659898477,
+       "ppv": 0.24520255863539445,
+       "threshold": 0.0761904761904762,
+       "ece": 0.012498785104044514,
+       "mean_cost_us": 3.0617039343334276,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 23.457401641664312,
+       "mean_stage": 2.0617039343334276,
+       "early_exit_frac": 0.3127653552221908,
+       "released_frac": 0.24030568921596376,
+       "escalated_frac": 0.072459666006227,
+       "miss_rate_among_released": 0.008244994110718492,
+       "deaths_among_released": 7,
+       "prevalence_among_escalated": 0.578125,
+       "prevalence_among_retained": 0.09308072487644152,
+       "resolved_before_labs_pct": 31.276535522219078,
+       "exit_frac_stage0": 0.3127653552221908,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.6872346447778093,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.031073446327683617,
+       "low_risk_release_rate": 0.26360490720352314,
+       "high_risk_mean_cost_us": 2.9915254237288136,
+       "low_risk_mean_cost_us": 3.06951871657754,
+       "cost_gap_us": -0.07799329284872636,
+       "safety_ordering_ok": false,
+       "high_risk_ece": 0.08081100090932741,
+       "low_risk_ece": 0.010230432592790169,
+       "taus_lo": [
+        0.032418952618453865,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.28662420382165604,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 2.0617039343334276,
+       "stage_hist_test": [
+        1105,
+        0,
+        0,
+        2428
+       ]
+      },
+      "alpha=0.05": {
+       "auroc": 0.8587207055970795,
+       "auprc": 0.47873173655322915,
+       "f1": 0.37568455640744797,
+       "sensitivity": 0.9002624671916011,
+       "specificity": 0.6503807106598984,
+       "ppv": 0.23737024221453287,
+       "threshold": 0.04444444444444437,
+       "ece": 0.013972484840100188,
+       "mean_cost_us": 1.5723181432210587,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 60.692046419473535,
+       "mean_stage": 0.5723181432210586,
+       "early_exit_frac": 0.8092272855929805,
+       "released_frac": 0.7367676195867535,
+       "escalated_frac": 0.072459666006227,
+       "miss_rate_among_released": 0.041874759892431807,
+       "deaths_among_released": 109,
+       "prevalence_among_escalated": 0.578125,
+       "prevalence_among_retained": 0.18397626112759644,
+       "resolved_before_labs_pct": 80.92272855929805,
+       "exit_frac_stage0": 0.8092272855929805,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.19077271440701954,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.3220338983050847,
+       "low_risk_release_rate": 0.7829506134004404,
+       "high_risk_mean_cost_us": 2.1186440677966103,
+       "low_risk_mean_cost_us": 1.5114815979867884,
+       "cost_gap_us": 0.6071624698098219,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.1006147945846309,
+       "low_risk_ece": 0.009688719322750507,
+       "taus_lo": [
+        0.125,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.28662420382165604,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 0.5723181432210586,
+       "stage_hist_test": [
+        2859,
+        0,
+        0,
+        674
+       ]
+      }
+     }
+    },
+    "3_fixed_block": {
+     "arch": "3_fixed_block",
+     "train_s": 3.4822216033935547,
+     "best_val_auroc": 0.8719306660271527,
+     "n_params": 52432,
+     "compute_is_measured": true,
+     "full_depth": {
+      "auroc": 0.8801652410834433,
+      "auprc": 0.5410389156220381
+     },
+     "stage_auroc": [
+      0.8760900049295868,
+      0.8780876533834285,
+      0.877996056330522,
+      0.8801652410834433
+     ],
+     "stage_gap_last_minus_first": 0.004075236153856521,
+     "gates": {
+      "alpha=0.02": {
+       "auroc": 0.8779144516833873,
+       "auprc": 0.510188559112203,
+       "f1": 0.3684210526315789,
+       "sensitivity": 0.9186351706036745,
+       "specificity": 0.6291243654822335,
+       "ppv": 0.2304147465437788,
+       "threshold": 0.07633587786259542,
+       "ece": 0.014108365394925824,
+       "mean_cost_us": 2.4273988112086045,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 39.31502971978489,
+       "mean_stage": 1.4273988112086047,
+       "early_exit_frac": 0.5242003962637984,
+       "released_frac": 0.44324936314746677,
+       "escalated_frac": 0.08095103311633173,
+       "miss_rate_among_released": 0.009578544061302681,
+       "deaths_among_released": 15,
+       "prevalence_among_escalated": 0.5874125874125874,
+       "prevalence_among_retained": 0.11778703152885188,
+       "resolved_before_labs_pct": 52.42003962637985,
+       "exit_frac_stage0": 0.5242003962637984,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.4757996037362015,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.031073446327683617,
+       "low_risk_release_rate": 0.48914753067002203,
+       "high_risk_mean_cost_us": 2.5677966101694913,
+       "low_risk_mean_cost_us": 2.411764705882353,
+       "cost_gap_us": 0.15603190428713853,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.06437062911490743,
+       "low_risk_ece": 0.011409030030476533,
+       "taus_lo": [
+        0.027777777777777776,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.3103448275862069,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 1.4273988112086047,
+       "stage_hist_test": [
+        1852,
+        0,
+        0,
+        1681
+       ],
+       "measured_edge_work_saved_pct": 42.39905068350337,
+       "measured_node_work_saved_pct": 39.78231331030969,
+       "edges_processed": 1023244
+      },
+      "alpha=0.05": {
+       "auroc": 0.8765063551700708,
+       "auprc": 0.510554911500871,
+       "f1": 0.3672612801678909,
+       "sensitivity": 0.9186351706036745,
+       "specificity": 0.6272208121827412,
+       "ppv": 0.22950819672131148,
+       "threshold": 0.0784313725490196,
+       "ece": 0.01012828222695276,
+       "mean_cost_us": 1.3982451174639117,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 65.0438720634022,
+       "mean_stage": 0.39824511746391167,
+       "early_exit_frac": 0.8672516275120294,
+       "released_frac": 0.7863005943956977,
+       "escalated_frac": 0.08095103311633173,
+       "miss_rate_among_released": 0.03779697624190065,
+       "deaths_among_released": 105,
+       "prevalence_among_escalated": 0.5874125874125874,
+       "prevalence_among_retained": 0.2302771855010661,
+       "resolved_before_labs_pct": 86.72516275120294,
+       "exit_frac_stage0": 0.8672516275120294,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.13274837248797056,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.2288135593220339,
+       "low_risk_release_rate": 0.8483799937087134,
+       "high_risk_mean_cost_us": 1.9745762711864407,
+       "low_risk_mean_cost_us": 1.3340673167662787,
+       "cost_gap_us": 0.6405089544201621,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.06520575879656967,
+       "low_risk_ece": 0.0094485402571312,
+       "taus_lo": [
+        0.2,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.3103448275862069,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 0.39824511746391167,
+       "stage_hist_test": [
+        3064,
+        0,
+        0,
+        469
+       ],
+       "measured_edge_work_saved_pct": 65.69721622394502,
+       "measured_node_work_saved_pct": 64.7667440412161,
+       "edges_processed": 609367
+      }
+     }
+    }
+   }
+  },
+  {
+   "seed": 45,
+   "n": 17663,
+   "prevalence": 0.10779595765158806,
+   "n_blocks": 4,
+   "archs": {
+    "1_graph_act": {
+     "arch": "1_graph_act",
+     "train_s": 5.844404935836792,
+     "best_val_auroc": 0.8960864742795476,
+     "n_params": 39952,
+     "mean_realised_depth": 4.0,
+     "analytical_depth_saved_pct": 0.0,
+     "measured_edge_work_saved_pct": null,
+     "compute_is_measured": false,
+     "full_depth": {
+      "auroc": 0.8954011617837111,
+      "auprc": 0.6241500573814769
+     },
+     "stage_auroc": [
+      0.8969266690648441,
+      0.8935850420347201,
+      0.8953012377259949,
+      0.8954011617837111
+     ],
+     "stage_gap_last_minus_first": -0.0015255072811329873,
+     "gates": {
+      "alpha=0.02": {
+       "auroc": 0.8920224795821843,
+       "auprc": 0.5722719872020234,
+       "f1": 0.3557312252964427,
+       "sensitivity": 0.9448818897637795,
+       "specificity": 0.5929568527918782,
+       "ppv": 0.21911138161898966,
+       "threshold": 0.059113300492610835,
+       "ece": 0.02473003060305882,
+       "mean_cost_us": 2.18624398528163,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 45.34390036795924,
+       "mean_stage": 1.1862439852816304,
+       "early_exit_frac": 0.6045853382394566,
+       "released_frac": 0.5094820266062836,
+       "escalated_frac": 0.09510331163317294,
+       "miss_rate_among_released": 0.009444444444444445,
+       "deaths_among_released": 17,
+       "prevalence_among_escalated": 0.6011904761904762,
+       "prevalence_among_retained": 0.11596277738010022,
+       "resolved_before_labs_pct": 60.45853382394566,
+       "exit_frac_stage0": 0.6045853382394566,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.39541466176054346,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.0480225988700565,
+       "low_risk_release_rate": 0.5608681975463983,
+       "high_risk_mean_cost_us": 2.5254237288135593,
+       "low_risk_mean_cost_us": 2.148474363007235,
+       "cost_gap_us": 0.3769493658063241,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.0764131673078425,
+       "low_risk_ece": 0.022171481732020125,
+       "taus_lo": [
+        0.05063291139240506,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.30303030303030304,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 1.1862439852816304,
+       "stage_hist_test": [
+        2136,
+        0,
+        0,
+        1397
+       ]
+      },
+      "alpha=0.05": {
+       "auroc": 0.8933368972913918,
+       "auprc": 0.5763783627111597,
+       "f1": 0.3684483653347172,
+       "sensitivity": 0.931758530183727,
+       "specificity": 0.6221446700507615,
+       "ppv": 0.2296248382923674,
+       "threshold": 0.05442176870748299,
+       "ece": 0.021897390473324292,
+       "mean_cost_us": 1.2954995754316445,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 67.61251061420889,
+       "mean_stage": 0.2954995754316445,
+       "early_exit_frac": 0.9015001415227851,
+       "released_frac": 0.8063968298896123,
+       "escalated_frac": 0.09510331163317294,
+       "miss_rate_among_released": 0.033345033345033345,
+       "deaths_among_released": 95,
+       "prevalence_among_escalated": 0.6011904761904762,
+       "prevalence_among_retained": 0.2413793103448276,
+       "resolved_before_labs_pct": 90.15001415227852,
+       "exit_frac_stage0": 0.9015001415227851,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.09849985847721483,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.2994350282485876,
+       "low_risk_release_rate": 0.8628499528153507,
+       "high_risk_mean_cost_us": 1.771186440677966,
+       "low_risk_mean_cost_us": 1.2425290972003775,
+       "cost_gap_us": 0.5286573434775885,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.0723682829543551,
+       "low_risk_ece": 0.019473135832401303,
+       "taus_lo": [
+        0.28378378378378377,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.30303030303030304,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 0.2954995754316445,
+       "stage_hist_test": [
+        3185,
+        0,
+        0,
+        348
+       ]
+      }
+     }
+    },
+    "2_ppr_push": {
+     "eps_sweep": [
+      {
+       "eps_push": 1e-06,
+       "edges_touched": 1776508,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.8907122253753814
+      },
+      {
+       "eps_push": 0.0001,
+       "edges_touched": 1776508,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.8907122253753814
+      },
+      {
+       "eps_push": 0.001,
+       "edges_touched": 1776508,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.8907122253753814
+      },
+      {
+       "eps_push": 0.01,
+       "edges_touched": 1776508,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.8907122253753814
+      },
+      {
+       "eps_push": 0.03,
+       "edges_touched": 1768368,
+       "edge_work_saved_pct": 0.45820227097204125,
+       "mean_exit_round": 3.994621515274048,
+       "rounds_used": 4,
+       "test_auroc": 0.8907188869792292
+      },
+      {
+       "eps_push": 0.1,
+       "edges_touched": 1104161,
+       "edge_work_saved_pct": 37.8465506488009,
+       "mean_exit_round": 3.3090076446533203,
+       "rounds_used": 4,
+       "test_auroc": 0.8890959537418228
+      },
+      {
+       "eps_push": 0.3,
+       "edges_touched": 136671,
+       "edge_work_saved_pct": 92.30676135429731,
+       "mean_exit_round": 3.267282009124756,
+       "rounds_used": 4,
+       "test_auroc": 0.8766678990633784
+      }
+     ],
+     "encoder_only_auroc": 0.865202446140933,
+     "arch": "2_ppr_push",
+     "train_s": 6.796350717544556,
+     "best_val_auroc": 0.8903158599464407,
+     "n_params": 39042,
+     "ledger": {
+      "edges_touched": 1776508,
+      "dense_edges": 1776508,
+      "pushes": 70652,
+      "rounds_used": 4,
+      "mean_exit_round": 4.0,
+      "edge_work_saved_pct": 0.0
+     },
+     "measured_edge_work_saved_pct": 0.0,
+     "compute_is_measured": true,
+     "full_depth": {
+      "auroc": 0.8907122253753814,
+      "auprc": 0.6023845718653645
+     },
+     "stage_auroc": [
+      0.865202446140933,
+      0.8809646335451724,
+      0.8867011071585594,
+      0.8907122253753814
+     ],
+     "stage_gap_last_minus_first": 0.025509779234448415,
+     "gates": {
+      "alpha=0.02": {
+       "auroc": 0.876408512863557,
+       "auprc": 0.5041519403430573,
+       "f1": 0.3531202435312024,
+       "sensitivity": 0.9133858267716536,
+       "specificity": 0.6059644670050761,
+       "ppv": 0.2188679245283019,
+       "threshold": 0.04,
+       "ece": 0.017256575846198434,
+       "mean_cost_us": 2.3119162185111803,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 42.20209453722049,
+       "mean_stage": 1.3119162185111803,
+       "early_exit_frac": 0.5626945938296065,
+       "released_frac": 0.4973110670818002,
+       "escalated_frac": 0.0653835267478064,
+       "miss_rate_among_released": 0.016505406943653957,
+       "deaths_among_released": 29,
+       "prevalence_among_escalated": 0.6277056277056277,
+       "prevalence_among_retained": 0.13398058252427184,
+       "resolved_before_labs_pct": 56.269459382960655,
+       "exit_frac_stage0": 0.5626945938296065,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.43730540617039343,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.10451977401129943,
+       "low_risk_release_rate": 0.5410506448568733,
+       "high_risk_mean_cost_us": 2.889830508474576,
+       "low_risk_mean_cost_us": 2.24756212645486,
+       "cost_gap_us": 0.6422683820197159,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.09959577057463301,
+       "low_risk_ece": 0.01642108272117041,
+       "taus_lo": [
+        0.04040404040404041,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.3442622950819672,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 1.3119162185111803,
+       "stage_hist_test": [
+        1988,
+        0,
+        0,
+        1545
+       ]
+      },
+      "alpha=0.05": {
+       "auroc": 0.8706637122453602,
+       "auprc": 0.5005730187794142,
+       "f1": 0.32973226867073746,
+       "sensitivity": 0.9212598425196851,
+       "specificity": 0.5567893401015228,
+       "ppv": 0.20080091533180777,
+       "threshold": 0.04040404040404041,
+       "ece": 0.01564333314902028,
+       "mean_cost_us": 1.650438720634022,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 58.73903198414945,
+       "mean_stage": 0.6504387206340221,
+       "early_exit_frac": 0.7831870931219926,
+       "released_frac": 0.7178035663741863,
+       "escalated_frac": 0.0653835267478064,
+       "miss_rate_among_released": 0.031545741324921134,
+       "deaths_among_released": 80,
+       "prevalence_among_escalated": 0.6277056277056277,
+       "prevalence_among_retained": 0.20365535248041775,
+       "resolved_before_labs_pct": 78.31870931219926,
+       "exit_frac_stage0": 0.7831870931219926,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.21681290687800736,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.288135593220339,
+       "low_risk_release_rate": 0.7656495753381567,
+       "high_risk_mean_cost_us": 2.3389830508474576,
+       "low_risk_mean_cost_us": 1.5737653350110097,
+       "cost_gap_us": 0.7652177158364479,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.10629165454914141,
+       "low_risk_ece": 0.013576977531930287,
+       "taus_lo": [
+        0.1686746987951807,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.3442622950819672,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 0.6504387206340221,
+       "stage_hist_test": [
+        2767,
+        0,
+        0,
+        766
+       ]
+      }
+     }
+    },
+    "3_fixed_block": {
+     "arch": "3_fixed_block",
+     "train_s": 4.9697182178497314,
+     "best_val_auroc": 0.8964137255685678,
+     "n_params": 52432,
+     "compute_is_measured": true,
+     "full_depth": {
+      "auroc": 0.8925808052546731,
+      "auprc": 0.6244835689060966
+     },
+     "stage_auroc": [
+      0.8924758849940709,
+      0.8924121834072772,
+      0.8911493931278895,
+      0.8925808052546731
+     ],
+     "stage_gap_last_minus_first": 0.00010492026060215931,
+     "gates": {
+      "alpha=0.02": {
+       "auroc": 0.8916481807159893,
+       "auprc": 0.5737503372029098,
+       "f1": 0.3804288070368334,
+       "sensitivity": 0.9081364829396326,
+       "specificity": 0.6535532994923858,
+       "ppv": 0.24061196105702365,
+       "threshold": 0.043478260869565216,
+       "ece": 0.0196627897449638,
+       "mean_cost_us": 2.098782904047552,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 47.530427398811206,
+       "mean_stage": 1.0987829040475516,
+       "early_exit_frac": 0.6337390319841495,
+       "released_frac": 0.529861307670535,
+       "escalated_frac": 0.10387772431361449,
+       "miss_rate_among_released": 0.01282051282051282,
+       "deaths_among_released": 24,
+       "prevalence_among_escalated": 0.5831062670299727,
+       "prevalence_among_retained": 0.11051004636785162,
+       "resolved_before_labs_pct": 63.37390319841495,
+       "exit_frac_stage0": 0.6337390319841495,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.36626096801585056,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.05649717514124294,
+       "low_risk_release_rate": 0.5825731362063542,
+       "high_risk_mean_cost_us": 2.4152542372881354,
+       "low_risk_mean_cost_us": 2.063541994337842,
+       "cost_gap_us": 0.35171224295029324,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.06516683936518675,
+       "low_risk_ece": 0.017273318807020797,
+       "taus_lo": [
+        0.04040404040404041,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.26666666666666666,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 1.0987829040475516,
+       "stage_hist_test": [
+        2239,
+        0,
+        0,
+        1294
+       ],
+       "measured_edge_work_saved_pct": 49.61722660410198,
+       "measured_node_work_saved_pct": 47.48060918303799,
+       "edges_processed": 895054
+      },
+      "alpha=0.05": {
+       "auroc": 0.891667749177292,
+       "auprc": 0.573774052823295,
+       "f1": 0.385038503850385,
+       "sensitivity": 0.9186351706036745,
+       "specificity": 0.6551395939086294,
+       "ppv": 0.24356297842727906,
+       "threshold": 0.06521739130434782,
+       "ece": 0.016223463493716353,
+       "mean_cost_us": 1.2700254741013304,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 68.24936314746675,
+       "mean_stage": 0.2700254741013303,
+       "early_exit_frac": 0.9099915086328899,
+       "released_frac": 0.8061137843192754,
+       "escalated_frac": 0.10387772431361449,
+       "miss_rate_among_released": 0.03616573033707865,
+       "deaths_among_released": 103,
+       "prevalence_among_escalated": 0.5831062670299727,
+       "prevalence_among_retained": 0.20125786163522014,
+       "resolved_before_labs_pct": 90.99915086328899,
+       "exit_frac_stage0": 0.9099915086328899,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.0900084913671101,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.2966101694915254,
+       "low_risk_release_rate": 0.8628499528153507,
+       "high_risk_mean_cost_us": 1.694915254237288,
+       "low_risk_mean_cost_us": 1.2227115445108525,
+       "cost_gap_us": 0.47220370972643555,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.06127989869589857,
+       "low_risk_ece": 0.012816135174580658,
+       "taus_lo": [
+        0.25663716814159293,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.26666666666666666,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 0.2700254741013303,
+       "stage_hist_test": [
+        3215,
+        0,
+        0,
+        318
+       ],
+       "measured_edge_work_saved_pct": 69.23104202176404,
+       "measured_node_work_saved_pct": 68.66472286701013,
+       "edges_processed": 546613
+      }
+     }
+    }
+   }
+  },
+  {
+   "seed": 46,
+   "n": 17663,
+   "prevalence": 0.10779595765158806,
+   "n_blocks": 4,
+   "archs": {
+    "1_graph_act": {
+     "arch": "1_graph_act",
+     "train_s": 5.307900428771973,
+     "best_val_auroc": 0.8843562226041541,
+     "n_params": 39952,
+     "mean_realised_depth": 4.0,
+     "analytical_depth_saved_pct": 0.0,
+     "measured_edge_work_saved_pct": null,
+     "compute_is_measured": false,
+     "full_depth": {
+      "auroc": 0.8893732430019853,
+      "auprc": 0.5655236721729148
+     },
+     "stage_auroc": [
+      0.8897796008366976,
+      0.8899911067588634,
+      0.8893449311856322,
+      0.8893732430019853
+     ],
+     "stage_gap_last_minus_first": -0.0004063578347123231,
+     "gates": {
+      "alpha=0.02": {
+       "auroc": 0.8872956553019704,
+       "auprc": 0.539345344392297,
+       "f1": 0.36905384213277576,
+       "sensitivity": 0.926509186351706,
+       "specificity": 0.6259517766497462,
+       "ppv": 0.2304177545691906,
+       "threshold": 0.06829268292682927,
+       "ece": 0.014273179842913406,
+       "mean_cost_us": 2.9784885366544014,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 25.537786583639964,
+       "mean_stage": 1.9784885366544014,
+       "early_exit_frac": 0.34050382111519956,
+       "released_frac": 0.2674780639682989,
+       "escalated_frac": 0.07302575714690066,
+       "miss_rate_among_released": 0.004232804232804233,
+       "deaths_among_released": 4,
+       "prevalence_among_escalated": 0.6162790697674418,
+       "prevalence_among_retained": 0.09356223175965665,
+       "resolved_before_labs_pct": 34.05038211151996,
+       "exit_frac_stage0": 0.34050382111519956,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.6594961788848005,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.005649717514124294,
+       "low_risk_release_rate": 0.2966341616860648,
+       "high_risk_mean_cost_us": 2.8559322033898304,
+       "low_risk_mean_cost_us": 2.992135891789871,
+       "cost_gap_us": -0.1362036884000406,
+       "safety_ordering_ok": false,
+       "high_risk_ece": 0.045797195777624734,
+       "low_risk_ece": 0.01558018555447074,
+       "taus_lo": [
+        0.01060070671378092,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.2982456140350877,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 1.9784885366544014,
+       "stage_hist_test": [
+        1203,
+        0,
+        0,
+        2330
+       ]
+      },
+      "alpha=0.05": {
+       "auroc": 0.8868959590711059,
+       "auprc": 0.5390309782181157,
+       "f1": 0.36448115642746515,
+       "sensitivity": 0.926509186351706,
+       "specificity": 0.6183375634517766,
+       "ppv": 0.2268637532133676,
+       "threshold": 0.0660377358490566,
+       "ece": 0.013469671728765942,
+       "mean_cost_us": 1.399094254174922,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 65.02264364562696,
+       "mean_stage": 0.39909425417492217,
+       "early_exit_frac": 0.8669685819416926,
+       "released_frac": 0.793942824794792,
+       "escalated_frac": 0.07302575714690066,
+       "miss_rate_among_released": 0.036720142602495544,
+       "deaths_among_released": 103,
+       "prevalence_among_escalated": 0.6162790697674418,
+       "prevalence_among_retained": 0.2531914893617021,
+       "resolved_before_labs_pct": 86.69685819416925,
+       "exit_frac_stage0": 0.8669685819416926,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.1330314180583074,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.288135593220339,
+       "low_risk_release_rate": 0.8502673796791443,
+       "high_risk_mean_cost_us": 2.0084745762711864,
+       "low_risk_mean_cost_us": 1.3312362378106324,
+       "cost_gap_us": 0.677238338460554,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.04825589993499911,
+       "low_risk_ece": 0.013244194338177884,
+       "taus_lo": [
+        0.21804511278195488,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.2982456140350877,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 0.39909425417492217,
+       "stage_hist_test": [
+        3063,
+        0,
+        0,
+        470
+       ]
+      }
+     }
+    },
+    "2_ppr_push": {
+     "eps_sweep": [
+      {
+       "eps_push": 1e-06,
+       "edges_touched": 1776772,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.8847896432044979
+      },
+      {
+       "eps_push": 0.0001,
+       "edges_touched": 1776772,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.8847896432044979
+      },
+      {
+       "eps_push": 0.001,
+       "edges_touched": 1776772,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.8847896432044979
+      },
+      {
+       "eps_push": 0.01,
+       "edges_touched": 1776772,
+       "edge_work_saved_pct": 0.0,
+       "mean_exit_round": 4.0,
+       "rounds_used": 4,
+       "test_auroc": 0.8847896432044979
+      },
+      {
+       "eps_push": 0.03,
+       "edges_touched": 1760371,
+       "edge_work_saved_pct": 0.9230784816509963,
+       "mean_exit_round": 3.989413022994995,
+       "rounds_used": 4,
+       "test_auroc": 0.8847967211585861
+      },
+      {
+       "eps_push": 0.1,
+       "edges_touched": 968788,
+       "edge_work_saved_pct": 45.47482738359226,
+       "mean_exit_round": 3.1670725345611572,
+       "rounds_used": 4,
+       "test_auroc": 0.8836342712871551
+      },
+      {
+       "eps_push": 0.3,
+       "edges_touched": 108882,
+       "edge_work_saved_pct": 93.87192053904496,
+       "mean_exit_round": 3.4066693782806396,
+       "rounds_used": 4,
+       "test_auroc": 0.875155714989941
+      }
+     ],
+     "encoder_only_auroc": 0.8706508053879052,
+     "arch": "2_ppr_push",
+     "train_s": 7.3935956954956055,
+     "best_val_auroc": 0.885576961509253,
+     "n_params": 39042,
+     "ledger": {
+      "edges_touched": 1776772,
+      "dense_edges": 1776772,
+      "pushes": 70652,
+      "rounds_used": 4,
+      "mean_exit_round": 4.0,
+      "edge_work_saved_pct": 0.0
+     },
+     "measured_edge_work_saved_pct": 0.0,
+     "compute_is_measured": true,
+     "full_depth": {
+      "auroc": 0.8847892268542574,
+      "auprc": 0.5637518686015895
+     },
+     "stage_auroc": [
+      0.8706508053879052,
+      0.8807547930239684,
+      0.8834435828770133,
+      0.8847892268542574
+     ],
+     "stage_gap_last_minus_first": 0.014138421466352247,
+     "gates": {
+      "alpha=0.02": {
+       "auroc": 0.8815733375967598,
+       "auprc": 0.5099530694754278,
+       "f1": 0.3622603430877901,
+       "sensitivity": 0.9422572178477691,
+       "specificity": 0.6059644670050761,
+       "ppv": 0.22423485321673953,
+       "threshold": 0.043478260869565216,
+       "ece": 0.012420781254715216,
+       "mean_cost_us": 3.1805830738748937,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 20.48542315312766,
+       "mean_stage": 2.1805830738748937,
+       "early_exit_frac": 0.2731389753750354,
+       "released_frac": 0.20832153976790263,
+       "escalated_frac": 0.06481743560713275,
+       "miss_rate_among_released": 0.004076086956521739,
+       "deaths_among_released": 3,
+       "prevalence_among_escalated": 0.5720524017467249,
+       "prevalence_among_retained": 0.09618380062305296,
+       "resolved_before_labs_pct": 27.31389753750354,
+       "exit_frac_stage0": 0.2731389753750354,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.7268610246249646,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.00847457627118644,
+       "low_risk_release_rate": 0.23057565272098143,
+       "high_risk_mean_cost_us": 3.194915254237288,
+       "low_risk_mean_cost_us": 3.1789871028625356,
+       "cost_gap_us": 0.015928151374752453,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.06786066783919756,
+       "low_risk_ece": 0.014306790263240473,
+       "taus_lo": [
+        0.010309278350515464,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.2857142857142857,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 2.1805830738748937,
+       "stage_hist_test": [
+        965,
+        0,
+        0,
+        2568
+       ]
+      },
+      "alpha=0.05": {
+       "auroc": 0.8744483359313588,
+       "auprc": 0.5101622398575717,
+       "f1": 0.36315510852302807,
+       "sensitivity": 0.9002624671916011,
+       "specificity": 0.6303934010152284,
+       "ppv": 0.22745358090185677,
+       "threshold": 0.058823529411764594,
+       "ece": 0.013506495463732015,
+       "mean_cost_us": 1.5086328898952732,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 62.28417775261816,
+       "mean_stage": 0.5086328898952731,
+       "early_exit_frac": 0.8304557033682423,
+       "released_frac": 0.7656382677611095,
+       "escalated_frac": 0.06481743560713275,
+       "miss_rate_among_released": 0.03622920517560074,
+       "deaths_among_released": 98,
+       "prevalence_among_escalated": 0.5720524017467249,
+       "prevalence_among_retained": 0.25375626043405675,
+       "resolved_before_labs_pct": 83.04557033682423,
+       "exit_frac_stage0": 0.8304557033682423,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.1695442966317577,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.3615819209039548,
+       "low_risk_release_rate": 0.8106322743000943,
+       "high_risk_mean_cost_us": 2.135593220338983,
+       "low_risk_mean_cost_us": 1.4388172381251967,
+       "cost_gap_us": 0.6967759822137864,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.0785912454894369,
+       "low_risk_ece": 0.013643875583320668,
+       "taus_lo": [
+        0.20588235294117646,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.2857142857142857,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 0.5086328898952731,
+       "stage_hist_test": [
+        2934,
+        0,
+        0,
+        599
+       ]
+      }
+     }
+    },
+    "3_fixed_block": {
+     "arch": "3_fixed_block",
+     "train_s": 5.228579998016357,
+     "best_val_auroc": 0.8839140586487603,
+     "n_params": 52432,
+     "compute_is_measured": true,
+     "full_depth": {
+      "auroc": 0.8885397098205364,
+      "auprc": 0.5691330635839722
+     },
+     "stage_auroc": [
+      0.8874755186058595,
+      0.8885863410474706,
+      0.8889369079499579,
+      0.8885397098205364
+     ],
+     "stage_gap_last_minus_first": 0.001064191214676935,
+     "gates": {
+      "alpha=0.02": {
+       "auroc": 0.8847238598665015,
+       "auprc": 0.5274651761109629,
+       "f1": 0.383454443823365,
+       "sensitivity": 0.9002624671916011,
+       "specificity": 0.6621192893401016,
+       "ppv": 0.24360795454545456,
+       "threshold": 0.06451612903225802,
+       "ece": 0.00973134182747303,
+       "mean_cost_us": 2.9937729974525897,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 25.15567506368526,
+       "mean_stage": 1.99377299745259,
+       "early_exit_frac": 0.3354090008491367,
+       "released_frac": 0.25898669685819414,
+       "escalated_frac": 0.07642230399094255,
+       "miss_rate_among_released": 0.006557377049180328,
+       "deaths_among_released": 6,
+       "prevalence_among_escalated": 0.5777777777777777,
+       "prevalence_among_retained": 0.09327086882453152,
+       "resolved_before_labs_pct": 33.54090008491367,
+       "exit_frac_stage0": 0.3354090008491367,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.6645909991508633,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.01977401129943503,
+       "low_risk_release_rate": 0.2856244101918842,
+       "high_risk_mean_cost_us": 2.7457627118644066,
+       "low_risk_mean_cost_us": 3.021390374331551,
+       "cost_gap_us": -0.2756276624671443,
+       "safety_ordering_ok": false,
+       "high_risk_ece": 0.05572644426759722,
+       "low_risk_ece": 0.006951797679691591,
+       "taus_lo": [
+        0.011111111111111112,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.3333333333333333,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 1.99377299745259,
+       "stage_hist_test": [
+        1185,
+        0,
+        0,
+        2348
+       ],
+       "measured_edge_work_saved_pct": 27.201858201277375,
+       "measured_node_work_saved_pct": 25.451508803713974,
+       "edges_processed": 1293457
+      },
+      "alpha=0.05": {
+       "auroc": 0.8830080805254674,
+       "auprc": 0.5269198691027929,
+       "f1": 0.34321223709369025,
+       "sensitivity": 0.9422572178477691,
+       "specificity": 0.5710659898477157,
+       "ppv": 0.20981881940385738,
+       "threshold": 0.04375,
+       "ece": 0.00963304277996341,
+       "mean_cost_us": 1.4593829606566657,
+       "full_cost_us": 4.0,
+       "compute_saved_pct": 63.51542598358335,
+       "mean_stage": 0.45938296065666573,
+       "early_exit_frac": 0.8468723464477781,
+       "released_frac": 0.7704500424568356,
+       "escalated_frac": 0.07642230399094255,
+       "miss_rate_among_released": 0.03085966201322557,
+       "deaths_among_released": 84,
+       "prevalence_among_escalated": 0.5777777777777777,
+       "prevalence_among_retained": 0.26062846580406657,
+       "resolved_before_labs_pct": 84.6872346447778,
+       "exit_frac_stage0": 0.8468723464477781,
+       "exit_frac_stage1": 0.0,
+       "exit_frac_stage2": 0.0,
+       "exit_frac_stage3": 0.1531276535522219,
+       "high_risk_n": 354,
+       "high_risk_release_rate": 0.2457627118644068,
+       "low_risk_release_rate": 0.8288770053475936,
+       "high_risk_mean_cost_us": 2.0677966101694913,
+       "low_risk_mean_cost_us": 1.3916325888644228,
+       "cost_gap_us": 0.6761640213050686,
+       "safety_ordering_ok": true,
+       "high_risk_ece": 0.05407081474712382,
+       "low_risk_ece": 0.0073541388930873355,
+       "taus_lo": [
+        0.14666666666666667,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "taus_hi": [
+        0.3333333333333333,
+        1.0,
+        1.0,
+        1.0
+       ],
+       "mean_stage_test": 0.45938296065666573,
+       "stage_hist_test": [
+        2992,
+        0,
+        0,
+        541
+       ],
+       "measured_edge_work_saved_pct": 64.92177949675029,
+       "measured_node_work_saved_pct": 63.862311045688735,
+       "edges_processed": 623260
+      }
+     }
+    }
+   }
+  }
+ ]
+}

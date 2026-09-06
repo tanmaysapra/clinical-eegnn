@@ -138,6 +138,28 @@ def test_stratified_calibrator_falls_back_when_a_stratum_is_too_small():
     assert all(mdl is c.global_ for mdl in c.models_)
 
 
+def test_split_validation_3way_is_disjoint_and_covers_val(cohort):
+    val = cohort["val"]
+    y = cohort["y"]
+    parts = cascade.split_validation_3way(val, y, seed=0)
+    a, b, c = parts["model_val"], parts["gate_selection"], parts["gate_certification"]
+    assert not (a & b).any() and not (b & c).any() and not (a & c).any()
+    assert (a | b | c).sum() == val.sum()
+    assert not (a & ~val).any() and not (b & ~val).any() and not (c & ~val).any()
+
+
+def test_split_validation_3way_respects_fracs_per_class():
+    n = 2000
+    val = np.ones(n, dtype=bool)
+    y = np.zeros(n, dtype=int); y[: n // 5] = 1  # imbalanced, like the real cohort
+    parts = cascade.split_validation_3way(val, y, seed=1, fracs=(0.5, 0.25, 0.25))
+    for cls in (0, 1):
+        idx = np.flatnonzero(y == cls)
+        n_cls = len(idx)
+        assert parts["model_val"][idx].sum() == pytest.approx(0.5 * n_cls, abs=1)
+        assert parts["gate_selection"][idx].sum() == pytest.approx(0.25 * n_cls, abs=1)
+
+
 def test_calibration_uses_only_the_calibration_split(cohort):
     """Changing a test-split label must not move a calibrated probability."""
     n = len(cohort["y"])

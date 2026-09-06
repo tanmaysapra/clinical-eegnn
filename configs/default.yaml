@@ -47,6 +47,23 @@ train:
   high_risk_halt_penalty: 0.05    # discourage shallow halts on high-risk nodes
   gumbel_tau_start: 5.0
   gumbel_tau_end: 0.5
+arch4r:
+  fusion_dim: 64
+  stage_hidden: 32
+  alpha: 0.15              # local-push teleport probability
+  checkpoint_scale: 1.0    # multiplies local_push.CHECKPOINT_RATIOS' finite entries
+  top_k_keep: 64           # fused-graph edges kept per source node
+  k_cand: 64               # graph_density candidate-search width
+  k0: 16
+  gamma: 0.5               # density-adaptive-k sharpness, in {0.25, 0.5, 0.75}
+  k_min_adaptive: 4
+  k_max_adaptive: 48
+  percentile_qualify: 99.5
+  fixed_k: 16              # k for the fixed_k ablation arm
+  gate_eta: 0.02           # low-risk gate's target miss-rate budget
+  gate_gamma: 0.05         # certification family confidence budget
+  gate_min_release: 30
+  val_fracs: [0.4, 0.3, 0.3]   # model_val / gate_selection / gate_certification
 eval:
   operating_sensitivity: 0.90     # pick threshold at this sensitivity
   n_bins_ece: 15
