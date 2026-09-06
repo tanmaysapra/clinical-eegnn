@@ -48,16 +48,19 @@ exec(open(f"{REPO}/notebooks/src/_bootstrap.py").read())
 ensure_pyg()
 
 #%% code
-# `_bootstrap.py`'s hardcoded RAW ("/kaggle/input/datasets/akshaybe/updated-
-# mimic-iv") matches how the other notebooks' interactive "Add Data" sessions
-# mounted it -- attaching the dataset via the Kaggle API's
-# datasetDataSources instead mounts it directly under /kaggle/input/<slug>,
-# with no "datasets/<owner>/" nesting. Auto-detect rather than hardcode a
-# second guess: walk /kaggle/input for whichever directory actually has a
-# "hosp" subdirectory (mimic_iv.find_root's own definition of a real root).
+# `_bootstrap.py`'s hardcoded RAW assumes the dataset was attached via
+# Kaggle's interactive "Add Data" flow (which mounts it under
+# /kaggle/input/datasets/<owner>/<slug>). Attaching it via the Kaggle API's
+# kernel-metadata datasetDataSources field turned out not to take effect at
+# all when driven through this session's tooling (verified: the saved
+# kernel's own metadata never showed a dataset_data_source after several
+# attempts, and /kaggle/input was empty at runtime) -- so this downloads the
+# dataset directly via `kagglehub` instead, sidestepping kernel-metadata
+# attachment entirely. `kagglehub` ships preinstalled on Kaggle's standard
+# image and authenticates implicitly inside a Kaggle notebook.
 import os as _os
 
-def _find_mimic_raw_dir(start="/kaggle/input", max_depth=5):
+def _find_mimic_root(start, max_depth=5):
     for dirpath, dirnames, _files in _os.walk(start):
         if "hosp" in dirnames:
             base = _os.path.basename(dirpath)
@@ -66,12 +69,13 @@ def _find_mimic_raw_dir(start="/kaggle/input", max_depth=5):
             dirnames[:] = []
     return None
 
-_detected_raw = _find_mimic_raw_dir()
+_detected_raw = _find_mimic_root("/kaggle/input")
 if _detected_raw is None:
-    raise FileNotFoundError(
-        f"no MIMIC-IV 'hosp' directory found anywhere under /kaggle/input "
-        f"(tried {RAW} via _bootstrap.py's default too) -- is the "
-        "akshaybe/updated-mimic-iv dataset actually attached to this kernel?")
+    import kagglehub
+    _downloaded = kagglehub.dataset_download("akshaybe/updated-mimic-iv")
+    print(f"[phase0] downloaded dataset via kagglehub -> {_downloaded}")
+    _detected_raw = _find_mimic_root(_downloaded, max_depth=3) or _downloaded
+
 if _detected_raw != RAW:
     print(f"[phase0] RAW mount differs from _bootstrap.py's default: "
          f"using {_detected_raw} (not {RAW})")
