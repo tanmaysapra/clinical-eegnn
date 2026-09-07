@@ -2,11 +2,14 @@
 
 **Status as of this handover (updated, session 3): Phase 0 PASSED on the
 real MIMIC-IV cohort (17,663 patients), not just mock data. Phase 1's
-single-seed confirmatory pass completed on the real cohort too, after
-finding and fixing three real GPU bugs that never surfaced on the CPU-only
-local test suite (session 2's tests all ran on CPU). The 5-seed run that
-produces the statistically-real go/no-go verdict was triggered and, as of
-this handover, in progress. Full detail in §9 below.**
+5-seed real run is COMPLETE -- the statistically-real go/no-go verdict,
+after finding and fixing three real GPU bugs that never surfaced on the
+CPU-only local test suite (session 2's tests all ran on CPU). Headline:
+the density-adaptive graph shows a real, large, significant signal over
+the graph-free encoder (criterion 1 PASS, +0.1468 AUROC, p=0.0019), but
+overall verdict is NO-GO for Phase 2 on the pre-registered criteria
+(adaptive_k doesn't yet beat fixed_k; the certified policy is close to but
+short of its accuracy bar). Full detail in §9 below.**
 
 **Status as of the previous handover (session 2): Phase 0 complete and
 verified end-to-end. Phase 1, all 10 build steps complete and verified —
@@ -589,8 +592,50 @@ in the Kaggle UI. Triggered via manual UI edit + Save Version. As of this
 handover, still running; check the kernel directly for the current
 `current_version_number` and status before assuming this is done.
 
-Once it completes: this is the run whose go/no-go verdict actually counts
-(paired stats stop reading `nan` once seeds >= 2). Update this section (or
-the top status line) with the real result once it lands, and pull the real
-executed notebook + all 5 seeds' checkpoints the same way §7's smoke test
-verifies the plumbing.
+### The real result (5 seeds, statistically real)
+
+Completed. `analyse_arch4r_phase1.py`'s paired stats stop reading `nan` at
+n=5 -- this is the verdict that actually counts.
+
+| arm | test AUROC, mean ± SD (n=5) |
+|---|---|
+| plain_xgboost | 0.8962 ± 0.0032 |
+| cascade_3stage | 0.9015 ± 0.0053 |
+| graph_free_encoder | 0.8572 ± 0.0134 |
+| arch2_diffusion | 0.8852 ± 0.0044 |
+| arch4r_encoder_only | 0.7457 ± 0.0479 |
+| arch4r_fixed_k | 0.8917 ± 0.0049 |
+| arch4r_adaptive_k | 0.8925 ± 0.0038 |
+| arch4r_adaptive_k_certified | 0.8887 ± 0.0059 |
+
+**Criterion 1 (graph signal, adaptive_k vs encoder_only): PASS, and
+significant.** +0.1468 ± 0.0450 AUROC, t=7.30, p=0.0019, still significant
+after Holm correction across the two primary comparisons. A real, large
+effect -- the density-adaptive graph clearly carries signal the graph-free
+encoder doesn't have.
+
+**Criterion 2 (adaptive_k beats fixed_k): FAIL.** +0.0009 ± 0.0028, t=0.70,
+not significant. Genuine null result now, not a stats artifact -- the
+adaptive-k construction doesn't yet beat the simpler fixed-k=16 graph at
+this epoch budget.
+
+**Criterion 3 (certified tradeoff, needs >=30% compute saved AND <=0.002
+AUROC loss): FAIL.** 61.1% ± 3.9% compute saved clears the bar comfortably;
+0.0039 ± 0.0026 AUROC loss misses the bar by roughly 2x. Practically this
+is still a strong efficiency number (61% compute for <0.4% AUROC), it just
+doesn't clear this project's pre-registered, deliberately strict threshold.
+
+**Criterion 4 (certification holds every seed, needs all 5 + >=20%
+coverage): FAIL.** 0/5 seeds individually cleared their per-seed
+Clopper-Pearson certification bound, despite 61.1% ± 3.9% mean coverage --
+coverage is fine, the per-seed statistical guarantee isn't holding yet.
+
+**Overall: NO-GO for Phase 2 on the pre-registered criteria** -- but with a
+real, large, statistically significant graph-signal finding (criterion 1)
+that the single-seed confirmatory pass could only hint at. The honest
+framing for a write-up: Architecture 4R's density-adaptive graph
+demonstrably helps over a graph-free encoder; it does not yet demonstrate
+an advantage over the simpler fixed-k graph, and its certified low-risk
+policy is close to, but short of, the accuracy bar this project set for
+itself. Real executed notebook + go/no-go output: `notebooks/10_arch4r_phase1.ipynb`
+(commit `a30c64a`).

@@ -16,20 +16,20 @@ The active line of work. A weak multi-view encoder, a **density-adaptive** per-v
 
 **Phase 0 (integrity/replication gate): PASSED**, on the real 17,663-patient cohort — reproduced Architecture 2's diffusion gain at +0.0248 to +0.0266 across runs (recorded band: [+0.0041, +0.0373]).
 
-**Phase 1 (the graph-and-gate experiment)**: runs all 8 arms below — 3 of them (`cascade_3stage`, `plain_xgboost`, `architecture2`) are the prior architectures, kept solely as comparison baselines, not as separate lines of work anymore. A single-seed confirmatory pass on the real cohort:
+**Phase 1 (the graph-and-gate experiment)**: runs all 8 arms below — 3 of them (`cascade_3stage`, `plain_xgboost`, `architecture2`) are the prior architectures, kept solely as comparison baselines, not as separate lines of work anymore. Real 5-seed result on the real cohort:
 
-| arm | test AUROC |
+| arm | test AUROC, mean ± SD (n=5) |
 |---|---|
-| plain_xgboost (baseline) | 0.8932-0.8978 |
-| cascade_3stage (baseline) | 0.8988-0.9004 |
-| graph_free_encoder (baseline) | 0.8673-0.8681 |
-| arch2_diffusion (baseline) | 0.8824-0.8833 |
-| arch4r_encoder_only | 0.7293-0.7299 |
-| arch4r_fixed_k | 0.8895-0.8903 |
-| **arch4r_adaptive_k** | **0.8894-0.8899** |
-| arch4r_adaptive_k_certified | 0.8819-0.8863 (55-58% compute saved) |
+| plain_xgboost (baseline) | 0.8962 ± 0.0032 |
+| cascade_3stage (baseline) | 0.9015 ± 0.0053 |
+| graph_free_encoder (baseline) | 0.8572 ± 0.0134 |
+| arch2_diffusion (baseline) | 0.8852 ± 0.0044 |
+| arch4r_encoder_only | 0.7457 ± 0.0479 |
+| arch4r_fixed_k | 0.8917 ± 0.0049 |
+| **arch4r_adaptive_k** | **0.8925 ± 0.0038** |
+| arch4r_adaptive_k_certified | 0.8887 ± 0.0059 (61.1% ± 3.9% compute saved) |
 
-Read that as a pipeline/signal check, not a verdict: `arch4r_adaptive_k` clears `arch4r_encoder_only` by a large, real margin (graph structure helps), the certified policy trades under 1% AUROC for over half the compute, but `adaptive_k` doesn't yet beat `fixed_k`, and the certification check didn't clear at this seed/epoch budget. The statistically-real 5-seed verdict is the next milestone — see `ARCH4R_HANDOVER.md` for current status.
+**Overall verdict: NO-GO for Phase 2 on the pre-registered criteria — but with one real, statistically significant positive finding.** `arch4r_adaptive_k` beats `arch4r_encoder_only` by +0.1468 AUROC (t=7.30, p=0.0019, Holm-significant) — the density-adaptive graph clearly carries real signal. It does not yet significantly beat `arch4r_fixed_k` (+0.0009, not significant), and the certified low-risk policy saves compute well past its 30% bar (61.1%) but costs slightly more accuracy (0.39%) than its strict 0.2% bar allows. Full detail, including per-seed numbers and what would need to change, in `ARCH4R_HANDOVER.md`.
 
 ## Prior architectures — now comparison baselines only
 
