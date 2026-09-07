@@ -34,7 +34,14 @@ one pass instead of stopping at the first.
 last execution and the Kaggle session ended before it could be re-run. It
 executes clean (verified, `ERRORS: []`); re-run it on the next live session.
 Its numbers are single-seed in any case — the numbers of record are the 5-seed
-means in `results/headline.json`, summarised in HANDOVER §5n.
+means in `old/results/headline.json`, summarised in `old/HANDOVER.md` §5n.
+
+**Notebooks 00-08 are the prior architecture line (depth-cascade, EEGNN, the
+staged hybrid cascade, and the Architecture 2/3 controlled experiment).**
+Architecture 4R (notebooks 09-10) is the current active work; 00-08 now serve
+as comparison baselines against it (see `README.md` and `ARCH4R_HANDOVER.md`),
+not as a separately evolving line of work. Full history in `old/HANDOVER.md`
+and `old/ARCHITECTURES.md`.
 
 All nine execute clean end to end. Only `01` is expensive, and only on a cold
 block cache — it scans an 18 GB and a 42 GB CSV. Everything downstream of it

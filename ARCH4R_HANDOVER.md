@@ -1,6 +1,14 @@
 # Architecture 4R — implementation handover
 
-**Status as of this handover (updated, session 2): Phase 0 complete and
+**Status as of this handover (updated, session 3): Phase 0 PASSED on the
+real MIMIC-IV cohort (17,663 patients), not just mock data. Phase 1's
+single-seed confirmatory pass completed on the real cohort too, after
+finding and fixing three real GPU bugs that never surfaced on the CPU-only
+local test suite (session 2's tests all ran on CPU). The 5-seed run that
+produces the statistically-real go/no-go verdict was triggered and, as of
+this handover, in progress. Full detail in §9 below.**
+
+**Status as of the previous handover (session 2): Phase 0 complete and
 verified end-to-end. Phase 1, all 10 build steps complete and verified —
 `src/arch4r.py`, `src/gate_lowrisk.py`, `cascade.split_validation_3way`,
 `scripts/run_arch4r_phase1.py`, and `scripts/analyse_arch4r_phase1.py` all
@@ -446,6 +454,143 @@ run if it isn't already sitting in `results/`.
 
 Nothing above has been committed to git — `git status --short` in
 `clinical-eegnn/` will show every new/modified file listed in §2, plus
-pre-existing uncommitted work from an earlier iteration (`ARCHITECTURES.md`,
+pre-existing uncommitted work from an earlier iteration (`old/ARCHITECTURES.md`,
 `ppr_push.py`, `fixed_block.py`, etc. — those predate this session, do not
 touch them as part of finishing this handover's work unless asked).
+
+---
+
+## 9. Session 3 — real Kaggle runs, three real bugs found and fixed
+
+Everything in §1-7 above was verified on mock data only, on CPU, locally.
+This session ran both Kaggle notebooks (`architecture-4r-phase-0-integrity`,
+`architecture-4r-phase-1-experiment`) against the real credentialed
+MIMIC-IV cohort on Kaggle's GPU runtime for the first time. That surfaced
+three genuine bugs the CPU-only local suite could never catch, all now
+fixed and covered by the regression suite (108 passing, up from 95).
+
+### Phase 0: PASSED on real data
+
+```
+[mimic] wrote .../cohort_97de93de81.csv.gz  (17,663 patients, 331 features, prevalence 0.108)
+[phase0] cohort n=17663 raw_features=331 prevalence=0.10780
+reproduced diffusion gain: +0.0248 to +0.0266 (across runs) ± ~0.01   95% CI overlaps
+recorded band (±2 SD):     [+0.0041, +0.0373]
+[phase0] STOP CONDITION: PASSED -- Phase 1 may proceed.
+```
+
+The §3 open question (whether the ±2 SD tolerance band would false-stop) did
+not fire — the real reproduction landed comfortably inside the recorded
+band across every run.
+
+### Three real bugs, all GPU-only (never surfaced on CPU)
+
+1. **Device-placement bug in `scripts/run_arch4r_phase1.py`** — `torch.tensor(...)`
+   calls building `view_x`/`view_observed` input tensors had no `device=`
+   kwarg, so they defaulted to CPU even though the model was moved to `cuda`.
+   `RuntimeError: Expected all tensors to be on the same device`. Fixed by
+   threading `device` through `_torch_view_dict`/`_torch_obs_dict` and every
+   call site (commit `465a431`).
+2. **Device-placement bug in `src/graph_density.py`** — `row_normalize_with_selfloop`,
+   `_top_k_per_src`, and the empty-edge branch of `fuse_views` built helper
+   tensors (`self_w`, `self_idx`, `deg`, the empty-edges fallback) without a
+   `device=` kwarg, surfacing only once the `fixed_k`/`adaptive_k` arms ran
+   on GPU (`encoder_only` skips this code path entirely). Fixed by threading
+   the source tensor's device through all four call sites (commit `bbf8703`).
+3. **The real OOM cause, in `src/arch4r.py`'s per-query diffusion loop** —
+   after fixing the two bugs above, `fixed_k`/`adaptive_k` still hit
+   `CUDA out of memory` on a 16 GB T4 at ~13.6 GiB used. First attempted a
+   query mini-batch fix (commit `6ce026a`, splitting the ~10,600 train
+   queries into batches with a `backward()`/`step()` per batch) — this did
+   **not** fix it; the crash recurred at the identical memory footprint
+   regardless of batch size. Root cause: `Arch4RModel.forward`'s per-query
+   loop called `stage_context(h0, snapshots[s], self.V)` once per
+   `(query, checkpoint)` pair, and `stage_context` recomputes `V(h0)` — a
+   full `[n_nodes, d_hidden]` projection — on every single call, even though
+   `V(h0)` doesn't depend on the query or the checkpoint at all. With
+   ~10,600 queries x 5 checkpoints, that's tens of thousands of redundant
+   `[n_nodes, d_hidden]` activations all retained simultaneously for
+   `backward()`. Fixed by adding `stage_context_from_Vh0(Vh0, p_stage)` to
+   `src/local_push.py` (existing `stage_context` now delegates to it,
+   unchanged public signature/tests) and computing `Vh0 = self.V(h0)` once
+   per `forward()` call in `arch4r.py`, outside both loops (commit `ddb0565`).
+   This was the actual fix; the mini-batching from `6ce026a` stays in place
+   as an additional memory safety margin but wasn't load-bearing on its own.
+
+**A platform dead end, not a code bug:** tried switching from Kaggle's T4 to
+its P100 GPU option to work around the (mistakenly-diagnosed-as-hardware)
+OOM before finding the real cause above. Kaggle's current PyTorch build has
+dropped support for the P100's Pascal architecture (`sm_60`) entirely —
+`AcceleratorError: CUDA error: no kernel image is available for execution
+on the device`. Not fixable from this codebase; P100 is off the table on
+Kaggle's current image. Stick to T4.
+
+**Also learned the hard way:** `mcp__kaggle__save_notebook`-style API resaves
+of a kernel's dataset attachment are unreliable — every API resave in this
+session wiped `dataset_data_sources` from the kernel metadata even when the
+field was explicitly included in the request, forcing a manual "Add Data" +
+Save Version in the Kaggle UI to recover. A plain UI-triggered Save Version
+(no API resave) never had this problem. Prefer that path when only the
+underlying GitHub repo changed and the notebook's own cells don't need editing
+(the notebook re-clones the repo fresh on every run regardless).
+
+### Phase 1: real single-seed confirmatory pass, real 8-arm results
+
+After all three fixes landed, a single-seed (seed 42), 5-epoch confirmatory
+run completed cleanly on the real 17,663-patient cohort (`fixed_k`/`adaptive_k`
+each trained in ~29 minutes on a T4):
+
+| arm | test AUROC |
+|---|---|
+| plain_xgboost | 0.8932-0.8978 |
+| cascade_3stage | 0.8988-0.9004 |
+| graph_free_encoder | 0.8673-0.8681 |
+| arch2_diffusion | 0.8824-0.8833 |
+| arch4r_encoder_only | 0.7293-0.7299 |
+| arch4r_fixed_k | 0.8895-0.8903 |
+| arch4r_adaptive_k | 0.8894-0.8899 |
+| arch4r_adaptive_k_certified | 0.8819-0.8863 (55-58% compute saved, ~0.4-0.7% AUROC lost) |
+
+(Ranges cover two runs at the same config, seed 42 and seed 42 again after
+the checkpoint-saving commit — GPU non-determinism accounts for the spread.)
+
+All 4 go/no-go criteria report `FAIL` at n=1, but 3 of the 4 are `nan`-driven
+artifacts of `analyse_arch4r_phase1.py` needing >=2 seeds to compute paired
+statistics, not a real negative result — per-seed deltas are real and mostly
+favorable (`adaptive_k - encoder_only` = +0.16, a large real graph-signal
+gain; `adaptive_k - fixed_k` = essentially zero, a genuine "no advantage yet"
+finding, not a stats artifact). Do not report this run's literal "NO-GO" as
+the project's verdict — it's a pipeline/signal smoke test by design (see the
+notebook's own framing), not the statistically-real result.
+
+### Model checkpoints now persisted
+
+`_save_checkpoint()` added to `run_one_seed` (commit `8151bbc`) writes each
+arm's trained `state_dict` to `results/checkpoints/arch4r_<mode>_seed<seed>.pt`
+after training — anything under `/kaggle/working` is captured as real Kaggle
+kernel output, so these are downloadable per-run instead of discarded when
+the session ends. `*.pt` stays gitignored (weights trained on credentialed
+MIMIC-IV data are treated the same as raw/cached data in `.gitignore` — not
+committed, kept local-only). Note: `.pt` files are themselves zip archives
+internally (PyTorch's serialization format) — extracting them with a generic
+archive tool that auto-unpacks nested zips corrupts them (loses the required
+top-level folder wrapper); download and use as-is, don't extract further.
+
+### The 5-seed run (the actual go/no-go verdict)
+
+Notebook cell's `seeds` list bumped from `[42]` to `[42, 43, 44, 45, 46]`,
+epochs left at 5 (not the full 30-epoch budget — 5 seeds x 30 epochs is
+~29 hours, not tractable in one Kaggle session; 5 seeds x 5 epochs is
+~5 hours and is). Source change is in `notebooks/src/10_arch4r_phase1.py`
+(commit `b2b334d`) but note that pushing to GitHub alone does **not** change
+what Kaggle runs — the notebook's own cell content is separate from the repo
+and only updates via an explicit `save_notebook` API call or a manual edit
+in the Kaggle UI. Triggered via manual UI edit + Save Version. As of this
+handover, still running; check the kernel directly for the current
+`current_version_number` and status before assuming this is done.
+
+Once it completes: this is the run whose go/no-go verdict actually counts
+(paired stats stop reading `nan` once seeds >= 2). Update this section (or
+the top status line) with the real result once it lands, and pull the real
+executed notebook + all 5 seeds' checkpoints the same way §7's smoke test
+verifies the plumbing.

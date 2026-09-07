@@ -5,7 +5,7 @@ Why "weak" is load-bearing, not a hedge
 Architecture 2 (`ppr_push.py`) already showed that local-push diffusion adds
 real signal (+0.0207 AUROC) *on top of a shallow, graph-free encoder* -- and
 adds nothing on top of an already-strong tabular score (the closed graph-
-residual experiment, `ARCHITECTURES.md` SS2/SS3). So this encoder is
+residual experiment, `old/ARCHITECTURES.md` SS2/SS3). So this encoder is
 deliberately capped in capacity: no boosted-tree score, no leaf identifier,
 no strong teacher logit, and no label-derived feature is allowed anywhere
 near it. Making it stronger would put diffusion back in the regime where the

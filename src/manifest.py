@@ -5,7 +5,7 @@ Why this exists
 This exact failure has already cost the project real results twice: a cache
 keyed without the seed silently reused seed 42's graph (and, in the worse
 case, its split masks) for every other seed, inflating `run_architectures.py`'s
-first pass to ~0.91 AUROC before being caught (see `ARCHITECTURES.md`, "A leak
+first pass to ~0.91 AUROC before being caught (see `old/ARCHITECTURES.md`, "A leak
 found and fixed in this driver"). `run_architectures.py::run_seed` now guards
 against exactly this by setting `cfg["seed"] = seed` explicitly and asserting
 every loaded mask matches a fresh computation.

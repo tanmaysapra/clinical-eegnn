@@ -244,7 +244,7 @@ def run_one_seed(cfg, seed, args, cohort, verbose=True):
     # graph_build.build_graph's on-disk cache is keyed on cfg["seed"] --
     # leaving it at the config default would make every seed here reuse the
     # first seed's graph AND its train/val/test masks (the exact historical
-    # bug documented in ARCHITECTURES.md; `run_architectures.py::run_seed`
+    # bug documented in old/ARCHITECTURES.md; `run_architectures.py::run_seed`
     # and `run_phase0_integrity.py::run_one_seed` both guard against it the
     # same way). The assertion below is the safety net, not the fix.
     cfg = dict(cfg)

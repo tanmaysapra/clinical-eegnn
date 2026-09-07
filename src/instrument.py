@@ -4,7 +4,7 @@ Why this exists
 ----------------
 The project's own history has a documented case of a compute-saving claim
 that was never actually measured -- Architecture 1's efficiency figure was
-exit-depth arithmetic, not a count of work performed (`ARCHITECTURES.md`
+exit-depth arithmetic, not a count of work performed (`old/ARCHITECTURES.md`
 SS3, "measured rather than asserted"). Architecture 2 and 3 fixed this by
 counting real operations; `ppr_push.py`'s `ledger` dict is one such counter,
 built ad hoc per module. This module is the single shared counting primitive
