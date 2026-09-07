@@ -7,15 +7,15 @@ local-push diffusion, and Arch4R in its three ablation modes
 (`encoder_only`, `fixed_k`, `adaptive_k`) plus the certified low-risk policy
 built on top of `adaptive_k`.
 
-**This run is deliberately a single-seed, few-epoch confirmatory pass, not
-the 5-seed headline experiment the go/no-go criteria are meant to be read
-from.** A from-scratch benchmark (`ARCH4R_HANDOVER.md` §4 item 5) put one
-full training epoch (every train node scored as its own query, gradients
-included) at roughly 17.6 minutes at ~17,663 patients -- tractable for a
-handful of epochs on one seed in one Kaggle session, not yet for 5 seeds ×
-30 epochs, which is a separate, longer job. Read the numbers below as "does
-the pipeline produce a real, non-degenerate signal on real data", not as
-the Phase 1 verdict.
+**This run is 5 seeds at a modest epoch budget, not the full 30-epoch
+headline experiment.** `arch4r_fixed_k`/`arch4r_adaptive_k` measured
+~29 minutes each per seed at 5 epochs on a T4 (mini-batched query training,
+see `scripts/run_arch4r_phase1.py::_train_arch4r`) -- 5 seeds x 2 graph
+arms is ~5 hours, tractable in one Kaggle session; 5 seeds x 30 epochs is
+not (would be ~29 hours) and stays a separate, longer job. With 5 seeds
+the go/no-go criteria below ARE real (paired stats need >=2 seeds to stop
+reading as `nan`), but treat them as a lower bound on what the full-epoch
+budget would show, not the final word.
 
 Refuses to proceed if notebook `09`'s stop condition did not pass -- see the
 next cell for how that gets checked here (Kaggle's own kernel-output
@@ -129,7 +129,7 @@ assert ok, f"phase0 gate failed even after running inline: {reason}"
 print("[phase1] phase0 gate: PASSED, proceeding.")
 
 #%% md
-## Running Phase 1 (1 seed, modest epochs -- see the note at the top)
+## Running Phase 1 (5 seeds, modest epochs -- see the note at the top)
 
 #%% code
 import argparse
@@ -152,7 +152,7 @@ cohort = data_prep.load_cohort(cfg)
 print(f"[phase1] cohort n={cohort[0].shape[0]} raw_features={cohort[0].shape[1]} "
      f"prevalence={cohort[1].mean():.5f}", flush=True)
 
-seeds = [42]
+seeds = [42, 43, 44, 45, 46]
 runs = []
 for seed in seeds:
     t0 = time.time()
@@ -176,7 +176,7 @@ with open(out_path, "w") as f:
 print(f"[phase1] wrote {out_path}")
 
 #%% md
-## The go/no-go read (provisional -- 1 seed, not 5)
+## The go/no-go read (5 seeds, modest epochs)
 
 #%% code
 import analyse_arch4r_phase1 as an
@@ -185,13 +185,11 @@ an.main(out_path)
 #%% md
 ## What this licenses saying
 
-With one seed, none of the 4 go/no-go criteria can be trusted as a real
-verdict -- `analyse_arch4r_phase1.py` itself will show `nan`/degenerate
-paired statistics wherever a comparison structurally needs ≥2 seeds. What
-this run *does* establish: whether the full pipeline (real cohort → 3-way
-split → density-adaptive graph → local-push diffusion → certified gate)
-executes end to end on real data and produces AUROC numbers in a sane
-range (not chance, not degenerate). If the arm summary above shows
-`arch4r_adaptive_k` clearly above chance and roughly in the neighbourhood
-of `graph_free_encoder`/`arch2_diffusion`, that's the real signal to read
-before committing to the full 5-seed, more-epochs run.
+With 5 seeds, the paired go/no-go stats above are real (not `nan`) --
+this is the first run where the criteria can actually pass or fail rather
+than just "insufficient data". Read a FAIL here as a real result at this
+epoch budget, not an artifact -- but also not the final word: 5 epochs is
+still well short of the 30-epoch budget `ARCH4R_HANDOVER.md` calls for, so
+a criterion that fails narrowly at 5 epochs may still pass once the model
+is trained to the intended budget (that's a separate, longer job -- see
+the note at the top).
