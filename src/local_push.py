@@ -382,14 +382,28 @@ def replay_with_grad(trace: Trace, edge_index: np.ndarray, edge_weight: torch.Te
 
 # ------------------------------------------------------------ stage output
 
+def stage_context_from_Vh0(Vh0: torch.Tensor, p_stage: torch.Tensor) -> torch.Tensor:
+    """Same as `stage_context`, but takes `V(h0)` already applied.
+
+    `V(h0)` doesn't depend on the query or the checkpoint -- callers scoring
+    many (query, checkpoint) pairs against the same `h0`/`V` (e.g. arch4r.py's
+    per-query diffusion loop) should compute it once and reuse it here,
+    rather than calling `stage_context` and re-running `V` on every pair
+    (each redundant call keeps its own [n, d_hidden] activation alive for
+    backward(), which is what OOM'd a 16 GB GPU scoring thousands of queries
+    x 5 checkpoints).
+    """
+    weighted = (p_stage.unsqueeze(1) * Vh0).sum(dim=0)
+    return weighted / (p_stage.sum() + 1e-8)
+
+
 def stage_context(h0: torch.Tensor, p_stage: torch.Tensor, V: torch.nn.Module) -> torch.Tensor:
     """h_bar_q^(s) = (sum_u p_q^{(s)}(u) V h_u^{(0)}) / (sum_u p_q^{(s)}(u) + eps).
 
     `h0` is [n, d_in] (every graph node's own initial representation),
     `p_stage` is [n] (one query's PPR mass at checkpoint s). Returns [d_hidden].
     """
-    weighted = (p_stage.unsqueeze(1) * V(h0)).sum(dim=0)
-    return weighted / (p_stage.sum() + 1e-8)
+    return stage_context_from_Vh0(V(h0), p_stage)
 
 
 def stage_representation(h0_q: torch.Tensor, h_bar_q: torch.Tensor,

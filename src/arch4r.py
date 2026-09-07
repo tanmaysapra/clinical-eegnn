@@ -53,7 +53,8 @@ from src.graph_density import (EdgeScorerGATv2, ViewReliability, fuse_views,
                                row_normalize_with_selfloop)
 from src.instrument import OpCounter
 from src.local_push import (build_graph, local_push_trace, one_hot_source,
-                            replay_with_grad, stage_context, stage_representation)
+                            replay_with_grad, stage_context_from_Vh0,
+                            stage_representation)
 
 MODES = ("encoder_only", "fixed_k", "adaptive_k")
 
@@ -215,6 +216,11 @@ class Arch4RModel(nn.Module):
         # Built once, reused for every query below -- the fix that makes
         # scoring every training node as its own query per epoch tractable.
         shared_graph = build_graph(edge_index_np, n_nodes)
+        # V(h0) doesn't depend on the query or the checkpoint -- computing it
+        # once here instead of inside the loop below avoids keeping one
+        # [n_nodes, d_hidden] activation alive per (query, checkpoint) pair,
+        # which is what OOM'd a 16 GB GPU even after batching the query loop.
+        Vh0 = self.V(h0)
 
         stage_logits_rows = [[] for _ in range(n_checkpoints)]
         for local_i, q in enumerate(query_idx):
@@ -236,7 +242,7 @@ class Arch4RModel(nn.Module):
                                             alpha=self.alpha, n_checkpoints=n_checkpoints,
                                             graph=shared_graph)
             for s in range(n_checkpoints):
-                h_bar = stage_context(h0, snapshots[s], self.V)
+                h_bar = stage_context_from_Vh0(Vh0, snapshots[s])
                 g = stage_representation(h0[q], h_bar, self.w_self, self.w_diff,
                                          self.w_int, self.stage_ln)
                 logit = self.stage_head(g).squeeze(-1)
