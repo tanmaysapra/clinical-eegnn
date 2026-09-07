@@ -468,8 +468,9 @@ def fuse_views(per_view_edges: dict[str, tuple], reliability: dict[str, torch.Te
         all_src.append(src_t); all_dst.append(dst_t); all_w.append(w)
 
     if not all_src:
-        empty = torch.zeros((2, 0), dtype=torch.long)
-        return empty, torch.zeros(0)
+        dev = next(iter(reliability.values())).device
+        empty = torch.zeros((2, 0), dtype=torch.long, device=dev)
+        return empty, torch.zeros(0, device=dev)
 
     src = torch.cat(all_src); dst = torch.cat(all_dst); w = torch.cat(all_w)
     # Sum duplicate (src, dst) pairs across views before top-k keep.
@@ -498,8 +499,8 @@ def _top_k_per_src(src: torch.Tensor, dst: torch.Tensor, w: torch.Tensor, k: int
             count[s] = c + 1
     kept_idx = np.flatnonzero(keep)
     edge_index = torch.stack([
-        torch.as_tensor(src_np[kept_idx], dtype=torch.long),
-        torch.as_tensor(dst_np[kept_idx], dtype=torch.long),
+        torch.as_tensor(src_np[kept_idx], dtype=torch.long, device=src.device),
+        torch.as_tensor(dst_np[kept_idx], dtype=torch.long, device=src.device),
     ])
     return edge_index, w_np[kept_idx]
 
@@ -508,17 +509,17 @@ def row_normalize_with_selfloop(edge_index: torch.Tensor, weight: torch.Tensor, 
     """Add a self-loop (weight = each node's median retained outgoing weight)
     and row-normalize: P = D^-1 A."""
     src, dst = edge_index[0], edge_index[1]
-    self_w = torch.full((n,), 1.0, dtype=weight.dtype)
+    self_w = torch.full((n,), 1.0, dtype=weight.dtype, device=weight.device)
     for i in range(n):
         m = src == i
         if m.any():
             self_w[i] = weight[m].median()
-    self_idx = torch.arange(n, dtype=torch.long)
+    self_idx = torch.arange(n, dtype=torch.long, device=edge_index.device)
     full_src = torch.cat([src, self_idx])
     full_dst = torch.cat([dst, self_idx])
     full_w = torch.cat([weight, self_w])
 
-    deg = torch.zeros(n, dtype=weight.dtype)
+    deg = torch.zeros(n, dtype=weight.dtype, device=weight.device)
     deg.index_add_(0, full_src, full_w)
     deg = deg.clamp_min(1e-8)
     p_w = full_w / deg[full_src]
