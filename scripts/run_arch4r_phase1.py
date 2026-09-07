@@ -217,6 +217,16 @@ def _eval_arch4r_graph_arm(model, checkpoints, view_x_full, view_observed_full,
     return margins, graph_available
 
 
+def _save_checkpoint(model, mode, seed, out_dir="results/checkpoints"):
+    """Persist trained weights under `out_dir` so they show up as real
+    Kaggle kernel output files (anything under /kaggle/working is captured),
+    not just the summary metrics in arch4r_phase1.json."""
+    os.makedirs(out_dir, exist_ok=True)
+    path = os.path.join(out_dir, f"arch4r_{mode}_seed{seed}.pt")
+    torch.save(model.state_dict(), path)
+    return path
+
+
 def _eval_arch4r_encoder_only(model, checkpoints, view_x_full, view_observed_full, n_total, device):
     view_x = _torch_view_dict(view_x_full, np.arange(n_total), device)
     view_observed = _torch_obs_dict(view_observed_full, np.arange(n_total), device)
@@ -317,6 +327,7 @@ def run_one_seed(cfg, seed, args, cohort, verbose=True):
     model_enc, ckpts, t_enc = _train_arch4r(
         "encoder_only", view_in_dims, cfg_arch4r, view_x_full, view_observed_full,
         y, train, None, args.epochs, args.lr, device)
+    _save_checkpoint(model_enc, "encoder_only", seed)
     margins_enc, avail_enc = _eval_arch4r_encoder_only(model_enc, ckpts, view_x_full,
                                                        view_observed_full, n, device)
     arms["arch4r_encoder_only"] = {
@@ -329,6 +340,7 @@ def run_one_seed(cfg, seed, args, cohort, verbose=True):
     model_fixed, ckpts, t_fixed = _train_arch4r(
         "fixed_k", view_in_dims, cfg_arch4r, view_x_full, view_observed_full,
         y, train, ref_fixed, args.epochs, args.lr, device)
+    _save_checkpoint(model_fixed, "fixed_k", seed)
     margins_fixed, avail_fixed = _eval_arch4r_graph_arm(
         model_fixed, ckpts, view_x_full, view_observed_full, ref_fixed, train, n, device)
     arms["arch4r_fixed_k"] = {
@@ -342,6 +354,7 @@ def run_one_seed(cfg, seed, args, cohort, verbose=True):
     model_adaptive, ckpts, t_adaptive = _train_arch4r(
         "adaptive_k", view_in_dims, cfg_arch4r, view_x_full, view_observed_full,
         y, train, ref_adaptive, args.epochs, args.lr, device)
+    _save_checkpoint(model_adaptive, "adaptive_k", seed)
     margins_adaptive, avail_adaptive = _eval_arch4r_graph_arm(
         model_adaptive, ckpts, view_x_full, view_observed_full, ref_adaptive, train, n, device)
     arms["arch4r_adaptive_k"] = {
