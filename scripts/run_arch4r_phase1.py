@@ -140,19 +140,38 @@ def _train_arch4r(mode, view_in_dims, cfg_arch4r, view_x_full, view_observed_ful
     train_idx = np.flatnonzero(train_mask)
     view_x_train = _torch_view_dict(view_x_full, train_idx, device)
     view_observed_train = _torch_obs_dict(view_observed_full, train_idx, device)
-    batch = arch4r.transductive_batch(ref_graph)
+    full_batch = arch4r.transductive_batch(ref_graph)
     y_train_t = torch.tensor(y[train_idx], dtype=torch.float32, device=device)
-    mask_t = torch.ones(len(train_idx), dtype=torch.bool, device=device)
+
+    # Scoring every train node as its own query in one forward() retains all
+    # of their per-checkpoint diffusion activations simultaneously (nothing
+    # is freed until the single end-of-epoch backward()) -- OOMs a 16 GB GPU
+    # past a few thousand queries. Splitting the query set into mini-batches
+    # (backward()+step() per batch, so a batch's graph is freed before the
+    # next one is built) bounds peak memory to one batch's worth instead of
+    # all of them -- the full reference-graph topology (`full_batch.
+    # per_view_edges`) is still shared by every batch, only which nodes are
+    # scored as queries changes.
+    n_train = full_batch.n_nodes
+    query_batch_size = cfg_arch4r.get("query_batch_size", 512)
+    rng = np.random.default_rng(0)
 
     t0 = time.time()
     for _ in range(epochs):
         model.train()
-        opt.zero_grad()
-        out = model(view_x_train, view_observed_train, batch, checkpoints)
-        loss, _ = arch4r.arch4r_loss(out, y_train_t, mask_t, cfg_arch4r)
-        loss.backward()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), 5.0)
-        opt.step()
+        order = rng.permutation(n_train)
+        for start in range(0, n_train, query_batch_size):
+            chunk = order[start:start + query_batch_size]
+            batch = arch4r.Arch4RGraphBatch(
+                per_view_edges=full_batch.per_view_edges, n_nodes=n_train,
+                query_idx=chunk, graph_available=full_batch.graph_available[chunk])
+            mask_chunk = torch.ones(len(chunk), dtype=torch.bool, device=device)
+            opt.zero_grad()
+            out = model(view_x_train, view_observed_train, batch, checkpoints)
+            loss, _ = arch4r.arch4r_loss(out, y_train_t[chunk], mask_chunk, cfg_arch4r)
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 5.0)
+            opt.step()
     return model, checkpoints, time.time() - t0
 
 
