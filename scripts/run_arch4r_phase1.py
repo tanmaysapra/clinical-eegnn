@@ -57,7 +57,7 @@ _REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, _REPO_ROOT)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # for run_architectures
 
-from src import arch4r, cascade, data_prep, gate_lowrisk
+from src import arch4r, arch4r_train, cascade, data_prep, gate_lowrisk
 from src import graph_density as gd
 from src import train as train_mod
 from src._omp_guard import run_xgb_staged_worker, run_xgb_worker
@@ -115,7 +115,13 @@ def _train_arch4r(mode, view_in_dims, cfg_arch4r, view_x_full, view_observed_ful
     """Fixed-epoch transductive training loop for one Arch4R ablation arm.
     `ref_graph` is None for encoder_only (no graph dependency at all --
     trains over the whole cohort directly, matching arch4r.py's own no-
-    graph-dependency contract)."""
+    graph-dependency contract).
+
+    The per-epoch step itself lives in `src/arch4r_train.py` (shared with
+    `notebooks/src/11_arch4r_fullrun.py`, which needs to stop after every
+    epoch to checkpoint to Drive instead of running all `epochs` in one
+    call) -- this function is now just that shared step called in a loop,
+    behaviour unchanged from before the extraction."""
     model = arch4r.Arch4RModel(view_in_dims, cfg_arch4r, mode=mode).to(device)
     opt = torch.optim.Adam(model.parameters(), lr=lr)
     checkpoints = make_checkpoints(c=cfg_arch4r.get("checkpoint_scale", 1.0))
@@ -128,13 +134,8 @@ def _train_arch4r(mode, view_in_dims, cfg_arch4r, view_x_full, view_observed_ful
         mask_t = torch.tensor(train_mask, dtype=torch.bool, device=device)
         t0 = time.time()
         for _ in range(epochs):
-            model.train()
-            opt.zero_grad()
-            out = model(view_x, view_observed, None, checkpoints)
-            loss, _ = arch4r.arch4r_loss(out, y_t, mask_t, cfg_arch4r)
-            loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), 5.0)
-            opt.step()
+            arch4r_train.train_encoder_epoch(
+                model, opt, view_x, view_observed, mask_t, y_t, checkpoints, cfg_arch4r)
         return model, checkpoints, time.time() - t0
 
     train_idx = np.flatnonzero(train_mask)
@@ -152,26 +153,14 @@ def _train_arch4r(mode, view_in_dims, cfg_arch4r, view_x_full, view_observed_ful
     # all of them -- the full reference-graph topology (`full_batch.
     # per_view_edges`) is still shared by every batch, only which nodes are
     # scored as queries changes.
-    n_train = full_batch.n_nodes
     query_batch_size = cfg_arch4r.get("query_batch_size", 512)
     rng = np.random.default_rng(0)
 
     t0 = time.time()
     for _ in range(epochs):
-        model.train()
-        order = rng.permutation(n_train)
-        for start in range(0, n_train, query_batch_size):
-            chunk = order[start:start + query_batch_size]
-            batch = arch4r.Arch4RGraphBatch(
-                per_view_edges=full_batch.per_view_edges, n_nodes=n_train,
-                query_idx=chunk, graph_available=full_batch.graph_available[chunk])
-            mask_chunk = torch.ones(len(chunk), dtype=torch.bool, device=device)
-            opt.zero_grad()
-            out = model(view_x_train, view_observed_train, batch, checkpoints)
-            loss, _ = arch4r.arch4r_loss(out, y_train_t[chunk], mask_chunk, cfg_arch4r)
-            loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), 5.0)
-            opt.step()
+        arch4r_train.train_graph_epoch(
+            model, opt, full_batch, view_x_train, view_observed_train, y_train_t,
+            checkpoints, cfg_arch4r, query_batch_size, rng)
     return model, checkpoints, time.time() - t0
 
 

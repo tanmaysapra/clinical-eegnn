@@ -12,3 +12,6 @@ pyyaml>=6.0
 matplotlib>=3.7
 torchmetrics>=1.3
 pytest>=7.4
+# Google Drive checkpoint resume (notebook 11 only) -- src/gdrive.py
+google-api-python-client>=2.100
+google-auth>=2.23

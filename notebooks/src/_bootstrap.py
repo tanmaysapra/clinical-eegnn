@@ -29,6 +29,20 @@ def ensure_pyg():
         import torch_geometric  # noqa: F401
     return True
 
+def ensure_gdrive_libs():
+    """Install the Google Drive OAuth client libraries if missing -- not in
+    the Kaggle base image, needed only by notebook 11's Drive checkpoint
+    resume (`src/gdrive.py`)."""
+    try:
+        import google.auth, googleapiclient.discovery  # noqa: F401
+    except ImportError:
+        import subprocess
+        subprocess.run([sys.executable, "-m", "pip", "install", "-q",
+                        "google-api-python-client", "google-auth"], check=True)
+        import google.auth, googleapiclient.discovery  # noqa: F401
+    return True
+
+
 def mimic_cfg(blocks=("demographics", "comorbidity", "labs", "vitals", "treatment"),
               **overrides):
     """The one place the MIMIC config is assembled."""
