@@ -14,10 +14,27 @@ import json
 import sys
 
 
+def _embed_cell(rel_path, repo_root):
+    """`#%% embed src/foo.py` -> one code cell that `%%writefile`s that repo
+    file into /kaggle/working/<rel_path>, so a notebook can carry the modules
+    it needs without cloning the (private) repo -- no GITHUB_TOKEN secret."""
+    import os
+    body = open(os.path.join(repo_root, rel_path), encoding="utf-8").read()
+    lines = [f"%%writefile /kaggle/working/{rel_path}\n"] + [l + "\n" for l in body.splitlines()]
+    return {"cell_type": "code", "metadata": {}, "execution_count": None,
+            "outputs": [], "source": lines}
+
+
 def convert(src_path, out_path):
+    import os
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     text = open(src_path, encoding="utf-8").read()
     section, cells = None, []
     for line in text.splitlines():
+        if line.strip().startswith("#%% embed "):
+            cells.append(_embed_cell(line.strip()[len("#%% embed "):].strip(), repo_root))
+            section = None
+            continue
         if line.strip() == "#%% md":
             section = "markdown"
             cells.append({"cell_type": "markdown", "metadata": {}, "source": []})

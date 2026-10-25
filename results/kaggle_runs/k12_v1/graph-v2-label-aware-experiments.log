@@ -1,0 +1,316 @@
+[{"stream_name":"stderr","time":5.537762102,"data":"/usr/local/lib/python3.12/dist-packages/nbformat/__init__.py:96: MissingIDFieldWarning: Cell is missing an id field, this will become a hard error in future nbformat versions. You may want to use `normalize()` on your notebooks before validations (available since nbformat 5.1.4). Previous versions of nbformat are fixing this issue transparently, and will stop doing so in the future.\n"}
+,{"stream_name":"stderr","time":5.538577993,"data":"  validate(nb)\n"}
+,{"stream_name":"stderr","time":6.276857921,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":6.27688578,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":6.276890436,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":6.2768941,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":6.837028617,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":6.837057715,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":6.837062517,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":6.837066076,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stdout","time":14.314623627,"data":"[v2] device=cuda torch=2.10.0+cu128\n"}
+,{"stream_name":"stdout","time":14.339146892,"data":"Writing /kaggle/working/src/mimic_concepts.py\n"}
+,{"stream_name":"stdout","time":14.370528647,"data":"Writing /kaggle/working/src/mimic_iv.py\n"}
+,{"stream_name":"stdout","time":14.389258125,"data":"Writing /kaggle/working/src/instrument.py\n"}
+,{"stream_name":"stdout","time":14.409105832,"data":"Writing /kaggle/working/src/encoder_mv.py\n"}
+,{"stream_name":"stdout","time":14.433852858,"data":"Writing /kaggle/working/src/graph_density.py\n"}
+,{"stream_name":"stdout","time":14.458199141,"data":"Writing /kaggle/working/src/local_push.py\n"}
+,{"stream_name":"stdout","time":14.47949161,"data":"Writing /kaggle/working/src/arch4r.py\n"}
+,{"stream_name":"stdout","time":16.105574111,"data":"[v2] smoke test OK\n"}
+,{"stream_name":"stderr","time":16.106768714,"data":"/usr/local/lib/python3.12/dist-packages/sklearn/preprocessing/_data.py:2829: UserWarning: n_quantiles (256) is greater than the total number of samples (200). n_quantiles is set to n_samples.\n"}
+,{"stream_name":"stderr","time":16.10679149,"data":"  warnings.warn(\n"}
+,{"stream_name":"stderr","time":16.1067973,"data":"/usr/local/lib/python3.12/dist-packages/sklearn/preprocessing/_data.py:2829: UserWarning: n_quantiles (256) is greater than the total number of samples (200). n_quantiles is set to n_samples.\n"}
+,{"stream_name":"stderr","time":16.106802915,"data":"  warnings.warn(\n"}
+,{"stream_name":"stderr","time":16.106807749,"data":"\n"}
+,{"stream_name":"stderr","time":16.106812183,"data":"/usr/local/lib/python3.12/dist-packages/sklearn/preprocessing/_data.py:2829: UserWarning: n_quantiles (256) is greater than the total number of samples (200). n_quantiles is set to n_samples.\n"}
+,{"stream_name":"stderr","time":16.106817315,"data":"  warnings.warn(\n"}
+,{"stream_name":"stderr","time":16.10682233,"data":"/usr/local/lib/python3.12/dist-packages/sklearn/preprocessing/_data.py:2829: UserWarning: n_quantiles (256) is greater than the total number of samples (200). n_quantiles is set to n_samples.\n"}
+,{"stream_name":"stderr","time":16.106827865,"data":"  warnings.warn(\n"}
+,{"stream_name":"stdout","time":16.149200515,"data":"[v2] MIMIC root: /kaggle/input/datasets/akshaybe/updated-mimic-iv\n"}
+,{"stream_name":"stdout","time":16.276274023,"data":"[v2] cohort signature: 97de93de81\n"}
+,{"stream_name":"stdout","time":16.305355496,"data":"[mimic] building cohort from /kaggle/input/datasets/akshaybe/updated-mimic-iv/mimic-iv-3.1\n"}
+,{"stream_name":"stdout","time":19.698197426,"data":"  icu stays                      94,458\n"}
+,{"stream_name":"stdout","time":19.698222906,"data":"  first stay per patient         65,366\n"}
+,{"stream_name":"stdout","time":19.698228297,"data":"  adult                          65,366\n"}
+,{"stream_name":"stdout","time":19.698232574,"data":"  los \u003e= 28h                     46,776\n"}
+,{"stream_name":"stdout","time":19.698236812,"data":"  died after window              46,705\n"}
+,{"stream_name":"stdout","time":19.698240897,"data":"  discharged after window        46,651\n"}
+,{"stream_name":"stdout","time":19.961482184,"data":"  [demographics] built 33 cols in 0.3s -\u003e /kaggle/working/processed/block_63737e3178_demographics.parquet\n"}
+,{"stream_name":"stdout","time":25.673409499,"data":"  [comorbidity] built 19 cols in 5.7s -\u003e /kaggle/working/processed/block_63737e3178_comorbidity.parquet\n"}
+,{"stream_name":"stdout","time":25.749003425,"data":"  [lab] duckdb scan of hosp/labevents.csv ...\n"}
+,{"stream_name":"stdout","time":155.427275788,"data":"  [labs] built 168 cols in 129.9s -\u003e /kaggle/working/processed/block_63737e3178_labs.parquet\n"}
+,{"stream_name":"stdout","time":155.427323405,"data":"  [vit] duckdb scan of icu/chartevents.csv ...\n"}
+,{"stream_name":"stdout","time":515.019596919,"data":"  [vitals] built 84 cols in 359.5s -\u003e /kaggle/working/processed/block_63737e3178_vitals.parquet\n"}
+,{"stream_name":"stdout","time":515.019654232,"data":"  [tx] duckdb scan of icu/inputevents.csv ...\n"}
+,{"stream_name":"stdout","time":534.445043256,"data":"  [tx] duckdb scan of icu/procedureevents.csv ...\n"}
+,{"stream_name":"stdout","time":535.515420903,"data":"  [tx] duckdb scan of outputevents ...\n"}
+,{"stream_name":"stdout","time":539.007890509,"data":"  [treatment] built 27 cols in 23.9s -\u003e /kaggle/working/processed/block_63737e3178_treatment.parquet\n"}
+,{"stream_name":"stdout","time":539.007924734,"data":"  [vitals] present for 17,663 / 46,651 patients (37.9%)\n"}
+,{"stream_name":"stdout","time":539.007930616,"data":"  dropped 28,988 patients lacking a required block -\u003e 17,663 remain\n"}
+,{"stream_name":"stdout","time":539.007940534,"data":"  [severity] 12 components: tx_any_vasopressor, tx_invasive_ventilation, tx_crrt, tx_n_interventions, lab_lactate_max, lab_creatinine_max, lab_bun_max, vit_gcs_motor_last, vit_gcs_verbal_last, vit_sbp_min, vit_spo2_min, vit_resp_rate_max\n"}
+,{"stream_name":"stdout","time":551.38973731,"data":"[mimic] wrote /kaggle/working/processed/cohort_97de93de81.csv.gz  (17,663 patients, 331 features, prevalence 0.108)\n"}
+,{"stream_name":"stdout","time":551.389779379,"data":"[v2] cohort n=17663 features=331 prevalence=0.1078 views={'demographics': 33, 'comorbidity': 19, 'labs': 168, 'vitals': 84, 'treatment': 27} (535s)\n"}
+,{"stream_name":"stdout","time":552.139808247,"data":"[v2][seed 42] train=10597 model_val=1413 test=3533\n"}
+,{"stream_name":"stdout","time":553.87821284,"data":"[v2][seed 42] xgb_plain_phase1_config                    test_auroc=0.8958 test_auprc=0.5546\n"}
+,{"stream_name":"stderr","time":553.995579624,"data":"/usr/local/lib/python3.12/dist-packages/xgboost/core.py:751: UserWarning: [06:07:18] WARNING: /__w/xgboost/xgboost/src/common/error_msg.cc:62: Falling back to prediction using DMatrix due to mismatched devices. This might lead to higher memory usage and slower performance. XGBoost is running on: cuda:0, while the input data is on: cpu.\n"}
+,{"stream_name":"stderr","time":553.995651477,"data":"Potential solutions:\n"}
+,{"stream_name":"stderr","time":553.995656984,"data":"- Use a data structure that matches the device ordinal in the booster.\n"}
+,{"stream_name":"stderr","time":553.995665398,"data":"- Set the device for booster before call to inplace_predict.\n"}
+,{"stream_name":"stderr","time":553.995668649,"data":"\n"}
+,{"stream_name":"stderr","time":553.995670892,"data":"This warning will only be shown once.\n"}
+,{"stream_name":"stderr","time":553.995707222,"data":"\n"}
+,{"stream_name":"stderr","time":553.995711137,"data":"  return func(**kwargs)\n"}
+,{"stream_name":"stderr","time":553.99571519,"data":"\n"}
+,{"stream_name":"stderr","time":553.995719334,"data":"/usr/local/lib/python3.12/dist-packages/xgboost/core.py:751: UserWarning: [06:07:18] WARNING: /__w/xgboost/xgboost/src/common/error_msg.cc:62: Falling back to prediction using DMatrix due to mismatched devices. This might lead to higher memory usage and slower performance. XGBoost is running on: cuda:0, while the input data is on: cpu.\n"}
+,{"stream_name":"stderr","time":553.995723693,"data":"Potential solutions:\n"}
+,{"stream_name":"stderr","time":553.99572703,"data":"- Use a data structure that matches the device ordinal in the booster.\n"}
+,{"stream_name":"stderr","time":553.995730429,"data":"- Set the device for booster before call to inplace_predict.\n"}
+,{"stream_name":"stderr","time":553.99573378,"data":"\n"}
+,{"stream_name":"stderr","time":553.995736989,"data":"This warning will only be shown once.\n"}
+,{"stream_name":"stderr","time":553.99574037,"data":"\n"}
+,{"stream_name":"stderr","time":553.995743605,"data":"  return func(**kwargs)\n"}
+,{"stream_name":"stdout","time":557.156520318,"data":"[v2][seed 42] xgb_tuned_nativeNaN_earlystop              test_auroc=0.9018 test_auprc=0.5928 best_iteration=656\n"}
+,{"stream_name":"stdout","time":562.684357342,"data":"[v2][seed 42] arch4r_encoder_only[phase1_fullbatch_5ep]  test_auroc=0.7387 val_auroc=0.7673\n"}
+,{"stream_name":"stdout","time":567.455553082,"data":"[v2][seed 42] arch4r_encoder_only[minibatch_30ep]        test_auroc=0.8531 val_auroc=0.8983 best_epoch=6 epochs_run=30 restored_best=False train_s=4.7455\n"}
+,{"stream_name":"stdout","time":571.754942281,"data":"[v2][seed 42] arch4r_encoder_only[minibatch_earlystop]   test_auroc=0.8866 val_auroc=0.8983 best_epoch=6 epochs_run=27 restored_best=True train_s=4.2719\n"}
+,{"stream_name":"stdout","time":575.216741422,"data":"[v2][seed 42] encoder[iqr,ind=0]                         test_auroc_last=0.8924 test_auroc_bestval=0.8924 best_exit=0 val_auroc_last=0.9017 test_auprc_last=0.5601 test_auroc_per_exit=[0.8924] val_auroc=0.9017 best_epoch=3 epochs_run=24 restored_best=True train_s=3.0156\n"}
+,{"stream_name":"stdout","time":578.6830566,"data":"[v2][seed 42] encoder[iqr,ind=1]                         test_auroc_last=0.8981 test_auroc_bestval=0.8981 best_exit=0 val_auroc_last=0.9019 test_auprc_last=0.5733 test_auroc_per_exit=[0.8981] val_auroc=0.9019 best_epoch=3 epochs_run=24 restored_best=True train_s=2.9669\n"}
+,{"stream_name":"stdout","time":582.220979654,"data":"[v2][seed 42] encoder[pct,ind=0]                         test_auroc_last=0.8897 test_auroc_bestval=0.8897 best_exit=0 val_auroc_last=0.8945 test_auprc_last=0.5428 test_auroc_per_exit=[0.8897] val_auroc=0.8945 best_epoch=2 epochs_run=23 restored_best=True train_s=2.9249\n"}
+,{"stream_name":"stdout","time":585.70066453,"data":"[v2][seed 42] encoder[pct,ind=1]                         test_auroc_last=0.8915 test_auroc_bestval=0.8915 best_exit=0 val_auroc_last=0.8907 test_auprc_last=0.5518 test_auroc_per_exit=[0.8915] val_auroc=0.8907 best_epoch=2 epochs_run=23 restored_best=True train_s=2.8301\n"}
+,{"stream_name":"stdout","time":589.819801539,"data":"[v2][seed 42] encoder[quantile,ind=0]                    test_auroc_last=0.8974 test_auroc_bestval=0.8974 best_exit=0 val_auroc_last=0.9012 test_auprc_last=0.5655 test_auroc_per_exit=[0.8974] val_auroc=0.9012 best_epoch=3 epochs_run=24 restored_best=True train_s=2.9507\n"}
+,{"stream_name":"stdout","time":594.034503466,"data":"[v2][seed 42] encoder[quantile,ind=1]                    test_auroc_last=0.8962 test_auroc_bestval=0.8962 best_exit=0 val_auroc_last=0.8970 test_auprc_last=0.5667 test_auroc_per_exit=[0.8962] val_auroc=0.8970 best_epoch=3 epochs_run=24 restored_best=True train_s=3.0105\n"}
+,{"stream_name":"stdout","time":594.035656156,"data":"[v2][seed 42] best preprocessing on model_val: ('iqr', True)\n"}
+,{"stream_name":"stdout","time":594.633153584,"data":"[v2][seed 42] homophily[feature_cosine_knn,k=16]         edge_h=0.8555 adj_h=0.2487 M11=0.3436 M00=0.9174 loo_label_rate_auroc_train=0.8510 label_rate_auroc_model_val=0.8111\n"}
+,{"stream_name":"stdout","time":594.720657681,"data":"[v2][seed 42] homophily[feature_cosine_knn,k=64]         edge_h=0.8503 adj_h=0.2218 M11=0.3093 M00=0.9157 loo_label_rate_auroc_train=0.8626 label_rate_auroc_model_val=0.8409\n"}
+,{"stream_name":"stdout","time":614.035137084,"data":"[v2][seed 42] G1_retrieval[m=32]                         test_auroc_last=0.8991 test_auroc_bestval=0.8990 best_exit=0 val_auroc_last=0.8985 test_auprc_last=0.5818 test_auroc_per_exit=[0.899, 0.8991] val_auroc=0.8985 best_epoch=9 epochs_run=26 restored_best=True train_s=19.1971\n"}
+,{"stream_name":"stdout","time":639.054040347,"data":"[v2][seed 42] G1_retrieval[m=96]                         test_auroc_last=0.8924 test_auroc_bestval=0.8907 best_exit=0 val_auroc_last=0.8981 test_auprc_last=0.5559 test_auroc_per_exit=[0.8907, 0.8924] val_auroc=0.8981 best_epoch=3 epochs_run=20 restored_best=True train_s=24.8094\n"}
+,{"stream_name":"stdout","time":714.371221762,"data":"[v2][seed 42] G2_labelPPR[keep=0.5]                      test_auroc_last=0.8938 test_auroc_bestval=0.8951 best_exit=0 val_auroc_last=0.8941 test_auprc_last=0.5635 test_auroc_per_exit=[0.8951, 0.894, 0.8943, 0.8938, 0.894, 0.8938] val_auroc=0.8941 best_step=60 steps_run=560 train_s=75.1176 tau=0.0989\n"}
+,{"stream_name":"stderr","time":714.54427696,"data":"/tmp/ipykernel_22/2463680247.py:161: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.\n"}
+,{"stream_name":"stderr","time":714.544310252,"data":"Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)\n"}
+,{"stream_name":"stderr","time":714.544315827,"data":"  info | {\"tau\": float(g2.log_tau.exp())}))\n"}
+,{"stream_name":"stderr","time":714.544320819,"data":"\n"}
+,{"stream_name":"stderr","time":714.544325931,"data":"/tmp/ipykernel_22/2463680247.py:161: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.\n"}
+,{"stream_name":"stderr","time":714.544331167,"data":"Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)\n"}
+,{"stream_name":"stderr","time":714.544335953,"data":"  info | {\"tau\": float(g2.log_tau.exp())}))\n"}
+,{"stream_name":"stdout","time":789.678209103,"data":"[v2][seed 42] G2_labelPPR[keep=0.75]                     test_auroc_last=0.8941 test_auroc_bestval=0.8943 best_exit=0 val_auroc_last=0.8961 test_auprc_last=0.5569 test_auroc_per_exit=[0.8943, 0.8941, 0.8943, 0.8938, 0.8943, 0.8941] val_auroc=0.8961 best_step=60 steps_run=560 train_s=75.1141 tau=0.0987\n"}
+,{"stream_name":"stdout","time":789.679160097,"data":"[v2] DONE\n"}
+,{"stream_name":"stdout","time":789.680492384,"data":"{\n"}
+,{"stream_name":"stdout","time":789.680516926,"data":" \"42\": {\n"}
+,{"stream_name":"stdout","time":789.680521678,"data":"  \"xgb_plain_phase1_config\": {\n"}
+,{"stream_name":"stdout","time":789.680525437,"data":"   \"test_auroc\": 0.8958150139227521,\n"}
+,{"stream_name":"stdout","time":789.680529091,"data":"   \"test_auprc\": 0.5545743072592642\n"}
+,{"stream_name":"stdout","time":789.680532615,"data":"  },\n"}
+,{"stream_name":"stdout","time":789.680535714,"data":"  \"xgb_tuned_nativeNaN_earlystop\": {\n"}
+,{"stream_name":"stdout","time":789.680538952,"data":"   \"test_auroc\": 0.9018004649799486,\n"}
+,{"stream_name":"stdout","time":789.680542337,"data":"   \"test_auprc\": 0.592753692549146,\n"}
+,{"stream_name":"stdout","time":789.680545798,"data":"   \"best_iteration\": 656\n"}
+,{"stream_name":"stdout","time":789.68054922,"data":"  },\n"}
+,{"stream_name":"stdout","time":789.680552293,"data":"  \"arch4r_encoder_only[phase1_fullbatch_5ep]\": {\n"}
+,{"stream_name":"stdout","time":789.680555544,"data":"   \"test_auroc\": 0.7387085814780767,\n"}
+,{"stream_name":"stdout","time":789.680558993,"data":"   \"val_auroc\": 0.7672951709169831\n"}
+,{"stream_name":"stdout","time":789.680562405,"data":"  },\n"}
+,{"stream_name":"stdout","time":789.680565689,"data":"  \"arch4r_encoder_only[minibatch_30ep]\": {\n"}
+,{"stream_name":"stdout","time":789.680569666,"data":"   \"test_auroc\": 0.8531149659592043,\n"}
+,{"stream_name":"stdout","time":789.680573273,"data":"   \"val_auroc\": 0.8983263074418799,\n"}
+,{"stream_name":"stdout","time":789.680576926,"data":"   \"best_epoch\": 6,\n"}
+,{"stream_name":"stdout","time":789.680580494,"data":"   \"epochs_run\": 30,\n"}
+,{"stream_name":"stdout","time":789.680583969,"data":"   \"restored_best\": false,\n"}
+,{"stream_name":"stdout","time":789.680587631,"data":"   \"train_s\": 4.745508670806885\n"}
+,{"stream_name":"stdout","time":789.680591163,"data":"  },\n"}
+,{"stream_name":"stdout","time":789.680594491,"data":"  \"arch4r_encoder_only[minibatch_earlystop]\": {\n"}
+,{"stream_name":"stdout","time":789.680598029,"data":"   \"test_auroc\": 0.886561213477757,\n"}
+,{"stream_name":"stdout","time":789.680601489,"data":"   \"val_auroc\": 0.8983158729496222,\n"}
+,{"stream_name":"stdout","time":789.680604878,"data":"   \"best_epoch\": 6,\n"}
+,{"stream_name":"stdout","time":789.680608097,"data":"   \"epochs_run\": 27,\n"}
+,{"stream_name":"stdout","time":789.680611388,"data":"   \"restored_best\": true,\n"}
+,{"stream_name":"stdout","time":789.680614846,"data":"   \"train_s\": 4.2718915939331055\n"}
+,{"stream_name":"stdout","time":789.680618314,"data":"  },\n"}
+,{"stream_name":"stdout","time":789.680621563,"data":"  \"encoder[iqr,ind=0]\": {\n"}
+,{"stream_name":"stdout","time":789.680624976,"data":"   \"test_auroc_last\": 0.8924101016560747,\n"}
+,{"stream_name":"stdout","time":789.680628399,"data":"   \"test_auroc_bestval\": 0.8924101016560747,\n"}
+,{"stream_name":"stdout","time":789.680631913,"data":"   \"best_exit\": 0,\n"}
+,{"stream_name":"stdout","time":789.680635429,"data":"   \"val_auroc_last\": 0.9017383864101173,\n"}
+,{"stream_name":"stdout","time":789.68063875,"data":"   \"test_auprc_last\": 0.5601027244863007,\n"}
+,{"stream_name":"stdout","time":789.680641888,"data":"   \"test_auroc_per_exit\": [\n"}
+,{"stream_name":"stdout","time":789.680645189,"data":"    0.8924\n"}
+,{"stream_name":"stdout","time":789.680648929,"data":"   ],\n"}
+,{"stream_name":"stdout","time":789.680652177,"data":"   \"val_auroc\": 0.9017383864101173,\n"}
+,{"stream_name":"stdout","time":789.680655592,"data":"   \"best_epoch\": 3,\n"}
+,{"stream_name":"stdout","time":789.680663913,"data":"   \"epochs_run\": 24,\n"}
+,{"stream_name":"stdout","time":789.68066758,"data":"   \"restored_best\": true,\n"}
+,{"stream_name":"stdout","time":789.680691346,"data":"   \"train_s\": 3.01557993888855\n"}
+,{"stream_name":"stdout","time":789.680695919,"data":"  },\n"}
+,{"stream_name":"stdout","time":789.680702534,"data":"  \"encoder[iqr,ind=1]\": {\n"}
+,{"stream_name":"stdout","time":789.680706473,"data":"   \"test_auroc_last\": 0.898139913665614,\n"}
+,{"stream_name":"stdout","time":789.680710242,"data":"   \"test_auroc_bestval\": 0.898139913665614,\n"}
+,{"stream_name":"stdout","time":789.680713786,"data":"   \"best_exit\": 0,\n"}
+,{"stream_name":"stdout","time":789.680717121,"data":"   \"val_auroc_last\": 0.901931424516883,\n"}
+,{"stream_name":"stdout","time":789.680720511,"data":"   \"test_auprc_last\": 0.573317085969762,\n"}
+,{"stream_name":"stdout","time":789.680723909,"data":"   \"test_auroc_per_exit\": [\n"}
+,{"stream_name":"stdout","time":789.680727406,"data":"    0.8981\n"}
+,{"stream_name":"stdout","time":789.680730794,"data":"   ],\n"}
+,{"stream_name":"stdout","time":789.680734094,"data":"   \"val_auroc\": 0.901931424516883,\n"}
+,{"stream_name":"stdout","time":789.680737406,"data":"   \"best_epoch\": 3,\n"}
+,{"stream_name":"stdout","time":789.680740826,"data":"   \"epochs_run\": 24,\n"}
+,{"stream_name":"stdout","time":789.680744206,"data":"   \"restored_best\": true,\n"}
+,{"stream_name":"stdout","time":789.680747296,"data":"   \"train_s\": 2.966920852661133\n"}
+,{"stream_name":"stdout","time":789.680750912,"data":"  },\n"}
+,{"stream_name":"stdout","time":789.680754268,"data":"  \"encoder[pct,ind=0]\": {\n"}
+,{"stream_name":"stdout","time":789.680757771,"data":"   \"test_auroc_last\": 0.8896946653876388,\n"}
+,{"stream_name":"stdout","time":789.680761437,"data":"   \"test_auroc_bestval\": 0.8896946653876388,\n"}
+,{"stream_name":"stdout","time":789.68077318,"data":"   \"best_exit\": 0,\n"}
+,{"stream_name":"stdout","time":789.680776814,"data":"   \"val_auroc_last\": 0.8945490212446263,\n"}
+,{"stream_name":"stdout","time":789.680780399,"data":"   \"test_auprc_last\": 0.5427967452033147,\n"}
+,{"stream_name":"stdout","time":789.680783891,"data":"   \"test_auroc_per_exit\": [\n"}
+,{"stream_name":"stdout","time":789.680787237,"data":"    0.8897\n"}
+,{"stream_name":"stdout","time":789.680790412,"data":"   ],\n"}
+,{"stream_name":"stdout","time":789.680793713,"data":"   \"val_auroc\": 0.8945490212446263,\n"}
+,{"stream_name":"stdout","time":789.680797304,"data":"   \"best_epoch\": 2,\n"}
+,{"stream_name":"stdout","time":789.680800807,"data":"   \"epochs_run\": 23,\n"}
+,{"stream_name":"stdout","time":789.680804331,"data":"   \"restored_best\": true,\n"}
+,{"stream_name":"stdout","time":789.680807853,"data":"   \"train_s\": 2.9249327182769775\n"}
+,{"stream_name":"stdout","time":789.680811364,"data":"  },\n"}
+,{"stream_name":"stdout","time":789.680816463,"data":"  \"encoder[pct,ind=1]\": {\n"}
+,{"stream_name":"stdout","time":789.680819919,"data":"   \"test_auroc_last\": 0.891470815513543,\n"}
+,{"stream_name":"stdout","time":789.680823461,"data":"   \"test_auroc_bestval\": 0.891470815513543,\n"}
+,{"stream_name":"stdout","time":789.680826778,"data":"   \"best_exit\": 0,\n"}
+,{"stream_name":"stdout","time":789.680830136,"data":"   \"val_auroc_last\": 0.890709128093827,\n"}
+,{"stream_name":"stdout","time":789.680833586,"data":"   \"test_auprc_last\": 0.5518331846984305,\n"}
+,{"stream_name":"stdout","time":789.680837013,"data":"   \"test_auroc_per_exit\": [\n"}
+,{"stream_name":"stdout","time":789.680840593,"data":"    0.8915\n"}
+,{"stream_name":"stdout","time":789.68084872,"data":"   ],\n"}
+,{"stream_name":"stdout","time":789.680852253,"data":"   \"val_auroc\": 0.890709128093827,\n"}
+,{"stream_name":"stdout","time":789.680858524,"data":"   \"best_epoch\": 2,\n"}
+,{"stream_name":"stdout","time":789.680861734,"data":"   \"epochs_run\": 23,\n"}
+,{"stream_name":"stdout","time":789.680864977,"data":"   \"restored_best\": true,\n"}
+,{"stream_name":"stdout","time":789.680868387,"data":"   \"train_s\": 2.8300654888153076\n"}
+,{"stream_name":"stdout","time":789.680871871,"data":"  },\n"}
+,{"stream_name":"stdout","time":789.680875017,"data":"  \"encoder[quantile,ind=0]\": {\n"}
+,{"stream_name":"stdout","time":789.680878341,"data":"   \"test_auroc_last\": 0.897393814034667,\n"}
+,{"stream_name":"stdout","time":789.680881463,"data":"   \"test_auroc_bestval\": 0.897393814034667,\n"}
+,{"stream_name":"stdout","time":789.680884851,"data":"   \"best_exit\": 0,\n"}
+,{"stream_name":"stdout","time":789.680888257,"data":"   \"val_auroc_last\": 0.9011697065820776,\n"}
+,{"stream_name":"stdout","time":789.680891806,"data":"   \"test_auprc_last\": 0.5655041065670735,\n"}
+,{"stream_name":"stdout","time":789.680895224,"data":"   \"test_auroc_per_exit\": [\n"}
+,{"stream_name":"stdout","time":789.680898629,"data":"    0.8974\n"}
+,{"stream_name":"stdout","time":789.680902014,"data":"   ],\n"}
+,{"stream_name":"stdout","time":789.68090495,"data":"   \"val_auroc\": 0.9011697065820776,\n"}
+,{"stream_name":"stdout","time":789.68090812,"data":"   \"best_epoch\": 3,\n"}
+,{"stream_name":"stdout","time":789.680911224,"data":"   \"epochs_run\": 24,\n"}
+,{"stream_name":"stdout","time":789.680914567,"data":"   \"restored_best\": true,\n"}
+,{"stream_name":"stdout","time":789.680917805,"data":"   \"train_s\": 2.950739622116089\n"}
+,{"stream_name":"stdout","time":789.680920959,"data":"  },\n"}
+,{"stream_name":"stdout","time":789.680923988,"data":"  \"encoder[quantile,ind=1]\": {\n"}
+,{"stream_name":"stdout","time":789.680927342,"data":"   \"test_auroc_last\": 0.8961555884194679,\n"}
+,{"stream_name":"stdout","time":789.680930591,"data":"   \"test_auroc_bestval\": 0.8961555884194679,\n"}
+,{"stream_name":"stdout","time":789.680933949,"data":"   \"best_exit\": 0,\n"}
+,{"stream_name":"stdout","time":789.680937138,"data":"   \"val_auroc_last\": 0.8970376476480655,\n"}
+,{"stream_name":"stdout","time":789.680940584,"data":"   \"test_auprc_last\": 0.5667398722563898,\n"}
+,{"stream_name":"stdout","time":789.680943709,"data":"   \"test_auroc_per_exit\": [\n"}
+,{"stream_name":"stdout","time":789.680946877,"data":"    0.8962\n"}
+,{"stream_name":"stdout","time":789.680950044,"data":"   ],\n"}
+,{"stream_name":"stdout","time":789.680953417,"data":"   \"val_auroc\": 0.8970376476480655,\n"}
+,{"stream_name":"stdout","time":789.680957138,"data":"   \"best_epoch\": 3,\n"}
+,{"stream_name":"stdout","time":789.68096052,"data":"   \"epochs_run\": 24,\n"}
+,{"stream_name":"stdout","time":789.680963769,"data":"   \"restored_best\": true,\n"}
+,{"stream_name":"stdout","time":789.680966868,"data":"   \"train_s\": 3.0105230808258057\n"}
+,{"stream_name":"stdout","time":789.680970208,"data":"  },\n"}
+,{"stream_name":"stdout","time":789.680973391,"data":"  \"homophily[feature_cosine_knn,k=16]\": {\n"}
+,{"stream_name":"stdout","time":789.680977044,"data":"   \"edge_h\": 0.8555251955986023,\n"}
+,{"stream_name":"stdout","time":789.680980461,"data":"   \"adj_h\": 0.24872243404388428,\n"}
+,{"stream_name":"stdout","time":789.680984239,"data":"   \"M11\": 0.3435858190059662,\n"}
+,{"stream_name":"stdout","time":789.680987493,"data":"   \"M00\": 0.9173585176467896,\n"}
+,{"stream_name":"stdout","time":789.680996058,"data":"   \"loo_label_rate_auroc_train\": 0.8510255047181738,\n"}
+,{"stream_name":"stdout","time":789.681000258,"data":"   \"label_rate_auroc_model_val\": 0.8110783004299011\n"}
+,{"stream_name":"stdout","time":789.681003579,"data":"  },\n"}
+,{"stream_name":"stdout","time":789.681006731,"data":"  \"homophily[feature_cosine_knn,k=64]\": {\n"}
+,{"stream_name":"stdout","time":789.681009983,"data":"   \"edge_h\": 0.8503438830375671,\n"}
+,{"stream_name":"stdout","time":789.681013033,"data":"   \"adj_h\": 0.22177931666374207,\n"}
+,{"stream_name":"stdout","time":789.681016256,"data":"   \"M11\": 0.3093394339084625,\n"}
+,{"stream_name":"stdout","time":789.681019498,"data":"   \"M00\": 0.9156877994537354,\n"}
+,{"stream_name":"stdout","time":789.681022993,"data":"   \"loo_label_rate_auroc_train\": 0.8626441406940981,\n"}
+,{"stream_name":"stdout","time":789.681026767,"data":"   \"label_rate_auroc_model_val\": 0.8408531240869819\n"}
+,{"stream_name":"stdout","time":789.681030335,"data":"  },\n"}
+,{"stream_name":"stdout","time":789.681033509,"data":"  \"G1_retrieval[m=32]\": {\n"}
+,{"stream_name":"stdout","time":789.681036859,"data":"   \"test_auroc_last\": 0.8991000173201701,\n"}
+,{"stream_name":"stdout","time":789.681040568,"data":"   \"test_auroc_bestval\": 0.8989834392528345,\n"}
+,{"stream_name":"stdout","time":789.681044281,"data":"   \"best_exit\": 0,\n"}
+,{"stream_name":"stdout","time":789.681047738,"data":"   \"val_auroc_last\": 0.8984619558412288,\n"}
+,{"stream_name":"stdout","time":789.681051254,"data":"   \"test_auprc_last\": 0.5818242839427891,\n"}
+,{"stream_name":"stdout","time":789.681054664,"data":"   \"test_auroc_per_exit\": [\n"}
+,{"stream_name":"stdout","time":789.681058116,"data":"    0.899,\n"}
+,{"stream_name":"stdout","time":789.681061433,"data":"    0.8991\n"}
+,{"stream_name":"stdout","time":789.6810644,"data":"   ],\n"}
+,{"stream_name":"stdout","time":789.681067751,"data":"   \"val_auroc\": 0.8984619558412288,\n"}
+,{"stream_name":"stdout","time":789.681072433,"data":"   \"best_epoch\": 9,\n"}
+,{"stream_name":"stdout","time":789.681075749,"data":"   \"epochs_run\": 26,\n"}
+,{"stream_name":"stdout","time":789.681078899,"data":"   \"restored_best\": true,\n"}
+,{"stream_name":"stdout","time":789.681082283,"data":"   \"train_s\": 19.197112560272217\n"}
+,{"stream_name":"stdout","time":789.681085302,"data":"  },\n"}
+,{"stream_name":"stdout","time":789.681088456,"data":"  \"G1_retrieval[m=96]\": {\n"}
+,{"stream_name":"stdout","time":789.681091596,"data":"   \"test_auroc_last\": 0.8924300864676179,\n"}
+,{"stream_name":"stdout","time":789.681094812,"data":"   \"test_auroc_bestval\": 0.8906747538537378,\n"}
+,{"stream_name":"stdout","time":789.681098294,"data":"   \"best_exit\": 0,\n"}
+,{"stream_name":"stdout","time":789.681101489,"data":"   \"val_auroc_last\": 0.898060227889311,\n"}
+,{"stream_name":"stdout","time":789.681104866,"data":"   \"test_auprc_last\": 0.5559165890021817,\n"}
+,{"stream_name":"stdout","time":789.681108388,"data":"   \"test_auroc_per_exit\": [\n"}
+,{"stream_name":"stdout","time":789.681112223,"data":"    0.8907,\n"}
+,{"stream_name":"stdout","time":789.681115788,"data":"    0.8924\n"}
+,{"stream_name":"stdout","time":789.681119002,"data":"   ],\n"}
+,{"stream_name":"stdout","time":789.681122179,"data":"   \"val_auroc\": 0.898060227889311,\n"}
+,{"stream_name":"stdout","time":789.681125643,"data":"   \"best_epoch\": 3,\n"}
+,{"stream_name":"stdout","time":789.681128783,"data":"   \"epochs_run\": 20,\n"}
+,{"stream_name":"stdout","time":789.681132111,"data":"   \"restored_best\": true,\n"}
+,{"stream_name":"stdout","time":789.681140038,"data":"   \"train_s\": 24.809423208236694\n"}
+,{"stream_name":"stdout","time":789.681143669,"data":"  },\n"}
+,{"stream_name":"stdout","time":789.681147067,"data":"  \"G2_labelPPR[keep=0.5]\": {\n"}
+,{"stream_name":"stdout","time":789.681150587,"data":"   \"test_auroc_last\": 0.893769901541495,\n"}
+,{"stream_name":"stdout","time":789.681154171,"data":"   \"test_auroc_bestval\": 0.8951072185139294,\n"}
+,{"stream_name":"stdout","time":789.681157711,"data":"   \"best_exit\": 0,\n"}
+,{"stream_name":"stdout","time":789.681161158,"data":"   \"val_auroc_last\": 0.8941159898159357,\n"}
+,{"stream_name":"stdout","time":789.681164818,"data":"   \"test_auprc_last\": 0.5635071845681707,\n"}
+,{"stream_name":"stdout","time":789.681168257,"data":"   \"test_auroc_per_exit\": [\n"}
+,{"stream_name":"stdout","time":789.68117176,"data":"    0.8951,\n"}
+,{"stream_name":"stdout","time":789.681175165,"data":"    0.894,\n"}
+,{"stream_name":"stdout","time":789.68117842,"data":"    0.8943,\n"}
+,{"stream_name":"stdout","time":789.681181644,"data":"    0.8938,\n"}
+,{"stream_name":"stdout","time":789.681184964,"data":"    0.894,\n"}
+,{"stream_name":"stdout","time":789.681188141,"data":"    0.8938\n"}
+,{"stream_name":"stdout","time":789.681191334,"data":"   ],\n"}
+,{"stream_name":"stdout","time":789.681198272,"data":"   \"val_auroc\": 0.8941159898159357,\n"}
+,{"stream_name":"stdout","time":789.681201693,"data":"   \"best_step\": 60,\n"}
+,{"stream_name":"stdout","time":789.681205229,"data":"   \"steps_run\": 560,\n"}
+,{"stream_name":"stdout","time":789.681208634,"data":"   \"train_s\": 75.11762046813965,\n"}
+,{"stream_name":"stdout","time":789.681212109,"data":"   \"tau\": 0.0988926887512207\n"}
+,{"stream_name":"stdout","time":789.681215526,"data":"  },\n"}
+,{"stream_name":"stdout","time":789.681218817,"data":"  \"G2_labelPPR[keep=0.75]\": {\n"}
+,{"stream_name":"stdout","time":789.681222149,"data":"   \"test_auroc_last\": 0.894059681308872,\n"}
+,{"stream_name":"stdout","time":789.68122577,"data":"   \"test_auroc_bestval\": 0.8943369705690342,\n"}
+,{"stream_name":"stdout","time":789.681229313,"data":"   \"best_exit\": 0,\n"}
+,{"stream_name":"stdout","time":789.681232581,"data":"   \"val_auroc_last\": 0.8961454985600399,\n"}
+,{"stream_name":"stdout","time":789.68123581,"data":"   \"test_auprc_last\": 0.5569433028867663,\n"}
+,{"stream_name":"stdout","time":789.681239135,"data":"   \"test_auroc_per_exit\": [\n"}
+,{"stream_name":"stdout","time":789.681242426,"data":"    0.8943,\n"}
+,{"stream_name":"stdout","time":789.681245679,"data":"    0.8941,\n"}
+,{"stream_name":"stdout","time":789.681248957,"data":"    0.8943,\n"}
+,{"stream_name":"stdout","time":789.681252261,"data":"    0.8938,\n"}
+,{"stream_name":"stdout","time":789.681255546,"data":"    0.8943,\n"}
+,{"stream_name":"stdout","time":789.681258837,"data":"    0.8941\n"}
+,{"stream_name":"stdout","time":789.681262103,"data":"   ],\n"}
+,{"stream_name":"stdout","time":789.681265333,"data":"   \"val_auroc\": 0.8961454985600399,\n"}
+,{"stream_name":"stdout","time":789.681268809,"data":"   \"best_step\": 60,\n"}
+,{"stream_name":"stdout","time":789.681272152,"data":"   \"steps_run\": 560,\n"}
+,{"stream_name":"stdout","time":789.681275849,"data":"   \"train_s\": 75.1140546798706,\n"}
+,{"stream_name":"stdout","time":789.681279233,"data":"   \"tau\": 0.09865540266036987\n"}
+,{"stream_name":"stdout","time":789.681282541,"data":"  }\n"}
+,{"stream_name":"stdout","time":789.681286068,"data":" }\n"}
+,{"stream_name":"stdout","time":789.681293196,"data":"}\n"}
+,{"stream_name":"stderr","time":795.177926491,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":795.177966372,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":795.341046102,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":795.34107481,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":795.967172027,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":796.298299071,"data":"[NbConvertApp] Writing 222767 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":798.696061551,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":799.975313865,"data":"[NbConvertApp] Writing 1006837 bytes to __results__.html\n"}
+]

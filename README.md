@@ -10,9 +10,29 @@ This project is built on **MIMIC-IV v3.1, which is credentialed data under the [
 
 To reproduce, obtain your own MIMIC-IV credentials and point `data.raw_dir` at your copy.
 
-## Current work: Architecture 4R
+## Latest: graph v2 — can a graph/neural model beat XGBoost? (notebooks 12–18)
 
-The active line of work. A weak multi-view encoder, a **density-adaptive** per-view patient-similarity graph (every prior graph in this project used fixed-k feature-kNN), checkpointed local-push diffusion, and a certified (Clopper-Pearson) low-risk-only stopping gate — aimed at closing the measured AUROC gap between the project's one positive graph result (Architecture 2, below) and the tabular cascade. Full technical record, including the bugs found and fixed getting it running on real GPU hardware, is in **[`ARCH4R_HANDOVER.md`](ARCH4R_HANDOVER.md)**.
+Goal: beat XGBoost, target test AUROC > 0.91, without stacking with XGBoost. Everything below is on the same core test split and seeds 42–44. "best-data" adds the 28,988 patients the cohort drops only because the Kaggle mirror's `chartevents` is truncated (training only) plus 252 within-window trajectory features. Full record: **[`GRAPH_V2_RESULTS.md`](GRAPH_V2_RESULTS.md)**.
+
+| model | original data | best-data |
+|---|---|---|
+| XGBoost, phase-1 config | 0.8939 ± 0.0015 | 0.9006 ± 0.0034 |
+| XGBoost, tuned | 0.9034 ± 0.0025 | **0.9082 ± 0.0040** |
+| 3-stage cascade | 0.9012 ± 0.0045 | 0.9057 ± 0.0039 |
+| Arch4R `encoder_only`, corrected | 0.8919 ± 0.0048 | — |
+| Arch4R `adaptive_k` (phase 1, 5 seeds) | 0.8925 ± 0.0038 | — |
+| **Graph v2 encoder** (cross-fitted multi-view MLP) | 0.9013 ± 0.0022 | **0.9063 ± 0.0009** (best run 0.9080) |
+| Graph v2 G1 — label-aware retrieval | 0.8995 ± 0.0016 | 0.9047 ± 0.0012 |
+| **Graph v2 best: pretrained encoder ⊕ G1 retrieval** | — | **0.9082 ± 0.0023** (best run 0.9099) |
+
+- **Correction to phase 1:** its `encoder_only` arm took only 5 optimizer steps. Trained properly it reaches 0.8919, so the "+0.1468 graph signal" below was an undertraining artifact.
+- The best model (self-supervised-pretrained encoder + label-aware retrieval, no XGBoost anywhere) beats every original baseline, including the cascade, and **ties tuned XGBoost given identical data** (0.9082 vs 0.9082). Nothing clears 0.91 on the 3-seed mean.
+- Graph signal appears only with pretraining. Without it, retrieval, masked-label PPR and Correct & Smooth added nothing over a well-trained encoder. With a pretrained encoder, the retrieval exit adds +0.0015 on every seed.
+- Paused until a non-truncated MIMIC-IV source is available.
+
+## Architecture 4R
+
+The previous line of work. A weak multi-view encoder, a **density-adaptive** per-view patient-similarity graph (every prior graph in this project used fixed-k feature-kNN), checkpointed local-push diffusion, and a certified (Clopper-Pearson) low-risk-only stopping gate — aimed at closing the measured AUROC gap between the project's one positive graph result (Architecture 2, below) and the tabular cascade. Full technical record, including the bugs found and fixed getting it running on real GPU hardware, is in **[`ARCH4R_HANDOVER.md`](ARCH4R_HANDOVER.md)**.
 
 **Phase 0 (integrity/replication gate): PASSED**, on the real 17,663-patient cohort — reproduced Architecture 2's diffusion gain at +0.0248 to +0.0266 across runs (recorded band: [+0.0041, +0.0373]).
 
@@ -29,7 +49,7 @@ The active line of work. A weak multi-view encoder, a **density-adaptive** per-v
 | **arch4r_adaptive_k** | **0.8925 ± 0.0038** |
 | arch4r_adaptive_k_certified | 0.8887 ± 0.0059 (61.1% ± 3.9% compute saved) |
 
-**Overall verdict: NO-GO for Phase 2 on the pre-registered criteria — but with one real, statistically significant positive finding.** `arch4r_adaptive_k` beats `arch4r_encoder_only` by +0.1468 AUROC (t=7.30, p=0.0019, Holm-significant) — the density-adaptive graph clearly carries real signal. It does not yet significantly beat `arch4r_fixed_k` (+0.0009, not significant), and the certified low-risk policy saves compute well past its 30% bar (61.1%) but costs slightly more accuracy (0.39%) than its strict 0.2% bar allows. Full detail, including per-seed numbers and what would need to change, in `ARCH4R_HANDOVER.md`.
+**Overall verdict: NO-GO for Phase 2 on the pre-registered criteria.** Phase 1 reported `arch4r_adaptive_k` beating `arch4r_encoder_only` by +0.1468 AUROC (t=7.30, p=0.0019). **Superseded by graph v2:** that encoder arm was undertrained (5 optimizer steps). Trained properly it reaches 0.8919, so the real gap is ≈ +0.0006, not evidence of graph signal. It does not yet significantly beat `arch4r_fixed_k` (+0.0009, not significant), and the certified low-risk policy saves compute well past its 30% bar (61.1%) but costs slightly more accuracy (0.39%) than its strict 0.2% bar allows. Full detail, including per-seed numbers and what would need to change, in `ARCH4R_HANDOVER.md`.
 
 ## Prior architectures — now comparison baselines only
 
@@ -46,6 +66,9 @@ Full technical record for all of this (including the negative results, the repro
 ## Layout
 
 ```
+src/graph_v2.py           graph v2: encoder, G1 retrieval, cross-fitting, leak-free C&S, PLR, pretraining
+src/temporal_block.py     within-window trajectory features (6 h bins, slope, recency)
+GRAPH_V2_RESULTS.md        numbers of record for every baseline and every model (notebooks 12-18)
 src/arch4r.py             Architecture 4R model (encoder + density-adaptive graph + diffusion + gate)
 src/graph_density.py      density-adaptive per-view reference graph construction
 src/local_push.py         checkpointed local-push diffusion
@@ -61,7 +84,9 @@ src/fixed_block.py        Architecture 3 / Fixed-Block (comparison baseline)
 src/model.py              Architecture 1 / Graph-ACT / EEGNN (comparison baseline)
 src/mimic_iv.py           the MIMIC-IV ETL
 notebooks/                the documented pipeline; 00-08 are the prior architecture line (comparison
-                           baselines), 09-10 are Architecture 4R Phase 0/1 — see notebooks/README.md
+                           baselines), 09-11 are Architecture 4R, 12-18 are graph v2 (self-contained,
+                           pushed with the Kaggle CLI) — see notebooks/README.md
+results/kaggle_runs/       logs + result JSON of every graph v2 Kaggle run
 results/                  aggregate metrics + figures (no patient data); results/checkpoints/ holds
                            trained Arch4R weights (gitignored, kept local-only, not pushed)
 old/                       superseded status/handover docs and the prior architectures' result JSONs,
@@ -76,7 +101,8 @@ ARCH4R_HANDOVER.md         the full technical record for the active work -- read
 conda create -y -n eegnn python=3.11 && conda activate eegnn
 pip install -r requirements.txt
 
-python -m pytest tests/ -q                          # 108 tests
+python -m pytest tests/ -q                          # 138 test functions (tests/test_graph_v2.py
+                                                    # also runs inside notebooks 12-18 on Kaggle)
 
 # Architecture 4R -- the active work
 python scripts/run_phase0_integrity.py --source mock --seeds 42 43 44 45 46

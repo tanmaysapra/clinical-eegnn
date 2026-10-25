@@ -1,0 +1,296 @@
+{
+ "42": {
+  "REF_xgb_tuned[core]": {
+   "model_val_auroc": 0.9005697232772654,
+   "test_auroc": 0.9018004649799486,
+   "test_auprc": 0.592753692549146
+  },
+  "ENC[core][B_lr3e-4_wd1e-3_p0.3]": {
+   "oof_auroc_core": 0.897123622727622,
+   "model_val_auroc": 0.9047956926415961,
+   "test_auroc": 0.9009411180835899,
+   "test_auprc": 0.5807321537970364,
+   "best_epochs": [
+    11,
+    13,
+    11,
+    19,
+    13
+   ]
+  },
+  "ENC[core][C_lr3e-4_wd1e-2_p0.4_d256]": {
+   "oof_auroc_core": 0.8969592344972636,
+   "model_val_auroc": 0.9026253182520139,
+   "test_auroc": 0.9040046231530703,
+   "test_auprc": 0.5869886500339315,
+   "best_epochs": [
+    15,
+    9,
+    18,
+    11,
+    11
+   ]
+  },
+  "ENC_bag2[core][B_lr3e-4_wd1e-3_p0.3]": {
+   "model_val_auroc": 0.9049730790099754,
+   "test_auroc": 0.9016455826904887,
+   "test_auprc": 0.5792802268815368
+  },
+  "G1[core][m=32]": {
+   "oof_auroc_core": 0.8964849628760437,
+   "model_val_auroc": 0.9011175341207895,
+   "test_auroc": 0.9028804775037638,
+   "test_auprc": 0.5894479133882086,
+   "exit0_test_auroc": 0.9025948612387918
+  },
+  "ENC_bag2+G1[core]": {
+   "model_val_auroc": 0.9033035602487582,
+   "test_auroc": 0.9027988728566289,
+   "test_auprc": 0.5865281237729861
+  },
+  "REF_xgb_tuned[core+aux]": {
+   "model_val_auroc": 0.9108111774281062,
+   "test_auroc": 0.9058806973366907,
+   "test_auprc": 0.6029772342841614
+  },
+  "ENC[core+aux][B_lr3e-4_wd1e-3_p0.3]": {
+   "oof_auroc_core": 0.9008605608092901,
+   "model_val_auroc": 0.9122146166367545,
+   "test_auroc": 0.9054626816952449,
+   "test_auprc": 0.5791797569370011,
+   "best_epochs": [
+    13,
+    6,
+    6,
+    11,
+    11
+   ]
+  },
+  "ENC[core+aux][C_lr3e-4_wd1e-2_p0.4_d256]": {
+   "oof_auroc_core": 0.9017952120886009,
+   "model_val_auroc": 0.9121572269293377,
+   "test_auroc": 0.9055059821202552,
+   "test_auprc": 0.585003622055989,
+   "best_epochs": [
+    6,
+    5,
+    11,
+    11,
+    7
+   ]
+  },
+  "ENC_bag2[core+aux][C_lr3e-4_wd1e-2_p0.4_d256]": {
+   "model_val_auroc": 0.9136858800450768,
+   "test_auroc": 0.9060613933410608,
+   "test_auprc": 0.5865443638961418
+  },
+  "G1[core+aux][m=32]": {
+   "oof_auroc_core": 0.902255406520517,
+   "model_val_auroc": 0.9120215785299887,
+   "test_auroc": 0.9056750203178917,
+   "test_auprc": 0.5767727702762588,
+   "exit0_test_auroc": 0.9058224083030231
+  },
+  "ENC_bag2+G1[core+aux]": {
+   "model_val_auroc": 0.9131798071705831,
+   "test_auroc": 0.9061521576934863,
+   "test_auprc": 0.5830923504138485
+  }
+ },
+ "43": {
+  "REF_xgb_tuned[core]": {
+   "model_val_auroc": 0.910899870612296,
+   "test_auroc": 0.9079582850367054,
+   "test_auprc": 0.5887134407047093
+  },
+  "ENC[core][B_lr3e-4_wd1e-3_p0.3]": {
+   "oof_auroc_core": 0.8892144650529143,
+   "model_val_auroc": 0.9037678951542218,
+   "test_auroc": 0.9018654156174641,
+   "test_auprc": 0.5729447334439137,
+   "best_epochs": [
+    6,
+    11,
+    18,
+    12,
+    15
+   ]
+  },
+  "ENC[core][C_lr3e-4_wd1e-2_p0.4_d256]": {
+   "oof_auroc_core": 0.8901223511499303,
+   "model_val_auroc": 0.9032409532952127,
+   "test_auroc": 0.9013999360486031,
+   "test_auprc": 0.5761742337339639,
+   "best_epochs": [
+    10,
+    8,
+    11,
+    11,
+    14
+   ]
+  },
+  "ENC_bag2[core][C_lr3e-4_wd1e-2_p0.4_d256]": {
+   "model_val_auroc": 0.905672189991235,
+   "test_auroc": 0.9015531529371011,
+   "test_auprc": 0.5749331886698338
+  },
+  "G1[core][m=32]": {
+   "oof_auroc_core": 0.8901940336796755,
+   "model_val_auroc": 0.9020409866855879,
+   "test_auroc": 0.8998327937434216,
+   "test_auprc": 0.5752326854606268,
+   "exit0_test_auroc": 0.8994097818990899
+  },
+  "ENC_bag2+G1[core]": {
+   "model_val_auroc": 0.904263533536458,
+   "test_auroc": 0.9010693539576589,
+   "test_auprc": 0.5762129221606532
+  },
+  "REF_xgb_tuned[core+aux]": {
+   "model_val_auroc": 0.9204787345047789,
+   "test_auroc": 0.9079095720585687,
+   "test_auprc": 0.6036246184872869
+  },
+  "ENC[core+aux][B_lr3e-4_wd1e-3_p0.3]": {
+   "oof_auroc_core": 0.8961170110793035,
+   "model_val_auroc": 0.9180527150548855,
+   "test_auroc": 0.9036115885260535,
+   "test_auprc": 0.5840487708071563,
+   "best_epochs": [
+    9,
+    16,
+    9,
+    8,
+    8
+   ]
+  },
+  "ENC[core+aux][C_lr3e-4_wd1e-2_p0.4_d256]": {
+   "oof_auroc_core": 0.8946458521839554,
+   "model_val_auroc": 0.9152093159146876,
+   "test_auroc": 0.9072854630480836,
+   "test_auprc": 0.5937037069713462,
+   "best_epochs": [
+    9,
+    16,
+    12,
+    5,
+    11
+   ]
+  },
+  "ENC_bag2[core+aux][B_lr3e-4_wd1e-3_p0.3]": {
+   "model_val_auroc": 0.9178857631787638,
+   "test_auroc": 0.9049114339768443,
+   "test_auprc": 0.5887100923952142
+  },
+  "G1[core+aux][m=32]": {
+   "oof_auroc_core": 0.8895924190631075,
+   "model_val_auroc": 0.9162788513710922,
+   "test_auroc": 0.9059922792011406,
+   "test_auprc": 0.5910709024785503,
+   "exit0_test_auroc": 0.9056050734774904
+  },
+  "ENC_bag2+G1[core+aux]": {
+   "model_val_auroc": 0.9173901247965274,
+   "test_auroc": 0.9059423171722825,
+   "test_auprc": 0.5915016547473319
+  }
+ },
+ "44": {
+  "REF_xgb_tuned[core]": {
+   "model_val_auroc": 0.9075347468592178,
+   "test_auroc": 0.8977593695458118,
+   "test_auprc": 0.5768176591585105
+  },
+  "ENC[core][B_lr3e-4_wd1e-3_p0.3]": {
+   "oof_auroc_core": 0.8959246536965124,
+   "model_val_auroc": 0.9102424976000667,
+   "test_auroc": 0.8982023662016867,
+   "test_auprc": 0.5878508999842739,
+   "best_epochs": [
+    23,
+    15,
+    13,
+    14,
+    13
+   ]
+  },
+  "ENC[core][C_lr3e-4_wd1e-2_p0.4_d256]": {
+   "oof_auroc_core": 0.8951337842355855,
+   "model_val_auroc": 0.9121937476522393,
+   "test_auroc": 0.8985096326791638,
+   "test_auprc": 0.5914421065466948,
+   "best_epochs": [
+    15,
+    7,
+    11,
+    8,
+    13
+   ]
+  },
+  "ENC_bag2[core][B_lr3e-4_wd1e-3_p0.3]": {
+   "model_val_auroc": 0.9078686506114613,
+   "test_auroc": 0.8980383242069361,
+   "test_auprc": 0.5865937748809615
+  },
+  "G1[core][m=32]": {
+   "oof_auroc_core": 0.8955741131602273,
+   "model_val_auroc": 0.9114894194248508,
+   "test_auroc": 0.8972514222524215,
+   "test_auprc": 0.5821952930470402,
+   "exit0_test_auroc": 0.8970099391129408
+  },
+  "ENC_bag2+G1[core]": {
+   "model_val_auroc": 0.9103259735381277,
+   "test_auroc": 0.8983547503897038,
+   "test_auprc": 0.5861387517405233
+  },
+  "REF_xgb_tuned[core+aux]": {
+   "model_val_auroc": 0.9129085103718854,
+   "test_auroc": 0.9013682934303263,
+   "test_auprc": 0.5991296582800569
+  },
+  "ENC[core+aux][B_lr3e-4_wd1e-3_p0.3]": {
+   "oof_auroc_core": 0.9024238697267266,
+   "model_val_auroc": 0.9108685671355232,
+   "test_auroc": 0.9038397484578388,
+   "test_auprc": 0.60979541834271,
+   "best_epochs": [
+    19,
+    10,
+    11,
+    6,
+    7
+   ]
+  },
+  "ENC[core+aux][C_lr3e-4_wd1e-2_p0.4_d256]": {
+   "oof_auroc_core": 0.9026543837015784,
+   "model_val_auroc": 0.9091051379439876,
+   "test_auroc": 0.9035949345164342,
+   "test_auprc": 0.6083575479246555,
+   "best_epochs": [
+    17,
+    12,
+    10,
+    9,
+    7
+   ]
+  },
+  "ENC_bag2[core+aux][C_lr3e-4_wd1e-2_p0.4_d256]": {
+   "model_val_auroc": 0.9094338244501022,
+   "test_auroc": 0.9041903153603262,
+   "test_auprc": 0.6141863361504782
+  },
+  "G1[core+aux][m=32]": {
+   "oof_auroc_core": 0.9041787025091663,
+   "model_val_auroc": 0.9083173337785384,
+   "test_auroc": 0.9030037171749471,
+   "test_auprc": 0.6088888133175522,
+   "exit0_test_auroc": 0.902877979402321
+  },
+  "ENC_bag2+G1[core+aux]": {
+   "model_val_auroc": 0.9092355690972077,
+   "test_auroc": 0.9040620794862572,
+   "test_auprc": 0.6126901335465457
+  }
+ }
+}

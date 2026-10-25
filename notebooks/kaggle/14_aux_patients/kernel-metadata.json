@@ -1,0 +1,16 @@
+{
+  "id": "satgunsinghsodhi/graph-v2-aux-patients",
+  "title": "Graph v2 aux patients",
+  "code_file": "14_aux_patients.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "machine_shape": "NvidiaTeslaT4",
+  "dataset_sources": ["akshaybe/updated-mimic-iv"],
+  "competition_sources": [],
+  "kernel_sources": ["satgunsinghsodhi/graph-v2-label-aware-experiments"],
+  "model_sources": []
+}

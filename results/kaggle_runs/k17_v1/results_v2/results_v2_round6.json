@@ -1,0 +1,152 @@
+{
+ "42": {
+  "REF_xgb_tuned[base+temporal]": {
+   "model_val_auroc": 0.9076964814892108,
+   "test_auroc": 0.9049755519138787,
+   "test_auprc": 0.5923881453393205
+  },
+  "ENC[scratch]": {
+   "oof_auroc_core": 0.8968950536276084,
+   "model_val_auroc": 0.9107642222129471,
+   "test_auroc": 0.9053910694538817,
+   "test_auprc": 0.5855023642514243,
+   "best_epochs": [
+    8,
+    8,
+    7,
+    6,
+    11
+   ]
+  },
+  "ENC[pretrained]": {
+   "oof_auroc_core": 0.9037553680860858,
+   "model_val_auroc": 0.9133989315079928,
+   "test_auroc": 0.9084895479435628,
+   "test_auprc": 0.5969914822253223,
+   "best_epochs": [
+    5,
+    4,
+    7,
+    6,
+    6
+   ]
+  },
+  "ENC_bag3[pretrained]": {
+   "model_val_auroc": 0.9131693726783254,
+   "test_auroc": 0.9085470042767496,
+   "test_auprc": 0.5948421265342161
+  },
+  "G1[pretrained][m=32]": {
+   "oof_auroc_core": 0.898968104978787,
+   "model_val_auroc": 0.9126059100964147,
+   "test_auroc": 0.9094221724822468,
+   "test_auprc": 0.5879622732004486,
+   "exit0_test_auroc": 0.9082822055238018
+  },
+  "ENC_bag3[pretrained]+G1[pretrained]": {
+   "model_val_auroc": 0.9138789181518427,
+   "test_auroc": 0.9098585075342739,
+   "test_auprc": 0.5945133860823418
+  }
+ },
+ "43": {
+  "REF_xgb_tuned[base+temporal]": {
+   "model_val_auroc": 0.9223308568805041,
+   "test_auroc": 0.9120634984078766,
+   "test_auprc": 0.6101560823233982
+  },
+  "ENC[scratch]": {
+   "oof_auroc_core": 0.8959548455630459,
+   "model_val_auroc": 0.9210317625944322,
+   "test_auroc": 0.9074744860572632,
+   "test_auprc": 0.6053993416224749,
+   "best_epochs": [
+    4,
+    11,
+    5,
+    4,
+    5
+   ]
+  },
+  "ENC[pretrained]": {
+   "oof_auroc_core": 0.8988796594801997,
+   "model_val_auroc": 0.9192370299261238,
+   "test_auroc": 0.9078725168871657,
+   "test_auprc": 0.6095962708206567,
+   "best_epochs": [
+    4,
+    7,
+    7,
+    4,
+    5
+   ]
+  },
+  "ENC_bag3[pretrained]": {
+   "model_val_auroc": 0.9206769898576737,
+   "test_auroc": 0.9082089278814767,
+   "test_auprc": 0.6099479876455005
+  },
+  "G1[pretrained][m=32]": {
+   "oof_auroc_core": 0.8932465610445274,
+   "model_val_auroc": 0.914797153470512,
+   "test_auroc": 0.9092739517966346,
+   "test_auprc": 0.5991963599012875,
+   "exit0_test_auroc": 0.9071522309711286
+  },
+  "ENC_bag3[pretrained]+G1[pretrained]": {
+   "model_val_auroc": 0.9190283400809717,
+   "test_auroc": 0.9096603248198036,
+   "test_auprc": 0.6089338321966374
+  }
+ },
+ "44": {
+  "REF_xgb_tuned[base+temporal]": {
+   "model_val_auroc": 0.9116198505780708,
+   "test_auroc": 0.9076743341726955,
+   "test_auprc": 0.6089227925862027
+  },
+  "ENC[scratch]": {
+   "oof_auroc_core": 0.9027876076279842,
+   "model_val_auroc": 0.907712133227597,
+   "test_auroc": 0.9061005302636662,
+   "test_auprc": 0.6110646547864602,
+   "best_epochs": [
+    8,
+    7,
+    10,
+    9,
+    5
+   ]
+  },
+  "ENC[pretrained]": {
+   "oof_auroc_core": 0.9072859642087462,
+   "model_val_auroc": 0.9108529153971368,
+   "test_auroc": 0.9030328616917809,
+   "test_auprc": 0.6109972616083001,
+   "best_epochs": [
+    8,
+    4,
+    6,
+    7,
+    7
+   ]
+  },
+  "ENC_bag3[pretrained]": {
+   "model_val_auroc": 0.9103051045536125,
+   "test_auroc": 0.9032185538990368,
+   "test_auprc": 0.6107992629957957
+  },
+  "G1[pretrained][m=32]": {
+   "oof_auroc_core": 0.9025992789145005,
+   "model_val_auroc": 0.9086303685462666,
+   "test_auroc": 0.905382742449072,
+   "test_auprc": 0.6158390931368328,
+   "exit0_test_auroc": 0.9042011404665786
+  },
+  "ENC_bag3[pretrained]+G1[pretrained]": {
+   "model_val_auroc": 0.9103416252765141,
+   "test_auroc": 0.9049530690008927,
+   "test_auprc": 0.6162009008662955
+  }
+ }
+}

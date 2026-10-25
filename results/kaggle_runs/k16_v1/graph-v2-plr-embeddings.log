@@ -1,0 +1,100 @@
+[{"stream_name":"stderr","time":10.308439574,"data":"/usr/local/lib/python3.12/dist-packages/nbformat/__init__.py:96: MissingIDFieldWarning: Cell is missing an id field, this will become a hard error in future nbformat versions. You may want to use `normalize()` on your notebooks before validations (available since nbformat 5.1.4). Previous versions of nbformat are fixing this issue transparently, and will stop doing so in the future.\n"}
+,{"stream_name":"stderr","time":10.30853347,"data":"  validate(nb)\n"}
+,{"stream_name":"stderr","time":11.804428821,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":11.804462991,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":11.804468847,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":11.804473465000001,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":12.592819012,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":12.592852776,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":12.592857282,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":12.592860966,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stdout","time":27.212846035,"data":"[v2] device=cuda torch=2.10.0+cu128\n"}
+,{"stream_name":"stdout","time":27.234699273,"data":"Writing /kaggle/working/src/mimic_concepts.py\n"}
+,{"stream_name":"stdout","time":27.264251355,"data":"Writing /kaggle/working/src/mimic_iv.py\n"}
+,{"stream_name":"stdout","time":27.284664712,"data":"Writing /kaggle/working/src/graph_v2.py\n"}
+,{"stream_name":"stdout","time":27.299730119,"data":"Writing /kaggle/working/src/temporal_block.py\n"}
+,{"stream_name":"stdout","time":27.314789622,"data":"Writing /kaggle/working/tests/test_graph_v2.py\n"}
+,{"stream_name":"stdout","time":37.989044541,"data":"......                                                                   [100%]\n"}
+,{"stream_name":"stdout","time":37.989095226,"data":"6 passed in 3.66s\n"}
+,{"stream_name":"stdout","time":37.989183239,"data":" \n"}
+,{"stream_name":"stdout","time":37.989194399,"data":"[v2] leakage tests passed\n"}
+,{"stream_name":"stdout","time":38.753016742,"data":"[v2] cached files: ['block_63737e3178_comorbidity.parquet', 'block_63737e3178_demographics.parquet', 'block_63737e3178_labs.parquet', 'block_63737e3178_treatment.parquet', 'block_63737e3178_vitals.parquet', 'cohort_97de93de81.csv.gz', 'cohort_97de93de81.views.json']\n"}
+,{"stream_name":"stdout","time":38.7570523,"data":"[v2] MIMIC root: /kaggle/input/datasets/akshaybe/updated-mimic-iv\n"}
+,{"stream_name":"stdout","time":38.953860316,"data":"[mimic] cached cohort /kaggle/working/processed/cohort_97de93de81.csv.gz\n"}
+,{"stream_name":"stdout","time":39.709106215,"data":"[mimic] building cohort from /kaggle/input/datasets/akshaybe/updated-mimic-iv/mimic-iv-3.1\n"}
+,{"stream_name":"stdout","time":45.33781552,"data":"  icu stays                      94,458\n"}
+,{"stream_name":"stdout","time":45.337858113,"data":"  first stay per patient         65,366\n"}
+,{"stream_name":"stdout","time":45.337864757,"data":"  adult                          65,366\n"}
+,{"stream_name":"stdout","time":45.337875521,"data":"  los \u003e= 28h                     46,776\n"}
+,{"stream_name":"stdout","time":45.337879294,"data":"  died after window              46,705\n"}
+,{"stream_name":"stdout","time":45.337893019,"data":"  discharged after window        46,651\n"}
+,{"stream_name":"stdout","time":45.605799458,"data":"  [demographics] cached (33 cols)\n"}
+,{"stream_name":"stdout","time":45.60583907,"data":"  [comorbidity] cached (19 cols)\n"}
+,{"stream_name":"stdout","time":45.605842367,"data":"  [labs] cached (168 cols)\n"}
+,{"stream_name":"stdout","time":45.605844717,"data":"  [vitals] cached (84 cols)\n"}
+,{"stream_name":"stdout","time":45.605847439,"data":"  [treatment] cached (27 cols)\n"}
+,{"stream_name":"stdout","time":45.60585004,"data":"  [severity] 12 components: tx_any_vasopressor, tx_invasive_ventilation, tx_crrt, tx_n_interventions, lab_lactate_max, lab_creatinine_max, lab_bun_max, vit_gcs_motor_last, vit_gcs_verbal_last, vit_sbp_min, vit_spo2_min, vit_resp_rate_max\n"}
+,{"stream_name":"stdout","time":74.35128758,"data":"[mimic] wrote /kaggle/working/processed/cohort_a8a805075d.csv.gz  (46,651 patients, 331 features, prevalence 0.110)\n"}
+,{"stream_name":"stdout","time":74.351328024,"data":"[v2] core n=17663  full n=46651  (36s)\n"}
+,{"stream_name":"stdout","time":74.355417952,"data":"[v2] aux patients=28988 prevalence core=0.1078 aux=0.1117\n"}
+,{"stream_name":"stdout","time":76.880556675,"data":"[v2] temporal block (46651, 252) nan-frac=0.606 (core rows 0.442) (2s)\n"}
+,{"stream_name":"stdout","time":91.768903841,"data":"[v2][seed 42] REF_xgb_tuned[base+temporal]             model_val_auroc=0.9077 test_auroc=0.9050 test_auprc=0.5924\n"}
+,{"stream_name":"stderr","time":91.823685424,"data":"/usr/local/lib/python3.12/dist-packages/xgboost/core.py:751: UserWarning: [11:23:33] WARNING: /__w/xgboost/xgboost/src/common/error_msg.cc:62: Falling back to prediction using DMatrix due to mismatched devices. This might lead to higher memory usage and slower performance. XGBoost is running on: cuda:0, while the input data is on: cpu.\n"}
+,{"stream_name":"stderr","time":91.823730913,"data":"Potential solutions:\n"}
+,{"stream_name":"stderr","time":91.82373614,"data":"- Use a data structure that matches the device ordinal in the booster.\n"}
+,{"stream_name":"stderr","time":91.823754533,"data":"- Set the device for booster before call to inplace_predict.\n"}
+,{"stream_name":"stderr","time":91.823760346,"data":"\n"}
+,{"stream_name":"stderr","time":91.823765127,"data":"This warning will only be shown once.\n"}
+,{"stream_name":"stderr","time":91.82377041,"data":"\n"}
+,{"stream_name":"stderr","time":91.823775448,"data":"  return func(**kwargs)\n"}
+,{"stream_name":"stderr","time":91.823780015,"data":"\n"}
+,{"stream_name":"stderr","time":91.82378446,"data":"/usr/local/lib/python3.12/dist-packages/xgboost/core.py:751: UserWarning: [11:23:33] WARNING: /__w/xgboost/xgboost/src/common/error_msg.cc:62: Falling back to prediction using DMatrix due to mismatched devices. This might lead to higher memory usage and slower performance. XGBoost is running on: cuda:0, while the input data is on: cpu.\n"}
+,{"stream_name":"stderr","time":91.823790538,"data":"Potential solutions:\n"}
+,{"stream_name":"stderr","time":91.82379513,"data":"- Use a data structure that matches the device ordinal in the booster.\n"}
+,{"stream_name":"stderr","time":91.823805962,"data":"- Set the device for booster before call to inplace_predict.\n"}
+,{"stream_name":"stderr","time":91.823809484,"data":"\n"}
+,{"stream_name":"stderr","time":91.823812775,"data":"This warning will only be shown once.\n"}
+,{"stream_name":"stderr","time":91.823815828,"data":"\n"}
+,{"stream_name":"stderr","time":91.82381878,"data":"  return func(**kwargs)\n"}
+,{"stream_name":"stdout","time":149.206793748,"data":"[v2][seed 42] ENC[none]                                oof_auroc_core=0.8969 model_val_auroc=0.9108 test_auroc=0.9054 test_auprc=0.5855 best_epochs=[8, 8, 7, 6, 11]\n"}
+,{"stream_name":"stdout","time":228.045855064,"data":"[v2][seed 42] ENC[plr_s0.05]                           oof_auroc_core=0.8955 model_val_auroc=0.9085 test_auroc=0.9047 test_auprc=0.5801 best_epochs=[8, 6, 7, 6, 9]\n"}
+,{"stream_name":"stdout","time":303.603257749,"data":"[v2][seed 42] ENC[plr_s0.3]                            oof_auroc_core=0.8927 model_val_auroc=0.9043 test_auroc=0.9003 test_auprc=0.5685 best_epochs=[6, 6, 7, 6, 5]\n"}
+,{"stream_name":"stdout","time":392.867046949,"data":"[v2][seed 42] ENC_bag3[none]                           model_val_auroc=0.9123 test_auroc=0.9061 test_auprc=0.5857\n"}
+,{"stream_name":"stdout","time":824.560810095,"data":"[v2][seed 42] G1[none][m=32]                           oof_auroc_core=0.9015 model_val_auroc=0.9105 test_auroc=0.9036 test_auprc=0.5835 exit0_test_auroc=0.9033\n"}
+,{"stream_name":"stdout","time":824.56202029,"data":"[v2][seed 42] ENC_bag3+G1[none]                        model_val_auroc=0.9118 test_auroc=0.9055 test_auprc=0.5866\n"}
+,{"stream_name":"stdout","time":824.598437619,"data":"[v2][seed 42] done in 747s\n"}
+,{"stream_name":"stdout","time":843.711955795,"data":"[v2][seed 43] REF_xgb_tuned[base+temporal]             model_val_auroc=0.9223 test_auroc=0.9121 test_auprc=0.6102\n"}
+,{"stream_name":"stdout","time":887.832814544,"data":"[v2][seed 43] ENC[none]                                oof_auroc_core=0.8960 model_val_auroc=0.9210 test_auroc=0.9075 test_auprc=0.6054 best_epochs=[4, 11, 5, 4, 5]\n"}
+,{"stream_name":"stdout","time":978.384102563,"data":"[v2][seed 43] ENC[plr_s0.05]                           oof_auroc_core=0.8922 model_val_auroc=0.9166 test_auroc=0.9080 test_auprc=0.6157 best_epochs=[4, 13, 17, 5, 11]\n"}
+,{"stream_name":"stdout","time":1047.887172347,"data":"[v2][seed 43] ENC[plr_s0.3]                            oof_auroc_core=0.8889 model_val_auroc=0.9133 test_auroc=0.9072 test_auprc=0.5997 best_epochs=[4, 5, 5, 3, 6]\n"}
+,{"stream_name":"stdout","time":1133.966091507,"data":"[v2][seed 43] ENC_bag3[none]                           model_val_auroc=0.9220 test_auroc=0.9064 test_auprc=0.6015\n"}
+,{"stream_name":"stdout","time":1631.102739088,"data":"[v2][seed 43] G1[none][m=32]                           oof_auroc_core=0.8943 model_val_auroc=0.9194 test_auroc=0.9064 test_auprc=0.6049 exit0_test_auroc=0.9063\n"}
+,{"stream_name":"stdout","time":1631.103661436,"data":"[v2][seed 43] ENC_bag3+G1[none]                        model_val_auroc=0.9211 test_auroc=0.9068 test_auprc=0.6056\n"}
+,{"stream_name":"stdout","time":1631.142459025,"data":"[v2][seed 43] done in 807s\n"}
+,{"stream_name":"stdout","time":1642.724970729,"data":"[v2][seed 44] REF_xgb_tuned[base+temporal]             model_val_auroc=0.9116 test_auroc=0.9077 test_auprc=0.6089\n"}
+,{"stream_name":"stdout","time":1693.174697157,"data":"[v2][seed 44] ENC[none]                                oof_auroc_core=0.9028 model_val_auroc=0.9077 test_auroc=0.9061 test_auprc=0.6111 best_epochs=[8, 7, 10, 9, 5]\n"}
+,{"stream_name":"stdout","time":1797.658163167,"data":"[v2][seed 44] ENC[plr_s0.05]                           oof_auroc_core=0.9013 model_val_auroc=0.9065 test_auroc=0.9035 test_auprc=0.6148 best_epochs=[19, 9, 11, 16, 10]\n"}
+,{"stream_name":"stdout","time":1876.209838036,"data":"[v2][seed 44] ENC[plr_s0.3]                            oof_auroc_core=0.8980 model_val_auroc=0.9078 test_auroc=0.8977 test_auprc=0.5881 best_epochs=[11, 9, 3, 5, 4]\n"}
+,{"stream_name":"stdout","time":1977.409760604,"data":"[v2][seed 44] ENC_bag3[none]                           model_val_auroc=0.9098 test_auroc=0.9058 test_auprc=0.6161\n"}
+,{"stream_name":"stdout","time":2505.223812289,"data":"[v2][seed 44] G1[none][m=32]                           oof_auroc_core=0.9038 model_val_auroc=0.9075 test_auroc=0.9042 test_auprc=0.6091 exit0_test_auroc=0.9038\n"}
+,{"stream_name":"stdout","time":2505.22511697,"data":"[v2][seed 44] ENC_bag3+G1[none]                        model_val_auroc=0.9089 test_auroc=0.9055 test_auprc=0.6145\n"}
+,{"stream_name":"stdout","time":2505.260420497,"data":"[v2][seed 44] done in 874s\n"}
+,{"stream_name":"stdout","time":2505.261382018,"data":"\n"}
+,{"stream_name":"stdout","time":2505.261400526,"data":"[v2] SUMMARY test AUROC mean ± sd over seeds [42, 43, 44]\n"}
+,{"stream_name":"stdout","time":2505.261404311,"data":"[v2] ENC[none]                                      0.9063 ± 0.0009  per-seed=[0.9054, 0.9075, 0.9061]\n"}
+,{"stream_name":"stdout","time":2505.261407021,"data":"[v2] ENC[plr_s0.05]                                 0.9054 ± 0.0019  per-seed=[0.9047, 0.908, 0.9035]\n"}
+,{"stream_name":"stdout","time":2505.261409622,"data":"[v2] ENC[plr_s0.3]                                  0.9018 ± 0.0040  per-seed=[0.9003, 0.9072, 0.8977]\n"}
+,{"stream_name":"stdout","time":2505.261412081,"data":"[v2] ENC_bag3+G1[none]                              0.9059 ± 0.0006  per-seed=[0.9055, 0.9068, 0.9055]\n"}
+,{"stream_name":"stdout","time":2505.261414692,"data":"[v2] ENC_bag3[none]                                 0.9061 ± 0.0002  per-seed=[0.9061, 0.9064, 0.9058]\n"}
+,{"stream_name":"stdout","time":2505.261416988,"data":"[v2] G1[none][m=32]                                 0.9047 ± 0.0012  per-seed=[0.9036, 0.9064, 0.9042]\n"}
+,{"stream_name":"stdout","time":2505.261419383,"data":"[v2] REF_xgb_tuned[base+temporal]                   0.9082 ± 0.0029  per-seed=[0.905, 0.9121, 0.9077]\n"}
+,{"stream_name":"stdout","time":2505.2614217,"data":"[v2] DONE\n"}
+,{"stream_name":"stderr","time":2509.392692177,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":2509.392745297,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":2509.626017104,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":2509.626044163,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":2510.404794488,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":2510.72253693,"data":"[NbConvertApp] Writing 122239 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":2513.199136921,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":2514.351072425,"data":"[NbConvertApp] Writing 746788 bytes to __results__.html\n"}
+]

@@ -1,0 +1,111 @@
+[{"stream_name":"stderr","time":7.446878402,"data":"/usr/local/lib/python3.12/dist-packages/nbformat/__init__.py:96: MissingIDFieldWarning: Cell is missing an id field, this will become a hard error in future nbformat versions. You may want to use `normalize()` on your notebooks before validations (available since nbformat 5.1.4). Previous versions of nbformat are fixing this issue transparently, and will stop doing so in the future.\n"}
+,{"stream_name":"stderr","time":7.446951603,"data":"  validate(nb)\n"}
+,{"stream_name":"stderr","time":8.540985345,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":8.541027387,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":8.541052468,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":8.541058797,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":9.349291671,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":9.349338342,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":9.349345477,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":9.349351646,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stdout","time":16.746356039,"data":"[v2] device=cpu torch=2.10.0+cpu\n"}
+,{"stream_name":"stdout","time":16.778078322,"data":"Writing /kaggle/working/src/mimic_concepts.py\n"}
+,{"stream_name":"stdout","time":16.819014677,"data":"Writing /kaggle/working/src/mimic_iv.py\n"}
+,{"stream_name":"stdout","time":16.851868274,"data":"Writing /kaggle/working/src/graph_v2.py\n"}
+,{"stream_name":"stdout","time":16.877481989,"data":"Writing /kaggle/working/src/temporal_block.py\n"}
+,{"stream_name":"stdout","time":16.907824895,"data":"Writing /kaggle/working/src/tabular.py\n"}
+,{"stream_name":"stdout","time":16.933166545,"data":"Writing /kaggle/working/src/instrument.py\n"}
+,{"stream_name":"stdout","time":16.96213661,"data":"Writing /kaggle/working/src/encoder_mv.py\n"}
+,{"stream_name":"stdout","time":16.999424915,"data":"Writing /kaggle/working/src/graph_density.py\n"}
+,{"stream_name":"stdout","time":17.033651943,"data":"Writing /kaggle/working/src/local_push.py\n"}
+,{"stream_name":"stdout","time":17.066646886,"data":"Writing /kaggle/working/src/arch4r.py\n"}
+,{"stream_name":"stdout","time":17.093984008,"data":"Writing /kaggle/working/tests/test_graph_v2.py\n"}
+,{"stream_name":"stdout","time":30.50062088,"data":".......                                                                  [100%]\n"}
+,{"stream_name":"stdout","time":30.500664943,"data":"=============================== warnings summary ===============================\n"}
+,{"stream_name":"stdout","time":30.500671683,"data":"tests/test_graph_v2.py::test_pretrain_then_load_into_crossfit_encoder\n"}
+,{"stream_name":"stdout","time":30.500677318,"data":"  /kaggle/working/src/graph_v2.py:350: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.\n"}
+,{"stream_name":"stdout","time":30.500683303,"data":"  Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)\n"}
+,{"stream_name":"stdout","time":30.500688934,"data":"    tot += float(loss); nb += 1\n"}
+,{"stream_name":"stdout","time":30.50069409,"data":"\n"}
+,{"stream_name":"stdout","time":30.500699578,"data":"-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n"}
+,{"stream_name":"stdout","time":30.500724291,"data":"7 passed, 1 warning in 9.89s\n"}
+,{"stream_name":"stdout","time":30.500728098,"data":" \n"}
+,{"stream_name":"stdout","time":30.500731144,"data":"[v2] leakage tests passed\n"}
+,{"stream_name":"stdout","time":30.92206637,"data":"[v2] cached files: ['block_63737e3178_comorbidity.parquet', 'block_63737e3178_demographics.parquet', 'block_63737e3178_labs.parquet', 'block_63737e3178_treatment.parquet', 'block_63737e3178_vitals.parquet', 'cohort_97de93de81.csv.gz', 'cohort_97de93de81.views.json']\n"}
+,{"stream_name":"stdout","time":30.92585236,"data":"[v2] MIMIC root: /kaggle/input/datasets/akshaybe/updated-mimic-iv\n"}
+,{"stream_name":"stdout","time":31.122646869,"data":"[mimic] cached cohort /kaggle/working/processed/cohort_97de93de81.csv.gz\n"}
+,{"stream_name":"stdout","time":31.960306962,"data":"[mimic] building cohort from /kaggle/input/datasets/akshaybe/updated-mimic-iv/mimic-iv-3.1\n"}
+,{"stream_name":"stdout","time":36.152487833,"data":"  icu stays                      94,458\n"}
+,{"stream_name":"stdout","time":36.152533462,"data":"  first stay per patient         65,366\n"}
+,{"stream_name":"stdout","time":36.152540079,"data":"  adult                          65,366\n"}
+,{"stream_name":"stdout","time":36.152545953,"data":"  los \u003e= 28h                     46,776\n"}
+,{"stream_name":"stdout","time":36.152552055,"data":"  died after window              46,705\n"}
+,{"stream_name":"stdout","time":36.152557858,"data":"  discharged after window        46,651\n"}
+,{"stream_name":"stdout","time":36.152563527,"data":"  [demographics] cached (33 cols)\n"}
+,{"stream_name":"stdout","time":36.152569359,"data":"  [comorbidity] cached (19 cols)\n"}
+,{"stream_name":"stdout","time":36.404908084,"data":"  [labs] cached (168 cols)\n"}
+,{"stream_name":"stdout","time":36.404945396,"data":"  [vitals] cached (84 cols)\n"}
+,{"stream_name":"stdout","time":36.404952516,"data":"  [treatment] cached (27 cols)\n"}
+,{"stream_name":"stdout","time":36.404958905,"data":"  [severity] 12 components: tx_any_vasopressor, tx_invasive_ventilation, tx_crrt, tx_n_interventions, lab_lactate_max, lab_creatinine_max, lab_bun_max, vit_gcs_motor_last, vit_gcs_verbal_last, vit_sbp_min, vit_spo2_min, vit_resp_rate_max\n"}
+,{"stream_name":"stdout","time":76.360049638,"data":"[mimic] wrote /kaggle/working/processed/cohort_a8a805075d.csv.gz  (46,651 patients, 331 features, prevalence 0.110)\n"}
+,{"stream_name":"stdout","time":76.360090322,"data":"[v2] core n=17663  full n=46651  (45s)\n"}
+,{"stream_name":"stdout","time":76.36129801,"data":"[v2] aux patients=28988 prevalence core=0.1078 aux=0.1117\n"}
+,{"stream_name":"stdout","time":79.260672226,"data":"[v2] temporal block (46651, 252) nan-frac=0.606 (core rows 0.442) (3s)\n"}
+,{"stream_name":"stdout","time":84.97242864,"data":"[v2][seed 42] plain_xgboost_phase1cfg[core]            test_auroc=0.8932 test_auprc=0.5549\n"}
+,{"stream_name":"stdout","time":106.703063273,"data":"[v2][seed 42] xgboost_tuned[core]                      test_auroc=0.9027 test_auprc=0.5892\n"}
+,{"stream_name":"stdout","time":144.460226509,"data":"[v2][seed 42] cascade_3stage[core]                     test_auroc=0.9004 test_auprc=0.5917 stage_test_auroc=[0.8701, 0.8852, 0.9004]\n"}
+,{"stream_name":"stderr","time":145.252757014,"data":"/usr/local/lib/python3.12/dist-packages/numpy/lib/_nanfunctions_impl.py:1233: RuntimeWarning: All-NaN slice encountered\n"}
+,{"stream_name":"stderr","time":145.252797221,"data":"  return fnb._ureduce(a, func=_nanmedian, keepdims=keepdims,\n"}
+,{"stream_name":"stderr","time":145.252803929,"data":"\n"}
+,{"stream_name":"stderr","time":145.252827639,"data":"/usr/local/lib/python3.12/dist-packages/numpy/lib/_nanfunctions_impl.py:1233: RuntimeWarning: All-NaN slice encountered\n"}
+,{"stream_name":"stderr","time":145.252833264,"data":"  return fnb._ureduce(a, func=_nanmedian, keepdims=keepdims,\n"}
+,{"stream_name":"stdout","time":170.731145848,"data":"[v2][seed 42] plain_xgboost_phase1cfg[best-data]       test_auroc=0.8960 test_auprc=0.5701\n"}
+,{"stream_name":"stdout","time":313.24651516,"data":"[v2][seed 42] xgboost_tuned[best-data]                 test_auroc=0.9042 test_auprc=0.5975\n"}
+,{"stream_name":"stdout","time":492.28093685,"data":"[v2][seed 42] cascade_3stage[best-data]                test_auroc=0.9019 test_auprc=0.5836 stage_test_auroc=[0.8748, 0.8839, 0.9019]\n"}
+,{"stream_name":"stdout","time":503.898577777,"data":"[v2][seed 42] arch4r_encoder_only_corrected[core]      test_auroc=0.8860 test_auprc=0.5367 best_epoch=6\n"}
+,{"stream_name":"stdout","time":503.899602295,"data":"[v2][seed 42] done in 424s\n"}
+,{"stream_name":"stdout","time":508.786428558,"data":"[v2][seed 43] plain_xgboost_phase1cfg[core]            test_auroc=0.8961 test_auprc=0.5660\n"}
+,{"stream_name":"stdout","time":527.758054773,"data":"[v2][seed 43] xgboost_tuned[core]                      test_auroc=0.9068 test_auprc=0.5834\n"}
+,{"stream_name":"stdout","time":566.676456243,"data":"[v2][seed 43] cascade_3stage[core]                     test_auroc=0.9070 test_auprc=0.5842 stage_test_auroc=[0.8637, 0.8774, 0.907]\n"}
+,{"stream_name":"stderr","time":567.451211888,"data":"/usr/local/lib/python3.12/dist-packages/numpy/lib/_nanfunctions_impl.py:1233: RuntimeWarning: All-NaN slice encountered\n"}
+,{"stream_name":"stderr","time":567.451266478,"data":"  return fnb._ureduce(a, func=_nanmedian, keepdims=keepdims,\n"}
+,{"stream_name":"stderr","time":567.451274611,"data":"\n"}
+,{"stream_name":"stderr","time":567.451280513,"data":"/usr/local/lib/python3.12/dist-packages/numpy/lib/_nanfunctions_impl.py:1233: RuntimeWarning: All-NaN slice encountered\n"}
+,{"stream_name":"stderr","time":567.451286262,"data":"  return fnb._ureduce(a, func=_nanmedian, keepdims=keepdims,\n"}
+,{"stream_name":"stdout","time":592.229794726,"data":"[v2][seed 43] plain_xgboost_phase1cfg[best-data]       test_auroc=0.9037 test_auprc=0.5733\n"}
+,{"stream_name":"stdout","time":699.747060817,"data":"[v2][seed 43] xgboost_tuned[best-data]                 test_auroc=0.9137 test_auprc=0.6071\n"}
+,{"stream_name":"stdout","time":877.719370436,"data":"[v2][seed 43] cascade_3stage[best-data]                test_auroc=0.9110 test_auprc=0.6042 stage_test_auroc=[0.8762, 0.8865, 0.911]\n"}
+,{"stream_name":"stdout","time":888.985282212,"data":"[v2][seed 43] arch4r_encoder_only_corrected[core]      test_auroc=0.8977 test_auprc=0.5391 best_epoch=8\n"}
+,{"stream_name":"stdout","time":888.985327105,"data":"[v2][seed 43] done in 385s\n"}
+,{"stream_name":"stdout","time":893.875027581,"data":"[v2][seed 44] plain_xgboost_phase1cfg[core]            test_auroc=0.8925 test_auprc=0.5606\n"}
+,{"stream_name":"stdout","time":911.194797511,"data":"[v2][seed 44] xgboost_tuned[core]                      test_auroc=0.9008 test_auprc=0.5867\n"}
+,{"stream_name":"stdout","time":948.880639003,"data":"[v2][seed 44] cascade_3stage[core]                     test_auroc=0.8961 test_auprc=0.5762 stage_test_auroc=[0.8589, 0.8705, 0.8961]\n"}
+,{"stream_name":"stderr","time":949.658419024,"data":"/usr/local/lib/python3.12/dist-packages/numpy/lib/_nanfunctions_impl.py:1233: RuntimeWarning: All-NaN slice encountered\n"}
+,{"stream_name":"stderr","time":949.658462393,"data":"  return fnb._ureduce(a, func=_nanmedian, keepdims=keepdims,\n"}
+,{"stream_name":"stderr","time":949.658469611,"data":"\n"}
+,{"stream_name":"stderr","time":949.658473567,"data":"/usr/local/lib/python3.12/dist-packages/numpy/lib/_nanfunctions_impl.py:1233: RuntimeWarning: All-NaN slice encountered\n"}
+,{"stream_name":"stderr","time":949.658493667,"data":"  return fnb._ureduce(a, func=_nanmedian, keepdims=keepdims,\n"}
+,{"stream_name":"stdout","time":974.378353618,"data":"[v2][seed 44] plain_xgboost_phase1cfg[best-data]       test_auroc=0.9023 test_auprc=0.5861\n"}
+,{"stream_name":"stdout","time":1090.301846998,"data":"[v2][seed 44] xgboost_tuned[best-data]                 test_auroc=0.9066 test_auprc=0.6108\n"}
+,{"stream_name":"stdout","time":1268.493209463,"data":"[v2][seed 44] cascade_3stage[best-data]                test_auroc=0.9041 test_auprc=0.5949 stage_test_auroc=[0.8659, 0.8761, 0.9041]\n"}
+,{"stream_name":"stdout","time":1279.092810228,"data":"[v2][seed 44] arch4r_encoder_only_corrected[core]      test_auroc=0.8920 test_auprc=0.5524 best_epoch=6\n"}
+,{"stream_name":"stdout","time":1279.095518167,"data":"[v2][seed 44] done in 390s\n"}
+,{"stream_name":"stdout","time":1279.097045657,"data":"\n"}
+,{"stream_name":"stdout","time":1279.097087763,"data":"[v2] SUMMARY test AUROC mean ± sd over seeds [42, 43, 44]\n"}
+,{"stream_name":"stdout","time":1279.097096546,"data":"[v2] arch4r_encoder_only_corrected[core]            0.8919 ± 0.0048  per-seed=[0.886, 0.8977, 0.892]\n"}
+,{"stream_name":"stdout","time":1279.09710307,"data":"[v2] cascade_3stage[best-data]                      0.9057 ± 0.0039  per-seed=[0.9019, 0.911, 0.9041]\n"}
+,{"stream_name":"stdout","time":1279.097109585,"data":"[v2] cascade_3stage[core]                           0.9012 ± 0.0045  per-seed=[0.9004, 0.907, 0.8961]\n"}
+,{"stream_name":"stdout","time":1279.097115312,"data":"[v2] plain_xgboost_phase1cfg[best-data]             0.9006 ± 0.0034  per-seed=[0.896, 0.9037, 0.9023]\n"}
+,{"stream_name":"stdout","time":1279.097121536,"data":"[v2] plain_xgboost_phase1cfg[core]                  0.8939 ± 0.0015  per-seed=[0.8932, 0.8961, 0.8925]\n"}
+,{"stream_name":"stdout","time":1279.097128069,"data":"[v2] xgboost_tuned[best-data]                       0.9082 ± 0.0040  per-seed=[0.9042, 0.9137, 0.9066]\n"}
+,{"stream_name":"stdout","time":1279.097134197,"data":"[v2] xgboost_tuned[core]                            0.9034 ± 0.0025  per-seed=[0.9027, 0.9068, 0.9008]\n"}
+,{"stream_name":"stdout","time":1279.097140467,"data":"[v2] DONE\n"}
+,{"stream_name":"stderr","time":1284.308884637,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":1284.30894019,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":1284.521932437,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":1284.521980382,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":1285.309032469,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":1285.748447326,"data":"[NbConvertApp] Writing 227534 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":1288.920838534,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":1290.557429143,"data":"[NbConvertApp] Writing 1094961 bytes to __results__.html\n"}
+]

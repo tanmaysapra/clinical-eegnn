@@ -1,0 +1,111 @@
+[{"stream_name":"stderr","time":8.080320634,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":8.080397247,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":8.080404684,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":8.080409272,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":8.685850894,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":8.685897136,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":8.685902864,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":8.685906978,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stdout","time":17.922747955,"data":"[v2] device=cuda torch=2.10.0+cu128\n"}
+,{"stream_name":"stdout","time":17.943674927,"data":"Writing /kaggle/working/src/mimic_concepts.py\n"}
+,{"stream_name":"stdout","time":17.97224993,"data":"Writing /kaggle/working/src/mimic_iv.py\n"}
+,{"stream_name":"stdout","time":17.993211981,"data":"Writing /kaggle/working/src/graph_v2.py\n"}
+,{"stream_name":"stdout","time":18.008120556,"data":"Writing /kaggle/working/src/temporal_block.py\n"}
+,{"stream_name":"stdout","time":18.023636436,"data":"Writing /kaggle/working/tests/test_graph_v2.py\n"}
+,{"stream_name":"stdout","time":31.362310298,"data":".......                                                                  [100%]\n"}
+,{"stream_name":"stdout","time":31.362357459,"data":"=============================== warnings summary ===============================\n"}
+,{"stream_name":"stdout","time":31.362368415,"data":"tests/test_graph_v2.py::test_pretrain_then_load_into_crossfit_encoder\n"}
+,{"stream_name":"stdout","time":31.362374266,"data":"  /kaggle/working/src/graph_v2.py:350: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.\n"}
+,{"stream_name":"stdout","time":31.362379456,"data":"  Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)\n"}
+,{"stream_name":"stdout","time":31.362384494,"data":"    tot += float(loss); nb += 1\n"}
+,{"stream_name":"stdout","time":31.362388492,"data":"\n"}
+,{"stream_name":"stdout","time":31.362392516,"data":"-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n"}
+,{"stream_name":"stdout","time":31.362397292,"data":"7 passed, 1 warning in 8.73s\n"}
+,{"stream_name":"stdout","time":31.362402649,"data":" \n"}
+,{"stream_name":"stdout","time":31.362406871,"data":"[v2] leakage tests passed\n"}
+,{"stream_name":"stdout","time":31.691972967,"data":"[v2] cached files: ['block_63737e3178_comorbidity.parquet', 'block_63737e3178_demographics.parquet', 'block_63737e3178_labs.parquet', 'block_63737e3178_treatment.parquet', 'block_63737e3178_vitals.parquet', 'cohort_97de93de81.csv.gz', 'cohort_97de93de81.views.json']\n"}
+,{"stream_name":"stdout","time":31.694003957,"data":"[v2] MIMIC root: /kaggle/input/datasets/akshaybe/updated-mimic-iv\n"}
+,{"stream_name":"stdout","time":31.892886059,"data":"[mimic] cached cohort /kaggle/working/processed/cohort_97de93de81.csv.gz\n"}
+,{"stream_name":"stdout","time":32.551783499,"data":"[mimic] building cohort from /kaggle/input/datasets/akshaybe/updated-mimic-iv/mimic-iv-3.1\n"}
+,{"stream_name":"stdout","time":35.089294012,"data":"  icu stays                      94,458\n"}
+,{"stream_name":"stdout","time":35.089341169,"data":"  first stay per patient         65,366\n"}
+,{"stream_name":"stdout","time":35.089347254,"data":"  adult                          65,366\n"}
+,{"stream_name":"stdout","time":35.089351332,"data":"  los \u003e= 28h                     46,776\n"}
+,{"stream_name":"stdout","time":35.089356241,"data":"  died after window              46,705\n"}
+,{"stream_name":"stdout","time":35.089360058,"data":"  discharged after window        46,651\n"}
+,{"stream_name":"stdout","time":35.089364007,"data":"  [demographics] cached (33 cols)\n"}
+,{"stream_name":"stdout","time":35.089380636,"data":"  [comorbidity] cached (19 cols)\n"}
+,{"stream_name":"stdout","time":35.34108246,"data":"  [labs] cached (168 cols)\n"}
+,{"stream_name":"stdout","time":35.34110927,"data":"  [vitals] cached (84 cols)\n"}
+,{"stream_name":"stdout","time":35.341113832,"data":"  [treatment] cached (27 cols)\n"}
+,{"stream_name":"stdout","time":35.341117382,"data":"  [severity] 12 components: tx_any_vasopressor, tx_invasive_ventilation, tx_crrt, tx_n_interventions, lab_lactate_max, lab_creatinine_max, lab_bun_max, vit_gcs_motor_last, vit_gcs_verbal_last, vit_sbp_min, vit_spo2_min, vit_resp_rate_max\n"}
+,{"stream_name":"stdout","time":61.609979779,"data":"[mimic] wrote /kaggle/working/processed/cohort_a8a805075d.csv.gz  (46,651 patients, 331 features, prevalence 0.110)\n"}
+,{"stream_name":"stdout","time":61.610054984,"data":"[v2] core n=17663  full n=46651  (30s)\n"}
+,{"stream_name":"stdout","time":61.610927735,"data":"[v2] aux patients=28988 prevalence core=0.1078 aux=0.1117\n"}
+,{"stream_name":"stdout","time":63.947571929,"data":"[v2] temporal block (46651, 252) nan-frac=0.606 (core rows 0.442) (2s)\n"}
+,{"stream_name":"stdout","time":78.109094622,"data":"[v2][seed 42] REF_xgb_tuned[base+temporal]             model_val_auroc=0.9077 test_auroc=0.9050 test_auprc=0.5924\n"}
+,{"stream_name":"stderr","time":78.171798922,"data":"/usr/local/lib/python3.12/dist-packages/xgboost/core.py:751: UserWarning: [14:19:46] WARNING: /__w/xgboost/xgboost/src/common/error_msg.cc:62: Falling back to prediction using DMatrix due to mismatched devices. This might lead to higher memory usage and slower performance. XGBoost is running on: cuda:0, while the input data is on: cpu.\n"}
+,{"stream_name":"stderr","time":78.171844667,"data":"Potential solutions:\n"}
+,{"stream_name":"stderr","time":78.171852113,"data":"- Use a data structure that matches the device ordinal in the booster.\n"}
+,{"stream_name":"stderr","time":78.171857281,"data":"- Set the device for booster before call to inplace_predict.\n"}
+,{"stream_name":"stderr","time":78.171862592,"data":"\n"}
+,{"stream_name":"stderr","time":78.171866713,"data":"This warning will only be shown once.\n"}
+,{"stream_name":"stderr","time":78.171870728,"data":"\n"}
+,{"stream_name":"stderr","time":78.171874683,"data":"  return func(**kwargs)\n"}
+,{"stream_name":"stderr","time":78.171878947,"data":"\n"}
+,{"stream_name":"stderr","time":78.17188338,"data":"/usr/local/lib/python3.12/dist-packages/xgboost/core.py:751: UserWarning: [14:19:46] WARNING: /__w/xgboost/xgboost/src/common/error_msg.cc:62: Falling back to prediction using DMatrix due to mismatched devices. This might lead to higher memory usage and slower performance. XGBoost is running on: cuda:0, while the input data is on: cpu.\n"}
+,{"stream_name":"stderr","time":78.171889533,"data":"Potential solutions:\n"}
+,{"stream_name":"stderr","time":78.171894281,"data":"- Use a data structure that matches the device ordinal in the booster.\n"}
+,{"stream_name":"stderr","time":78.171899603,"data":"- Set the device for booster before call to inplace_predict.\n"}
+,{"stream_name":"stderr","time":78.171922538,"data":"\n"}
+,{"stream_name":"stderr","time":78.17192595,"data":"This warning will only be shown once.\n"}
+,{"stream_name":"stderr","time":78.171929168,"data":"\n"}
+,{"stream_name":"stderr","time":78.171932328,"data":"  return func(**kwargs)\n"}
+,{"stream_name":"stderr","time":83.052100927,"data":"/kaggle/working/src/graph_v2.py:350: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.\n"}
+,{"stream_name":"stderr","time":83.052128456,"data":"Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)\n"}
+,{"stream_name":"stderr","time":83.052133585,"data":"  tot += float(loss); nb += 1\n"}
+,{"stream_name":"stderr","time":83.052137338,"data":"\n"}
+,{"stream_name":"stderr","time":83.052140731,"data":"/kaggle/working/src/graph_v2.py:350: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.\n"}
+,{"stream_name":"stderr","time":83.052163145,"data":"Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)\n"}
+,{"stream_name":"stderr","time":83.052168097,"data":"  tot += float(loss); nb += 1\n"}
+,{"stream_name":"stdout","time":100.907604659,"data":"[v2][seed 42] pretrain loss 0.2048 -\u003e 0.0572 (20s)\n"}
+,{"stream_name":"stdout","time":145.475450325,"data":"[v2][seed 42] ENC[scratch]                             oof_auroc_core=0.8969 model_val_auroc=0.9108 test_auroc=0.9054 test_auprc=0.5855 best_epochs=[8, 8, 7, 6, 11]\n"}
+,{"stream_name":"stdout","time":184.286904484,"data":"[v2][seed 42] ENC[pretrained]                          oof_auroc_core=0.9038 model_val_auroc=0.9134 test_auroc=0.9085 test_auprc=0.5970 best_epochs=[5, 4, 7, 6, 6]\n"}
+,{"stream_name":"stdout","time":262.675960995,"data":"[v2][seed 42] ENC_bag3[pretrained]                     model_val_auroc=0.9132 test_auroc=0.9085 test_auprc=0.5948\n"}
+,{"stream_name":"stdout","time":723.023555366,"data":"[v2][seed 42] G1[pretrained][m=32]                     oof_auroc_core=0.8990 model_val_auroc=0.9126 test_auroc=0.9094 test_auprc=0.5880 exit0_test_auroc=0.9083\n"}
+,{"stream_name":"stdout","time":723.024718064,"data":"[v2][seed 42] ENC_bag3[pretrained]+G1[pretrained]      model_val_auroc=0.9139 test_auroc=0.9099 test_auprc=0.5945\n"}
+,{"stream_name":"stdout","time":723.064789574,"data":"[v2][seed 42] done in 659s\n"}
+,{"stream_name":"stdout","time":742.969308033,"data":"[v2][seed 43] REF_xgb_tuned[base+temporal]             model_val_auroc=0.9223 test_auroc=0.9121 test_auprc=0.6102\n"}
+,{"stream_name":"stdout","time":763.947475675,"data":"[v2][seed 43] pretrain loss 0.2030 -\u003e 0.0571 (18s)\n"}
+,{"stream_name":"stdout","time":803.683241878,"data":"[v2][seed 43] ENC[scratch]                             oof_auroc_core=0.8960 model_val_auroc=0.9210 test_auroc=0.9075 test_auprc=0.6054 best_epochs=[4, 11, 5, 4, 5]\n"}
+,{"stream_name":"stdout","time":842.569506143,"data":"[v2][seed 43] ENC[pretrained]                          oof_auroc_core=0.8989 model_val_auroc=0.9192 test_auroc=0.9079 test_auprc=0.6096 best_epochs=[4, 7, 7, 4, 5]\n"}
+,{"stream_name":"stdout","time":921.203702046,"data":"[v2][seed 43] ENC_bag3[pretrained]                     model_val_auroc=0.9207 test_auroc=0.9082 test_auprc=0.6099\n"}
+,{"stream_name":"stdout","time":1319.925562902,"data":"[v2][seed 43] G1[pretrained][m=32]                     oof_auroc_core=0.8932 model_val_auroc=0.9148 test_auroc=0.9093 test_auprc=0.5992 exit0_test_auroc=0.9072\n"}
+,{"stream_name":"stdout","time":1319.926757549,"data":"[v2][seed 43] ENC_bag3[pretrained]+G1[pretrained]      model_val_auroc=0.9190 test_auroc=0.9097 test_auprc=0.6089\n"}
+,{"stream_name":"stdout","time":1319.960576775,"data":"[v2][seed 43] done in 597s\n"}
+,{"stream_name":"stdout","time":1331.797551889,"data":"[v2][seed 44] REF_xgb_tuned[base+temporal]             model_val_auroc=0.9116 test_auroc=0.9077 test_auprc=0.6089\n"}
+,{"stream_name":"stdout","time":1352.812995062,"data":"[v2][seed 44] pretrain loss 0.2005 -\u003e 0.0572 (18s)\n"}
+,{"stream_name":"stdout","time":1397.068114121,"data":"[v2][seed 44] ENC[scratch]                             oof_auroc_core=0.9028 model_val_auroc=0.9077 test_auroc=0.9061 test_auprc=0.6111 best_epochs=[8, 7, 10, 9, 5]\n"}
+,{"stream_name":"stdout","time":1437.946464777,"data":"[v2][seed 44] ENC[pretrained]                          oof_auroc_core=0.9073 model_val_auroc=0.9109 test_auroc=0.9030 test_auprc=0.6110 best_epochs=[8, 4, 6, 7, 7]\n"}
+,{"stream_name":"stdout","time":1519.015493447,"data":"[v2][seed 44] ENC_bag3[pretrained]                     model_val_auroc=0.9103 test_auroc=0.9032 test_auprc=0.6108\n"}
+,{"stream_name":"stdout","time":1939.423073595,"data":"[v2][seed 44] G1[pretrained][m=32]                     oof_auroc_core=0.9026 model_val_auroc=0.9086 test_auroc=0.9054 test_auprc=0.6158 exit0_test_auroc=0.9042\n"}
+,{"stream_name":"stdout","time":1939.423946895,"data":"[v2][seed 44] ENC_bag3[pretrained]+G1[pretrained]      model_val_auroc=0.9103 test_auroc=0.9050 test_auprc=0.6162\n"}
+,{"stream_name":"stdout","time":1939.463781781,"data":"[v2][seed 44] done in 620s\n"}
+,{"stream_name":"stdout","time":1939.46496758,"data":"\n"}
+,{"stream_name":"stdout","time":1939.464985079,"data":"[v2] SUMMARY test AUROC mean ± sd over seeds [42, 43, 44]\n"}
+,{"stream_name":"stdout","time":1939.464991292,"data":"[v2] ENC[pretrained]                                0.9065 ± 0.0024  per-seed=[0.9085, 0.9079, 0.903]\n"}
+,{"stream_name":"stdout","time":1939.464996078,"data":"[v2] ENC[scratch]                                   0.9063 ± 0.0009  per-seed=[0.9054, 0.9075, 0.9061]\n"}
+,{"stream_name":"stdout","time":1939.465000696,"data":"[v2] ENC_bag3[pretrained]                           0.9067 ± 0.0024  per-seed=[0.9085, 0.9082, 0.9032]\n"}
+,{"stream_name":"stdout","time":1939.465010787,"data":"[v2] ENC_bag3[pretrained]+G1[pretrained]            0.9082 ± 0.0023  per-seed=[0.9099, 0.9097, 0.905]\n"}
+,{"stream_name":"stdout","time":1939.465014257,"data":"[v2] G1[pretrained][m=32]                           0.9080 ± 0.0019  per-seed=[0.9094, 0.9093, 0.9054]\n"}
+,{"stream_name":"stdout","time":1939.465017711,"data":"[v2] REF_xgb_tuned[base+temporal]                   0.9082 ± 0.0029  per-seed=[0.905, 0.9121, 0.9077]\n"}
+,{"stream_name":"stdout","time":1939.465051336,"data":"[v2] DONE\n"}
+,{"stream_name":"stderr","time":1942.92752424,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":1942.927554202,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":1943.112208859,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":1943.112239039,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":1943.747148224,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":1944.04751423,"data":"[NbConvertApp] Writing 125992 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":1946.315219348,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":1947.365288414,"data":"[NbConvertApp] Writing 766351 bytes to __results__.html\n"}
+]

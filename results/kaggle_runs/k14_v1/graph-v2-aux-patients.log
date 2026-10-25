@@ -1,0 +1,120 @@
+[{"stream_name":"stderr","time":7.616275567,"data":"/usr/local/lib/python3.12/dist-packages/nbformat/__init__.py:96: MissingIDFieldWarning: Cell is missing an id field, this will become a hard error in future nbformat versions. You may want to use `normalize()` on your notebooks before validations (available since nbformat 5.1.4). Previous versions of nbformat are fixing this issue transparently, and will stop doing so in the future.\n"}
+,{"stream_name":"stderr","time":7.6163324580000005,"data":"  validate(nb)\n"}
+,{"stream_name":"stderr","time":8.592873804,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":8.592906433,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":8.592912572,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":8.5929168,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":9.23384111,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":9.233872741,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":9.233878945,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":9.233883489,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stdout","time":19.219840524,"data":"[v2] device=cuda torch=2.10.0+cu128\n"}
+,{"stream_name":"stdout","time":19.240740913,"data":"Writing /kaggle/working/src/mimic_concepts.py\n"}
+,{"stream_name":"stdout","time":19.267939545,"data":"Writing /kaggle/working/src/mimic_iv.py\n"}
+,{"stream_name":"stdout","time":19.287348166,"data":"Writing /kaggle/working/src/graph_v2.py\n"}
+,{"stream_name":"stdout","time":19.301945864,"data":"Writing /kaggle/working/tests/test_graph_v2.py\n"}
+,{"stream_name":"stdout","time":27.02649466,"data":".....                                                                    [100%]\n"}
+,{"stream_name":"stdout","time":27.02653737,"data":"5 passed in 3.26s\n"}
+,{"stream_name":"stdout","time":27.026547987,"data":" \n"}
+,{"stream_name":"stdout","time":27.026551417,"data":"[v2] leakage tests passed\n"}
+,{"stream_name":"stdout","time":27.254233225,"data":"[v2] cached files: ['block_63737e3178_comorbidity.parquet', 'block_63737e3178_demographics.parquet', 'block_63737e3178_labs.parquet', 'block_63737e3178_treatment.parquet', 'block_63737e3178_vitals.parquet', 'cohort_97de93de81.csv.gz', 'cohort_97de93de81.views.json']\n"}
+,{"stream_name":"stdout","time":27.258609383,"data":"[v2] MIMIC root: /kaggle/input/datasets/akshaybe/updated-mimic-iv\n"}
+,{"stream_name":"stdout","time":27.455257661,"data":"[mimic] cached cohort /kaggle/working/processed/cohort_97de93de81.csv.gz\n"}
+,{"stream_name":"stdout","time":28.163607792,"data":"[mimic] building cohort from /kaggle/input/datasets/akshaybe/updated-mimic-iv/mimic-iv-3.1\n"}
+,{"stream_name":"stdout","time":30.690328867,"data":"  icu stays                      94,458\n"}
+,{"stream_name":"stdout","time":30.690362134,"data":"  first stay per patient         65,366\n"}
+,{"stream_name":"stdout","time":30.690368757999998,"data":"  adult                          65,366\n"}
+,{"stream_name":"stdout","time":30.690374996,"data":"  los \u003e= 28h                     46,776\n"}
+,{"stream_name":"stdout","time":30.690381432,"data":"  died after window              46,705\n"}
+,{"stream_name":"stdout","time":30.690386937,"data":"  discharged after window        46,651\n"}
+,{"stream_name":"stdout","time":30.690406511,"data":"  [demographics] cached (33 cols)\n"}
+,{"stream_name":"stdout","time":30.690411236,"data":"  [comorbidity] cached (19 cols)\n"}
+,{"stream_name":"stdout","time":30.955077125,"data":"  [labs] cached (168 cols)\n"}
+,{"stream_name":"stdout","time":30.955102521,"data":"  [vitals] cached (84 cols)\n"}
+,{"stream_name":"stdout","time":30.955106337,"data":"  [treatment] cached (27 cols)\n"}
+,{"stream_name":"stdout","time":30.955109801,"data":"  [severity] 12 components: tx_any_vasopressor, tx_invasive_ventilation, tx_crrt, tx_n_interventions, lab_lactate_max, lab_creatinine_max, lab_bun_max, vit_gcs_motor_last, vit_gcs_verbal_last, vit_sbp_min, vit_spo2_min, vit_resp_rate_max\n"}
+,{"stream_name":"stdout","time":59.510031657,"data":"[mimic] wrote /kaggle/working/processed/cohort_a8a805075d.csv.gz  (46,651 patients, 331 features, prevalence 0.110)\n"}
+,{"stream_name":"stdout","time":59.510064657,"data":"[v2] core n=17663  full n=46651  (32s)\n"}
+,{"stream_name":"stdout","time":59.511168784,"data":"[v2] aux patients=28988 prevalence core=0.1078 aux=0.1117\n"}
+,{"stream_name":"stdout","time":63.969694433,"data":"[v2][seed 42] REF_xgb_tuned[core]                      model_val_auroc=0.9006 test_auroc=0.9018 test_auprc=0.5928\n"}
+,{"stream_name":"stderr","time":64.10625336,"data":"/usr/local/lib/python3.12/dist-packages/xgboost/core.py:751: UserWarning: [06:49:58] WARNING: /__w/xgboost/xgboost/src/common/error_msg.cc:62: Falling back to prediction using DMatrix due to mismatched devices. This might lead to higher memory usage and slower performance. XGBoost is running on: cuda:0, while the input data is on: cpu.\n"}
+,{"stream_name":"stderr","time":64.106296607,"data":"Potential solutions:\n"}
+,{"stream_name":"stderr","time":64.106302597,"data":"- Use a data structure that matches the device ordinal in the booster.\n"}
+,{"stream_name":"stderr","time":64.106308218,"data":"- Set the device for booster before call to inplace_predict.\n"}
+,{"stream_name":"stderr","time":64.106313715,"data":"\n"}
+,{"stream_name":"stderr","time":64.10631885,"data":"This warning will only be shown once.\n"}
+,{"stream_name":"stderr","time":64.10632412,"data":"\n"}
+,{"stream_name":"stderr","time":64.10632917,"data":"  return func(**kwargs)\n"}
+,{"stream_name":"stderr","time":64.106334316,"data":"\n"}
+,{"stream_name":"stderr","time":64.106339731,"data":"/usr/local/lib/python3.12/dist-packages/xgboost/core.py:751: UserWarning: [06:49:58] WARNING: /__w/xgboost/xgboost/src/common/error_msg.cc:62: Falling back to prediction using DMatrix due to mismatched devices. This might lead to higher memory usage and slower performance. XGBoost is running on: cuda:0, while the input data is on: cpu.\n"}
+,{"stream_name":"stderr","time":64.106346129,"data":"Potential solutions:\n"}
+,{"stream_name":"stderr","time":64.106351326,"data":"- Use a data structure that matches the device ordinal in the booster.\n"}
+,{"stream_name":"stderr","time":64.106357198,"data":"- Set the device for booster before call to inplace_predict.\n"}
+,{"stream_name":"stderr","time":64.106362684,"data":"\n"}
+,{"stream_name":"stderr","time":64.106368186,"data":"This warning will only be shown once.\n"}
+,{"stream_name":"stderr","time":64.106374072,"data":"\n"}
+,{"stream_name":"stderr","time":64.106379192,"data":"  return func(**kwargs)\n"}
+,{"stream_name":"stdout","time":85.427533957,"data":"[v2][seed 42] ENC[core][B_lr3e-4_wd1e-3_p0.3]          oof_auroc_core=0.8971 model_val_auroc=0.9048 test_auroc=0.9009 test_auprc=0.5807 best_epochs=[11, 13, 11, 19, 13]\n"}
+,{"stream_name":"stdout","time":99.139278373,"data":"[v2][seed 42] ENC[core][C_lr3e-4_wd1e-2_p0.4_d256]     oof_auroc_core=0.8970 model_val_auroc=0.9026 test_auroc=0.9040 test_auprc=0.5870 best_epochs=[15, 9, 18, 11, 11]\n"}
+,{"stream_name":"stdout","time":113.569924929,"data":"[v2][seed 42] ENC_bag2[core][B_lr3e-4_wd1e-3_p0.3]     model_val_auroc=0.9050 test_auroc=0.9016 test_auprc=0.5793\n"}
+,{"stream_name":"stdout","time":175.829241692,"data":"[v2][seed 42] G1[core][m=32]                           oof_auroc_core=0.8965 model_val_auroc=0.9011 test_auroc=0.9029 test_auprc=0.5894 exit0_test_auroc=0.9026\n"}
+,{"stream_name":"stdout","time":175.83030647,"data":"[v2][seed 42] ENC_bag2+G1[core]                        model_val_auroc=0.9033 test_auroc=0.9028 test_auprc=0.5865\n"}
+,{"stream_name":"stdout","time":188.341655182,"data":"[v2][seed 42] REF_xgb_tuned[core+aux]                  model_val_auroc=0.9108 test_auroc=0.9059 test_auprc=0.6030\n"}
+,{"stream_name":"stdout","time":230.561387594,"data":"[v2][seed 42] ENC[core+aux][B_lr3e-4_wd1e-3_p0.3]      oof_auroc_core=0.9009 model_val_auroc=0.9122 test_auroc=0.9055 test_auprc=0.5792 best_epochs=[13, 6, 6, 11, 11]\n"}
+,{"stream_name":"stdout","time":269.280355965,"data":"[v2][seed 42] ENC[core+aux][C_lr3e-4_wd1e-2_p0.4_d256] oof_auroc_core=0.9018 model_val_auroc=0.9122 test_auroc=0.9055 test_auprc=0.5850 best_epochs=[6, 5, 11, 11, 7]\n"}
+,{"stream_name":"stdout","time":315.459389841,"data":"[v2][seed 42] ENC_bag2[core+aux][C_lr3e-4_wd1e-2_p0.4_d256] model_val_auroc=0.9137 test_auroc=0.9061 test_auprc=0.5865\n"}
+,{"stream_name":"stdout","time":802.316313469,"data":"[v2][seed 42] G1[core+aux][m=32]                       oof_auroc_core=0.9023 model_val_auroc=0.9120 test_auroc=0.9057 test_auprc=0.5768 exit0_test_auroc=0.9058\n"}
+,{"stream_name":"stdout","time":802.317500885,"data":"[v2][seed 42] ENC_bag2+G1[core+aux]                    model_val_auroc=0.9132 test_auroc=0.9062 test_auprc=0.5831\n"}
+,{"stream_name":"stdout","time":802.345083104,"data":"[v2][seed 42] done in 742s\n"}
+,{"stream_name":"stdout","time":806.342175104,"data":"[v2][seed 43] REF_xgb_tuned[core]                      model_val_auroc=0.9109 test_auroc=0.9080 test_auprc=0.5887\n"}
+,{"stream_name":"stdout","time":820.724597619,"data":"[v2][seed 43] ENC[core][B_lr3e-4_wd1e-3_p0.3]          oof_auroc_core=0.8892 model_val_auroc=0.9038 test_auroc=0.9019 test_auprc=0.5729 best_epochs=[6, 11, 18, 12, 15]\n"}
+,{"stream_name":"stdout","time":833.368137567,"data":"[v2][seed 43] ENC[core][C_lr3e-4_wd1e-2_p0.4_d256]     oof_auroc_core=0.8901 model_val_auroc=0.9032 test_auroc=0.9014 test_auprc=0.5762 best_epochs=[10, 8, 11, 11, 14]\n"}
+,{"stream_name":"stdout","time":845.236178851,"data":"[v2][seed 43] ENC_bag2[core][C_lr3e-4_wd1e-2_p0.4_d256] model_val_auroc=0.9057 test_auroc=0.9016 test_auprc=0.5749\n"}
+,{"stream_name":"stdout","time":932.746907887,"data":"[v2][seed 43] G1[core][m=32]                           oof_auroc_core=0.8902 model_val_auroc=0.9020 test_auroc=0.8998 test_auprc=0.5752 exit0_test_auroc=0.8994\n"}
+,{"stream_name":"stdout","time":932.747852504,"data":"[v2][seed 43] ENC_bag2+G1[core]                        model_val_auroc=0.9043 test_auroc=0.9011 test_auprc=0.5762\n"}
+,{"stream_name":"stdout","time":940.922159817,"data":"[v2][seed 43] REF_xgb_tuned[core+aux]                  model_val_auroc=0.9205 test_auroc=0.9079 test_auprc=0.6036\n"}
+,{"stream_name":"stdout","time":984.453082376,"data":"[v2][seed 43] ENC[core+aux][B_lr3e-4_wd1e-3_p0.3]      oof_auroc_core=0.8961 model_val_auroc=0.9181 test_auroc=0.9036 test_auprc=0.5840 best_epochs=[9, 16, 9, 8, 8]\n"}
+,{"stream_name":"stdout","time":1028.415939954,"data":"[v2][seed 43] ENC[core+aux][C_lr3e-4_wd1e-2_p0.4_d256] oof_auroc_core=0.8946 model_val_auroc=0.9152 test_auroc=0.9073 test_auprc=0.5937 best_epochs=[9, 16, 12, 5, 11]\n"}
+,{"stream_name":"stdout","time":1072.631719161,"data":"[v2][seed 43] ENC_bag2[core+aux][B_lr3e-4_wd1e-3_p0.3] model_val_auroc=0.9179 test_auroc=0.9049 test_auprc=0.5887\n"}
+,{"stream_name":"stdout","time":1371.373673441,"data":"[v2][seed 43] G1[core+aux][m=32]                       oof_auroc_core=0.8896 model_val_auroc=0.9163 test_auroc=0.9060 test_auprc=0.5911 exit0_test_auroc=0.9056\n"}
+,{"stream_name":"stdout","time":1371.374536557,"data":"[v2][seed 43] ENC_bag2+G1[core+aux]                    model_val_auroc=0.9174 test_auroc=0.9059 test_auprc=0.5915\n"}
+,{"stream_name":"stdout","time":1371.397517433,"data":"[v2][seed 43] done in 569s\n"}
+,{"stream_name":"stdout","time":1373.448145951,"data":"[v2][seed 44] REF_xgb_tuned[core]                      model_val_auroc=0.9075 test_auroc=0.8978 test_auprc=0.5768\n"}
+,{"stream_name":"stdout","time":1389.477391756,"data":"[v2][seed 44] ENC[core][B_lr3e-4_wd1e-3_p0.3]          oof_auroc_core=0.8959 model_val_auroc=0.9102 test_auroc=0.8982 test_auprc=0.5879 best_epochs=[23, 15, 13, 14, 13]\n"}
+,{"stream_name":"stdout","time":1402.053803553,"data":"[v2][seed 44] ENC[core][C_lr3e-4_wd1e-2_p0.4_d256]     oof_auroc_core=0.8951 model_val_auroc=0.9122 test_auroc=0.8985 test_auprc=0.5914 best_epochs=[15, 7, 11, 8, 13]\n"}
+,{"stream_name":"stdout","time":1416.514874092,"data":"[v2][seed 44] ENC_bag2[core][B_lr3e-4_wd1e-3_p0.3]     model_val_auroc=0.9079 test_auroc=0.8980 test_auprc=0.5866\n"}
+,{"stream_name":"stdout","time":1474.529676252,"data":"[v2][seed 44] G1[core][m=32]                           oof_auroc_core=0.8956 model_val_auroc=0.9115 test_auroc=0.8973 test_auprc=0.5822 exit0_test_auroc=0.8970\n"}
+,{"stream_name":"stdout","time":1474.531014918,"data":"[v2][seed 44] ENC_bag2+G1[core]                        model_val_auroc=0.9103 test_auroc=0.8984 test_auprc=0.5861\n"}
+,{"stream_name":"stdout","time":1478.278289046,"data":"[v2][seed 44] REF_xgb_tuned[core+aux]                  model_val_auroc=0.9129 test_auroc=0.9014 test_auprc=0.5991\n"}
+,{"stream_name":"stdout","time":1522.823696977,"data":"[v2][seed 44] ENC[core+aux][B_lr3e-4_wd1e-3_p0.3]      oof_auroc_core=0.9024 model_val_auroc=0.9109 test_auroc=0.9038 test_auprc=0.6098 best_epochs=[19, 10, 11, 6, 7]\n"}
+,{"stream_name":"stdout","time":1567.158398776,"data":"[v2][seed 44] ENC[core+aux][C_lr3e-4_wd1e-2_p0.4_d256] oof_auroc_core=0.9027 model_val_auroc=0.9091 test_auroc=0.9036 test_auprc=0.6084 best_epochs=[17, 12, 10, 9, 7]\n"}
+,{"stream_name":"stdout","time":1608.650630719,"data":"[v2][seed 44] ENC_bag2[core+aux][C_lr3e-4_wd1e-2_p0.4_d256] model_val_auroc=0.9094 test_auroc=0.9042 test_auprc=0.6142\n"}
+,{"stream_name":"stdout","time":2033.191466613,"data":"[v2][seed 44] G1[core+aux][m=32]                       oof_auroc_core=0.9042 model_val_auroc=0.9083 test_auroc=0.9030 test_auprc=0.6089 exit0_test_auroc=0.9029\n"}
+,{"stream_name":"stdout","time":2033.192280563,"data":"[v2][seed 44] ENC_bag2+G1[core+aux]                    model_val_auroc=0.9092 test_auroc=0.9041 test_auprc=0.6127\n"}
+,{"stream_name":"stdout","time":2033.220712674,"data":"[v2][seed 44] done in 662s\n"}
+,{"stream_name":"stdout","time":2033.223458782,"data":"\n"}
+,{"stream_name":"stdout","time":2033.223481484,"data":"[v2] SUMMARY test AUROC mean ± sd over seeds [42, 43, 44]\n"}
+,{"stream_name":"stdout","time":2033.22348813,"data":"[v2] ENC[core+aux][B_lr3e-4_wd1e-3_p0.3]            0.9043 ± 0.0008  per-seed=[0.9055, 0.9036, 0.9038]\n"}
+,{"stream_name":"stdout","time":2033.22349327,"data":"[v2] ENC[core+aux][C_lr3e-4_wd1e-2_p0.4_d256]       0.9055 ± 0.0015  per-seed=[0.9055, 0.9073, 0.9036]\n"}
+,{"stream_name":"stdout","time":2033.223498794,"data":"[v2] ENC[core][B_lr3e-4_wd1e-3_p0.3]                0.9003 ± 0.0016  per-seed=[0.9009, 0.9019, 0.8982]\n"}
+,{"stream_name":"stdout","time":2033.223503561,"data":"[v2] ENC[core][C_lr3e-4_wd1e-2_p0.4_d256]           0.9013 ± 0.0022  per-seed=[0.904, 0.9014, 0.8985]\n"}
+,{"stream_name":"stdout","time":2033.22350848,"data":"[v2] ENC_bag2+G1[core+aux]                          0.9054 ± 0.0009  per-seed=[0.9062, 0.9059, 0.9041]\n"}
+,{"stream_name":"stdout","time":2033.223526937,"data":"[v2] ENC_bag2+G1[core]                              0.9007 ± 0.0018  per-seed=[0.9028, 0.9011, 0.8984]\n"}
+,{"stream_name":"stdout","time":2033.22352983,"data":"[v2] ENC_bag2[core+aux][B_lr3e-4_wd1e-3_p0.3]       0.9049 ± 0.0000  per-seed=[0.9049]\n"}
+,{"stream_name":"stdout","time":2033.22353216,"data":"[v2] ENC_bag2[core+aux][C_lr3e-4_wd1e-2_p0.4_d256]  0.9051 ± 0.0009  per-seed=[0.9061, 0.9042]\n"}
+,{"stream_name":"stdout","time":2033.223534495,"data":"[v2] ENC_bag2[core][B_lr3e-4_wd1e-3_p0.3]           0.8998 ± 0.0018  per-seed=[0.9016, 0.898]\n"}
+,{"stream_name":"stdout","time":2033.223536891,"data":"[v2] ENC_bag2[core][C_lr3e-4_wd1e-2_p0.4_d256]      0.9016 ± 0.0000  per-seed=[0.9016]\n"}
+,{"stream_name":"stdout","time":2033.223539315,"data":"[v2] G1[core+aux][m=32]                             0.9049 ± 0.0013  per-seed=[0.9057, 0.906, 0.903]\n"}
+,{"stream_name":"stdout","time":2033.22354166,"data":"[v2] G1[core][m=32]                                 0.9000 ± 0.0023  per-seed=[0.9029, 0.8998, 0.8973]\n"}
+,{"stream_name":"stdout","time":2033.223543992,"data":"[v2] REF_xgb_tuned[core+aux]                        0.9051 ± 0.0027  per-seed=[0.9059, 0.9079, 0.9014]\n"}
+,{"stream_name":"stdout","time":2033.223546405,"data":"[v2] REF_xgb_tuned[core]                            0.9025 ± 0.0042  per-seed=[0.9018, 0.908, 0.8978]\n"}
+,{"stream_name":"stdout","time":2033.223548777,"data":"[v2] DONE\n"}
+,{"stream_name":"stderr","time":2037.778982057,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":2037.779006736,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":2037.957830395,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":2037.957860245,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":2038.618952314,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":2038.93171926,"data":"[NbConvertApp] Writing 114711 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":2041.312933773,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":2042.372979469,"data":"[NbConvertApp] Writing 700769 bytes to __results__.html\n"}
+]

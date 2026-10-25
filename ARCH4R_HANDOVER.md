@@ -1,6 +1,27 @@
 # Architecture 4R — implementation handover
 
-**Status as of this handover (updated, session 3): Phase 0 PASSED on the
+**Status as of session 5 (latest, 2026-09-27): "graph v2" (notebooks 12–18)
+re-examined Arch4R against a goal of beating XGBoost / >0.91 test AUROC.
+Key corrections: phase 1's `encoder_only` arm took only 5 optimizer steps --
+trained properly it reaches 0.8919 ± 0.0048, so criterion 1's "+0.147 graph
+signal" was an undertraining artifact (true gap to `adaptive_k` ≈ +0.0006).
+Best model of this session: a self-supervised-pretrained multi-view encoder
++ label-aware retrieval (G1), trained with auxiliary patients + temporal
+features -- 0.9082 ± 0.0023 (best run 0.9099), above every original baseline
+and tied with tuned XGBoost on the same data (0.9082). Pretraining is what
+made the retrieval (graph) exit add signal (+0.0015, all seeds); without it no
+graph mechanism beat a well-trained encoder. Paused pending a non-truncated MIMIC-IV.
+Full record: §11 and `GRAPH_V2_RESULTS.md`.**
+
+**Status as of session 4: notebook `11_arch4r_fullrun` now trains all
+three Arch4R modes to the full 30-epoch budget for one random seed per run,
+with Google Drive checkpoint/resume. First completed run (seed 2130747922)
+shows `fixed_k`/`adaptive_k` OVERFITTING at 30 epochs (test AUROC below their
+5-epoch phase-1 numbers while train loss keeps falling); `encoder_only`
+improved a lot. Proposed, NOT yet implemented: validation-based early stopping
+on the existing `model_val` split + weight decay. Full detail in §10 below.**
+
+**Status as of the session-3 handover: Phase 0 PASSED on the
 real MIMIC-IV cohort (17,663 patients), not just mock data. Phase 1's
 5-seed real run is COMPLETE -- the statistically-real go/no-go verdict,
 after finding and fixing three real GPU bugs that never surfaced on the
@@ -639,3 +660,242 @@ an advantage over the simpler fixed-k graph, and its certified low-risk
 policy is close to, but short of, the accuracy bar this project set for
 itself. Real executed notebook + go/no-go output: `notebooks/10_arch4r_phase1.ipynb`
 (commit `a30c64a`).
+
+---
+
+## 10. Session 4 — notebook 11: full-epoch-budget run + Google Drive resume
+
+### What was asked and built
+
+Goal: a notebook that trains ONLY Arch4R (all three modes: `encoder_only`,
+`fixed_k`, `adaptive_k`, plus the certified gate on `adaptive_k`) to the full
+30-epoch budget, reuse the phase-1 numbers as frozen baselines instead of
+retraining them, and survive Kaggle session limits by checkpointing to
+Google Drive (resume pattern adapted from another project's snippet -- only
+the Drive save/load mechanics were copied, not its Dice/EMA/scheduler
+training loop; Arch4R's own training math is unchanged).
+
+Commit `26507d0` (local; pushed to GitHub by the user -- the Kaggle run cloned
+the new code successfully):
+
+| File | Role |
+|---|---|
+| `notebooks/src/11_arch4r_fullrun.py` (+ built `.ipynb`) | The notebook |
+| `notebooks/README_ARCH4R_FULLRUN.md` | One-time manual Kaggle setup (dataset, secrets, Google OAuth) |
+| `src/arch4r_train.py` | Per-epoch training steps, extracted from `scripts/run_arch4r_phase1.py::_train_arch4r` (behaviour-preserving; that script now calls them) |
+| `src/arch4r_fullrun.py` | Resume-state planning, checkpoint save/load, frozen `PHASE1_BASELINES` (the 5-seed means from §9) |
+| `src/gdrive.py` | OAuth Drive client (list/upload/download/delete/move/get_or_create_folder) |
+| `scripts/mint_gdrive_refresh_token.py` | One-time local OAuth consent -> refresh token |
+| `tests/test_arch4r_fullrun.py`, `test_arch4r_train.py`, `test_gdrive.py` | 21 new tests; full suite 117 passed at commit time |
+
+Decisions worth knowing (user-confirmed unless noted):
+- **All three Arch4R modes**, not just `adaptive_k`; baselines
+  (`plain_xgboost`, `cascade_3stage`, `graph_free_encoder`, `arch2_diffusion`)
+  are NOT retrained -- hardcoded from §9's 5-seed table.
+- **One random seed per notebook run.** Resuming ALWAYS continues the same
+  seed/mode/epoch recorded in `arch4r_fullrun_state.json` on Drive; a new
+  random seed is only drawn when there is no state file or the recorded seed
+  is `seed_complete`. Open-ended (no target seed count).
+- **Checkpoint every 5 epochs, replaced in place** (upload new -> update
+  state.json -> only then delete the old checkpoint, so a crash never leaves
+  Drive without a valid state).
+- **Google OAuth as the user's own account, NOT a service account** (the
+  user initially picked service account; changed after flagging that a bare
+  service account has zero storage quota on a personal Gmail account, so real
+  checkpoint uploads would fail). Kaggle Secrets needed: `GITHUB_TOKEN`,
+  `GDRIVE_CLIENT_ID`, `GDRIVE_CLIENT_SECRET`, `GDRIVE_REFRESH_TOKEN`,
+  `GDRIVE_FOLDER_ID`.
+- Query shuffle per epoch is seeded from `(seed, mode_idx, epoch)` (all ints)
+  so it is deterministic across a session boundary -- a single mutating rng
+  can't survive a restart. (My first draft used Python `hash()` on a string
+  tuple, which is randomized per process; caught and replaced before commit.)
+- Checkpoint loading uses `torch.load(..., weights_only=True)` (payload is
+  tensors/dicts only).
+- Bug caught in my own first draft: `prev_ckpt_id` carried across modes, so
+  the first checkpoint of mode B would have deleted mode A's FINAL checkpoint
+  before archiving. It is reset per mode now.
+
+### Kaggle platform notes (learned the hard way)
+
+- Kernel: `tanmaysapra/architecture-4r-full-epoch-training-run`
+  (kernel_id 135422891), private, T4 GPU, internet on.
+- `mcp__kaggle__save_notebook`: on CREATE, omit `slug` entirely (pass
+  `newTitle`; supplying a slug -> "Invalid slug"). On UPDATE, pass
+  `slug: "tanmaysapra/<slug>"` (user-prefixed) together with the full field
+  set (language, kernelType, isPrivate, enableGpu, enableInternet,
+  machineShape, kernelExecutionType) -- `id`-based or minimal updates fail
+  with an opaque error. Use `kernelExecutionType: "QuickSave"` to save
+  without running. `text` is the raw `.ipynb` JSON string.
+- The MCP cannot attach datasets or secrets, and it cannot start a real run
+  with them: dataset + secrets + "Save & Run All" are manual UI steps (see
+  `notebooks/README_ARCH4R_FULLRUN.md`).
+- Session logs ARE retrievable: `mcp__kaggle__list_notebook_session_output`
+  returns a huge payload whose final `"log"` field holds the stdout/stderr
+  stream (save-to-file, then grep with `-o` for `[fullrun]` / `Traceback`).
+- The Bash sandbox used in this session could not reach github.com, so the
+  push had to be done by the user.
+
+### Run history
+
+1. **Run 1 -- ERROR.** Phase-0 gate passed inline, cohort built, Drive OAuth
+   connected, then the first Drive call failed: `HttpError 403 ... Google
+   Drive API has not been used in project 159270457045` (Drive API not
+   enabled on the Google Cloud project -- README step 3.2). The log also
+   showed `device: cpu` despite GPU being enabled in kernel metadata (quota
+   was fine; suspected stale accelerator/docker-image pin from API creation).
+   User re-toggled the accelerator and enabled the API.
+2. **Run 2 -- COMPLETE, seed 2130747922, `device: cuda`.** All three modes
+   30/30 epochs, checkpointed every 5, archived to `Drive/2026-09-23/`.
+   `fixed_k` ~10,231 s and `adaptive_k` ~10,320 s (~2.85-2.9 h each);
+   `encoder_only` ~19 s. Each fresh kernel also spends ~33 min re-running the
+   phase-0 check inline + rebuilding the cohort unless a prior
+   `phase0_integrity.json` is attached (cheap win still open).
+3. **Run 3 -- triggered by the user after run 2; last observed status
+   RUNNING. Its outcome is unknown to this session.** Check
+   `arch4r_fullrun_state.json` on Drive and the kernel output.
+
+### Result (seed 2130747922, 30 epochs, single seed)
+
+| arm | test AUROC | phase-1 5-epoch ref (5-seed) |
+|---|---|---|
+| `arch4r_encoder_only` | 0.8866 | 0.7457 +/- 0.0479 |
+| `arch4r_fixed_k` | 0.8713 | 0.8917 +/- 0.0049 |
+| `arch4r_adaptive_k` | 0.8580 | 0.8925 +/- 0.0038 |
+| `arch4r_adaptive_k_certified` | 0.8594 | 0.8887 +/- 0.0059 |
+
+Frozen baselines: cascade_3stage 0.9015, plain_xgboost 0.8962,
+arch2_diffusion 0.8852, graph_free_encoder 0.8572.
+
+Training loss (fixed_k 0.21 -> 0.07, adaptive_k 0.22 -> 0.07 over epochs 5 ->
+30) fell monotonically while test AUROC ended BELOW the 5-epoch numbers: the
+graph arms overfit with the current fixed-epoch, no-early-stopping,
+no-weight-decay loop (§4 item 9's documented simplification, plain
+`Adam(lr=1e-3)`, dropout left at the encoder default 0.15). Single seed,
+single comparison against a 5-seed mean -- read as a strong hint, not a
+verdict.
+
+### Discussed, NOT implemented (awaiting user go-ahead)
+
+- **Validation-based early stopping**: evaluate AUROC on the existing
+  `model_val` split (currently only used for gate calibration, never during
+  training) every 5 epochs and keep the best checkpoint, not the last.
+  Slots into the existing Drive checkpoint machinery. Note this changes
+  `_train_arch4r`-style semantics, so decide whether phase-1 (notebook 10)
+  should keep fixed epochs for comparability.
+- **Weight decay** (AdamW) and/or a bit more dropout -- one-line levers.
+- **More data**: would help in principle but is mostly not obtainable -- the
+  17,663-patient cohort is what remains after `require_nonempty_blocks:
+  [vitals]` drops ~63% of otherwise-eligible patients because the Kaggle
+  mirror's `chartevents.csv` is truncated (~38% coverage). A non-truncated
+  MIMIC-IV source is the only real "more data" lever; early stopping is
+  cheaper and targets the observed failure directly.
+- More seeds (re-running notebook 11 draws a new random seed each time) before
+  trusting the direction of the 30-epoch-vs-5-epoch gap.
+
+### Housekeeping / state at end of session 4
+
+- Docs edited after commit `26507d0` (this section, the header status note,
+  `notebooks/README.md`) are UNCOMMITTED.
+- Pre-existing uncommitted changes NOT from this work, deliberately left
+  alone: `scripts/run_cascade.py`, `src/cascade.py`, `src/evaluate.py`,
+  `src/safe_exit.py`, `tests/test_pipeline.py`, `tests/test_run_cascade.py`.
+- Local side effect: to run the new tests, `google-api-python-client`,
+  `google-auth`, `google-auth-httplib2`, `google-auth-oauthlib` were
+  pip-installed into the user's global Python 3.12, which upgraded
+  `protobuf` to 7.36.2 and now conflicts with the installed
+  `tensorflow-intel 2.18.0` (needs protobuf < 6). Unrelated to this repo,
+  but tell whoever uses that TensorFlow install.
+- The recurring 30-minute Kaggle status check (session-only cron) was
+  cancelled at the end of this session.
+
+---
+
+## 11. Session 5 — graph v2: can a graph/neural model beat XGBoost? (notebooks 12–18)
+
+**Numbers of record, protocol, provenance: `GRAPH_V2_RESULTS.md`.** This
+section is the handover summary.
+
+### What was asked
+
+Push the Arch4R line past XGBoost, target test AUROC > 0.91 (best model).
+User decisions: no stacking/ensembling with XGBoost; any graph idea allowed;
+the weak-encoder rule may be relaxed; re-run the corrected `encoder_only`
+baseline. Literature review prompts and answers: `../RESEARCH.md`.
+
+### Corrections to earlier sections
+
+1. **§9 criterion 1 is not a real graph effect.** `arch4r_train.
+   train_encoder_epoch` takes one full-batch step per epoch, so phase 1's
+   `encoder_only` (5 epochs) got 5 optimizer steps (0.7457) while the graph
+   arms got ~105. Reproduced exactly (0.7387, nb12) and fixed: mini-batched
+   with early stopping the same model/preprocessing reaches **0.8919 ± 0.0048**
+   (nb18, seeds 42–44). Against that, `adaptive_k` (0.8925) is ≈ +0.0006.
+   Do not cite the +0.1468 / p=0.0019 result as graph signal.
+2. **§10's overfitting diagnosis confirmed and generalised:** every neural arm
+   peaks within 2–15 epochs; selection on the 1,413-row `model_val` split is
+   too noisy (AUROC SE ≈ ±0.012). From notebook 13 on, 5-fold cross-fitting on
+   the training split selects on ~10.6k OOF rows.
+
+### What was built (all verified on Kaggle; nothing runs locally)
+
+| file | role |
+|---|---|
+| `src/graph_v2.py` | preprocessing variants, multi-view encoder (+ optional PLR), G1 TabR-style retrieval, generic trainer, `crossfit(..., score_mask=)`, leak-free Correct & Smooth features, masked-feature pretraining |
+| `src/temporal_block.py` | 6 h-bin means, slope, recency per lab/vital concept (DuckDB, same window/ranges as `mimic_iv`) |
+| `tests/test_graph_v2.py` | leakage invariants (self-exclusion in kNN / retrieval / C&S incl. 2-hop returns, fold coverage, PLR, pretrain→crossfit) — run at the top of every notebook, which refuses to continue on failure |
+| `notebooks/src/12_…` – `18_…` | one notebook per round, see `notebooks/README.md` |
+| `scripts/nbmake.py` | new `#%% embed src/x.py` marker → `%%writefile` cell (self-contained notebooks, no GitHub token/secrets) |
+| `notebooks/kaggle/<nb>/kernel-metadata.json` | `kaggle kernels push` configs (account `satgunsinghsodhi`) |
+| `results/kaggle_runs/k12_v1 … k18_v1` | logs + result JSON of every run |
+
+### Findings
+
+- Cross-fitted encoder ≈ tuned XGBoost on the original data (0.9013 vs 0.9034).
+- More data is the only lever that moved every model: +28,988 auxiliary
+  (vitals-missing) training patients → +0.004–0.005; temporal trajectory
+  features → +0.003 for XGBoost, +0.0008 for the encoder.
+- Best of ours before pretraining: 0.9063 ± 0.0009 (best run 0.9080) vs tuned XGBoost
+  0.9082 ± 0.0040 and cascade 0.9057 ± 0.0039 on identical data.
+- G1 retrieval, G2 masked-label PPR, Correct & Smooth, PLR and bagging each
+  moved the score by ≤ 0.001 (C&S slightly negative). Label-only kNN AUROC is
+  0.84 and adjusted homophily 0.25, so the neighbourhood signal exists — a
+  well-trained encoder already captures it.
+- **Masked-feature self-supervised pretraining (nb17) changed the graph
+  result:** with a pretrained encoder, G1's retrieval exit beats its own
+  graph-free exit on every seed (+0.0011 / +0.0021 / +0.0012) and G1 reaches
+  0.9080 ± 0.0019. Encoder (3-bag) ⊕ G1, both pretrained, is the best model:
+  **0.9082 ± 0.0023** (best run 0.9099) vs tuned XGBoost 0.9082 ± 0.0029 in
+  the same run — a tie (per seed +0.0049 / −0.0024 / −0.0027).
+
+### Next steps (when the full MIMIC-IV arrives)
+
+1. Point the cohort at the non-truncated source (`require_nonempty_blocks`
+   stays `[vitals]`, but should now drop ~0 patients) and re-run nb15/nb18 to
+   re-baseline — expect a larger cohort with dense vitals and far fewer NaNs
+   in the temporal block.
+2. Re-run the best model (pretrained encoder ⊕ G1, nb17) on the dense cohort,
+   and pretrain on all stays (not just the cohort) — pretraining is the lever
+   that turned the retrieval exit positive here. Re-test masked-label PPR too.
+3. If trees still lead, a DuETT-style event × time model with masked
+   value/presence pretraining over all stays is the literature-backed next
+   architecture (RESEARCH.md prompt 1).
+4. Certified gate: switch Bonferroni + Clopper–Pearson to exact-binomial
+   Learn-then-Test with a single-start fixed sequence (RESEARCH.md prompt 4:
+   power at a true 1% miss rate 50.8% → 81.8%); not implemented yet.
+
+### Housekeeping
+
+- Kaggle runs use the local CLI account `satgunsinghsodhi` (user-approved);
+  earlier notebooks 09–11 live under `tanmaysapra`.
+- The `satgunsinghsodhi` GPU queue stalled for ~1.5 h near the end of the
+  session (quota/availability); nb18 was re-pushed CPU-only (it is XGBoost +
+  one small MLP), which is why its `xgboost_tuned[core]` differs from nb13/14
+  by 0.0009.
+- Committed as the graph-v2 checkpoint (branch `graph-v2-checkpoint`, 2026-10-25),
+  together with two earlier baseline bug fixes that had been sitting
+  uncommitted (seed-specific graph-cache key in `scripts/run_cascade.py`;
+  safety-ordering ties no longer reported as violations in `src/evaluate.py`,
+  `src/cascade.py`, `src/safe_exit.py`), each with a regression test.
+- `tests/test_graph_v2.py` was only ever executed on Kaggle (inside each
+  notebook). The full local suite was not re-run this session (no local
+  compute), so run `python -m pytest tests/ -q` before trusting a green suite.

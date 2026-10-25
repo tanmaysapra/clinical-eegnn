@@ -16,3 +16,7 @@ __pycache__/
 .pytest_cache/
 .DS_Store
 .venv/
+
+# Kaggle push dirs: only kernel-metadata.json is source; the .ipynb inside is a
+# copy of notebooks/<name>.ipynb made right before `kaggle kernels push`.
+notebooks/kaggle/*/*.ipynb

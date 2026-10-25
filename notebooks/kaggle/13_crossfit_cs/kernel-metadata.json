@@ -1,0 +1,16 @@
+{
+  "id": "satgunsinghsodhi/graph-v2-crossfit-correct-smooth",
+  "title": "Graph v2 crossfit correct smooth",
+  "code_file": "13_crossfit_cs.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "machine_shape": "NvidiaTeslaT4",
+  "dataset_sources": ["akshaybe/updated-mimic-iv"],
+  "competition_sources": [],
+  "kernel_sources": ["satgunsinghsodhi/graph-v2-label-aware-experiments"],
+  "model_sources": []
+}

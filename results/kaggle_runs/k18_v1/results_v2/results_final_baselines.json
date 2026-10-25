@@ -1,0 +1,125 @@
+{
+ "42": {
+  "plain_xgboost_phase1cfg[core]": {
+   "test_auroc": 0.8932003344125132,
+   "test_auprc": 0.5549497795416561
+  },
+  "xgboost_tuned[core]": {
+   "test_auroc": 0.9026889563931412,
+   "test_auprc": 0.5891701339601008
+  },
+  "cascade_3stage[core]": {
+   "test_auroc": 0.9003865395632653,
+   "test_auprc": 0.591708221123342,
+   "stage_test_auroc": [
+    0.8701,
+    0.8852,
+    0.9004
+   ]
+  },
+  "plain_xgboost_phase1cfg[best-data]": {
+   "test_auroc": 0.8959832194199076,
+   "test_auprc": 0.570070772925714
+  },
+  "xgboost_tuned[best-data]": {
+   "test_auroc": 0.9042136309737933,
+   "test_auprc": 0.5974862705384664
+  },
+  "cascade_3stage[best-data]": {
+   "test_auroc": 0.9018812369266024,
+   "test_auprc": 0.5836415681862007,
+   "stage_test_auroc": [
+    0.8748,
+    0.8839,
+    0.9019
+   ]
+  },
+  "arch4r_encoder_only_corrected[core]": {
+   "test_auroc": 0.8859874828463701,
+   "test_auprc": 0.536733972756116,
+   "best_epoch": 6
+  }
+ },
+ "43": {
+  "plain_xgboost_phase1cfg[core]": {
+   "test_auroc": 0.8960531662603088,
+   "test_auprc": 0.5659998976311447
+  },
+  "xgboost_tuned[core]": {
+   "test_auroc": 0.9067675233489214,
+   "test_auprc": 0.5834432193748319
+  },
+  "cascade_3stage[core]": {
+   "test_auroc": 0.9069973486816687,
+   "test_auprc": 0.5841889433510341,
+   "stage_test_auroc": [
+    0.8637,
+    0.8774,
+    0.907
+   ]
+  },
+  "plain_xgboost_phase1cfg[best-data]": {
+   "test_auroc": 0.9037023528784791,
+   "test_auprc": 0.5732932868249904
+  },
+  "xgboost_tuned[best-data]": {
+   "test_auroc": 0.9136664468337395,
+   "test_auprc": 0.607090906501957
+  },
+  "cascade_3stage[best-data]": {
+   "test_auroc": 0.9109784896811757,
+   "test_auprc": 0.6042498251093923,
+   "stage_test_auroc": [
+    0.8762,
+    0.8865,
+    0.911
+   ]
+  },
+  "arch4r_encoder_only_corrected[core]": {
+   "test_auroc": 0.8977060767150298,
+   "test_auprc": 0.5390503480010587,
+   "best_epoch": 8
+  }
+ },
+ "44": {
+  "plain_xgboost_phase1cfg[core]": {
+   "test_auroc": 0.8924617290858946,
+   "test_auprc": 0.5605655754207585
+  },
+  "xgboost_tuned[core]": {
+   "test_auroc": 0.9008262054172164,
+   "test_auprc": 0.5866526033438536
+  },
+  "cascade_3stage[core]": {
+   "test_auroc": 0.8961156187963814,
+   "test_auprc": 0.5762434388236696,
+   "stage_test_auroc": [
+    0.8589,
+    0.8705,
+    0.8961
+   ]
+  },
+  "plain_xgboost_phase1cfg[best-data]": {
+   "test_auroc": 0.9022584502444809,
+   "test_auprc": 0.5860513554423622
+  },
+  "xgboost_tuned[best-data]": {
+   "test_auroc": 0.9066426182767762,
+   "test_auprc": 0.6108351379265101
+  },
+  "cascade_3stage[best-data]": {
+   "test_auroc": 0.9041103761141532,
+   "test_auprc": 0.5949305348349921,
+   "stage_test_auroc": [
+    0.8659,
+    0.8761,
+    0.9041
+   ]
+  },
+  "arch4r_encoder_only_corrected[core]": {
+   "test_auroc": 0.8919787628069336,
+   "test_auprc": 0.5524419242561095,
+   "best_epoch": 6
+  }
+ }
+}

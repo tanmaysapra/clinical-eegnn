@@ -1,0 +1,15 @@
+{
+  "id": "satgunsinghsodhi/graph-v2-final-baselines",
+  "title": "Graph v2 final baselines",
+  "code_file": "18_final_baselines.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": ["akshaybe/updated-mimic-iv"],
+  "competition_sources": [],
+  "kernel_sources": ["satgunsinghsodhi/graph-v2-temporal-features"],
+  "model_sources": []
+}
