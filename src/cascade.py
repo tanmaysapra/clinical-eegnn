@@ -355,7 +355,10 @@ def evaluate_cascade(y, stage, risk, side, mask, cost_us, severity=None,
             "high_risk_mean_cost_us": float(spent[himask].mean()),
             "low_risk_mean_cost_us": float(spent[lomask].mean()),
             "cost_gap_us": float(spent[himask].mean() - spent[lomask].mean()),
-            "safety_ordering_ok": bool(spent[himask].mean() > spent[lomask].mean()),
+            # >= not >: a tie (e.g. the always_stage0/always_full baselines,
+            # where every patient spends the same cost) is not an ordering
+            # violation. See src/evaluate.py's high_risk_analysis.
+            "safety_ordering_ok": bool(spent[himask].mean() >= spent[lomask].mean()),
             "high_risk_ece": (expected_calibration_error(y[himask], risk[himask], n_bins)
                               if himask.sum() > n_bins else float("nan")),
             "low_risk_ece": (expected_calibration_error(y[lomask], risk[lomask], n_bins)

@@ -240,7 +240,7 @@ def high_risk_analysis(y, p, exit_layer, max_layers, operating_sensitivity=0.90,
         "low_risk_mean_depth": lo_depth,
         # The safety ordering: the sick must not be the ones cut short.
         "depth_gap": hi_depth - lo_depth,
-        "safety_ordering_ok": bool(hi_depth > lo_depth),
+        "safety_ordering_ok": bool(hi_depth >= lo_depth),
         "high_risk_early_exit_rate": float((exit_layer[hi] <= max_layers / 2).mean())
         if hi.any() else float("nan"),
         "low_risk_early_exit_rate": float((exit_layer[lo] <= max_layers / 2).mean())

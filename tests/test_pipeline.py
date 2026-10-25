@@ -195,6 +195,25 @@ def test_high_risk_metric_is_not_degenerate():
     assert res["high_risk_n"] == int(round(0.10 * n))
 
 
+def test_safety_ordering_tie_is_not_reported_as_a_violation():
+    """A strict `>` on `depth_gap == 0` reports a legitimate tie as an
+    ordering inversion. Equal depth is not a safety violation -- only
+    hi_depth < lo_depth (the sick cut short) is."""
+    import numpy as np
+    from src.evaluate import high_risk_analysis
+
+    n = 200
+    risk = np.arange(n, dtype=np.float64)          # well-defined top 10%
+    y = np.zeros(n, dtype=int)
+    p = np.full(n, 0.01)
+    exit_layer = np.full(n, 5.0)                    # identical depth everywhere
+
+    res = high_risk_analysis(y, p, exit_layer, max_layers=10,
+                             operating_sensitivity=0.90, risk=risk, top_frac=0.10)
+    assert res["depth_gap"] == 0.0
+    assert res["safety_ordering_ok"] is True
+
+
 def test_coverage_filter_keeps_blocks_aligned():
     """Dropping uncovered patients must drop the same rows from every block.
 

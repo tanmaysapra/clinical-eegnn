@@ -33,6 +33,13 @@ def _mock_views(n_raw):
                     [c.tolist() for c in cut]))
 
 
+def _graph_cache_key(cfg, seed):
+    """Cache key for the kNN graph -- must include the seed. `cache` is one
+    dict shared by every seed in a run (see `main`), and `make_splits` gives
+    each seed a different train mask, so the graph itself is seed-dependent."""
+    return ("graph", seed, cfg["graph"]["k"], cfg["graph"]["similarity"])
+
+
 def run_seed(cfg, seed, args, cache):
     t0 = time.time()
     cfg = json.loads(json.dumps(cfg))
@@ -73,7 +80,7 @@ def run_seed(cfg, seed, args, cache):
         edge_index, edge_weight = graph_build.build_knn_graph(
             Z, cfg["graph"]["k"], "cosine")
     else:
-        gkey = ("graph", cfg["graph"]["k"], cfg["graph"]["similarity"])
+        gkey = _graph_cache_key(cfg, seed)
         if gkey not in cache:
             cache[gkey] = graph_build.build_knn_graph(
                 X, cfg["graph"]["k"], cfg["graph"]["similarity"],

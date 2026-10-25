@@ -188,7 +188,10 @@ def evaluate_gate(y, depth, risk, exit_idx, mask, max_layers, severity=None,
             "high_risk_mean_depth": float(depth[hi].mean()),
             "low_risk_mean_depth": float(depth[lo].mean()),
             "depth_gap": float(depth[hi].mean() - depth[lo].mean()),
-            "safety_ordering_ok": bool(depth[hi].mean() > depth[lo].mean()),
+            # >= not >: a tie is not an ordering violation, only
+            # hi < lo (the sick cut short) is. See src/evaluate.py's
+            # high_risk_analysis.
+            "safety_ordering_ok": bool(depth[hi].mean() >= depth[lo].mean()),
             "high_risk_ece": (expected_calibration_error(y[hi], risk[hi], n_bins)
                               if hi.sum() > n_bins else float("nan")),
             "low_risk_ece": (expected_calibration_error(y[lo], risk[lo], n_bins)
